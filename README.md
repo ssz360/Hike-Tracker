@@ -1,6 +1,6 @@
-# se2022-15-OfficeQueueManager
+# se2022-15-HikeTracker
 
-Demo project Office Queue Manager developed by team 15 softeng 2.
+Hike tracker project developed by team 15 softeng 2.
 
 Technologies used on this project:
 
