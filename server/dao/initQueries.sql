@@ -49,18 +49,3 @@ VALUES  (0, 1000, 20, 50, 'TOURIST', 'Myhouse', 'YourHouse', NULL, 'This is a hi
         
 
 */
-
-/*
-INSERT INTO SERVICES_PER_COUNTER(CounterID,ServiceID)
-VALUES  (0,1),
-        (0,3),
-        (1,1),
-        (2,0),
-        (2,2),
-        (3,2);
-INSERT INTO SERVICES(ServiceID,ServiceName,TimeRequired)
-VALUES  (0,'Mail',5),
-        (1,'Billing',2),
-        (2,'Digital Identity',13),
-        (3,'Credit Card',7);
-        */
