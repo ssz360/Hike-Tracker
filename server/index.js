@@ -1,19 +1,23 @@
 'use strict';
 const express=require('express');
+const hikes=require('./dao/hikes');
 const app=express();
 const port=3001;
+
 // AUTHENTICATION CONTROL
 const passport = require('passport');
 const LocalStrategy = require('passport-local'); 
 const session=require('express-session');
 const cors = require('cors');
 app.use(express.json());
+
 passport.use(new LocalStrategy((username, password, callback)=>{
     users.login(username, password).then((user) => { 
         if (!user)  return callback(null, false, { message: 'Incorrect username and/or password.' });
         return callback(null, user);
     }); 
 }));
+
 passport.serializeUser(function (user, cb) {
     cb(null, user);
 });
@@ -39,12 +43,15 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
 }));
+
 app.use(passport.authenticate('session'));
+
 app.delete('/api/logout',isLoggedIn,async(req,res)=>{
     req.logOut(()=>{
         return res.status(204).end();
     });
 })
+
 app.post('/api/login', passport.authenticate('local'), (req,res) => {
     // This function is called if authentication is successful.
     // req.user contains the authenticated user.
@@ -54,3 +61,10 @@ app.post('/api/login', passport.authenticate('local'), (req,res) => {
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
 );
+
+// app.get('/api/hikes', async (req, res) => {
+//     hikes.getHikesList()
+//       .then(hikes => {res.json(hikes)})
+//       .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
+//   });
+
