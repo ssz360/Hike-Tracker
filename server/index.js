@@ -11,7 +11,7 @@ const user = require("./user");
 
 app.use(express.json());
 passport.use(new LocalStrategy((username, password, callback)=>{
-    users.login(username, password).then((user) => { 
+    user.login(username, password).then((user) => { 
         if (!user)  return callback(null, false, { message: 'Incorrect username and/or password.' });
         return callback(null, user);
     }); 
