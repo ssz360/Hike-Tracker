@@ -1,4 +1,4 @@
-import { Col, Table, Row, Form, Button } from 'react-bootstrap';
+import { Col, Row, Form, Button, Card } from 'react-bootstrap';
 
 function HikesList(props){
 
@@ -58,23 +58,9 @@ function HikesList(props){
         </Row>
         </div>
         <Row className="mt-2">
-          <Table striped>
-            <thead>
-              <tr>
-                <th>Label</th>
-                <th>Length</th>
-                <th>Expected Time</th>
-                <th>Ascent</th>
-                <th>Difficulty</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
               {
                 displayedHikes.map((hike) => <HikeRow hike={hike}/>)
               }
-            </tbody>
-          </Table>
         </Row>
         </>
       )
@@ -84,14 +70,16 @@ function HikesList(props){
 
 function HikeRow(props){
     return (
-    <><tr>
-        <td>{props.hike.label}</td>
-        <td>{props.hike.length}</td>
-        <td>{props.hike.length}</td>
-        <td>{props.hike.length}</td>
-        <td>{props.hike.difficulty}</td>
-        <td>{props.hike.length}</td>
-    </tr></>);
+    <><Col xs={4} className="mt-2"><Card>
+    <Card.Header as="h4">{props.hike.label}</Card.Header>
+    <Card.Body>
+      <Card.Text>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id laoreet elit. 
+      Vestibulum vel diam vel nunc cursus posuere. Phasellus et porttitor augue.
+      </Card.Text>
+    </Card.Body>
+  </Card>
+  </Col></>);
 }
 
 export default HikesList;

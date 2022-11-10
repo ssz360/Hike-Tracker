@@ -10,9 +10,10 @@ import { useState } from 'react';
 function App() {
   // const [logged,setLogged]=useState(false);
 
-  const vett = [{label : "h1", length : 100, difficulty: "Tourist"}, 
-  {label : "h2", length : 200, difficulty: "Hiker"},
-  {label : "h3", length : 300, difficulty: "Professional hiker"}];
+  const vett = [{label : "Crazy Mountain", length : 100, difficulty: "Tourist"}, 
+  {label : "Yuuu hike", length : 200, difficulty: "Hiker"},
+  {label : "Monte bianco", length : 300, difficulty: "Professional hiker"},
+  {label : "Andrea best member", length : 100, difficulty: "Tourist"}];
 
   const [hikes, setHikes] = useState(vett);
 
