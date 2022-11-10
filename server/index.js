@@ -8,6 +8,7 @@ const LocalStrategy = require('passport-local');
 const session=require('express-session');
 const cors = require('cors');
 const user = require("./user");
+const tokens = require("./tokens");
 
 app.use(express.json());
 passport.use(new LocalStrategy((username, password, callback)=>{
@@ -54,6 +55,8 @@ app.post('/api/login', passport.authenticate('local'), (req,res) => {
 });
 
 app.post("/api/register", user.register);
+app.post("/api/resendVerification", tokens.newVerification);
+app.get("/api/verify/:token", tokens.verify);
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
