@@ -1,3 +1,4 @@
 import Header from "./Navbar";
-
-export { Header };
+import Login from "./Login"
+import SignUp from "./SignUp"
+export { Header, Login };

@@ -1,13 +1,14 @@
 // import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Header } from './components';
 import { ParkingLot } from './pages';
-
+import { Login } from './components';
 function App() {
-  // const [logged,setLogged]=useState(false);
+ const [logged,setLogged]=useState(false);
 
   return (
     <>
@@ -18,6 +19,7 @@ function App() {
             <Routes>
               <Route path='/' element={<h1>Hike Tracker!</h1>} />
               <Route path='/parking' element={<ParkingLot/>} />
+              <Route path='/login' element={<Login setLogged={setLogged}/>}/>
             </Routes>
           </Col>
         </Row>
