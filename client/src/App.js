@@ -10,12 +10,16 @@ import { useState } from 'react';
 function App() {
   // const [logged,setLogged]=useState(false);
 
-  const vett = [{label : "Crazy Mountain", length : 100, difficulty: "Tourist"}, 
-  {label : "Yuuu hike", length : 200, difficulty: "Hiker"},
-  {label : "Monte bianco", length : 300, difficulty: "Professional hiker"},
-  {label : "Andrea best member", length : 100, difficulty: "Tourist"}];
+  const vett = [{label : "Crazy Mountain", area: "one", length : 2, difficulty: "Tourist", ascent : 200, timeEx : 1}, 
+  {label : "Yuuu hike", area: "one", length : 20, difficulty: "Hiker", ascent : 450, timeEx : 3},
+  {label : "Monte bianco", area: "two", length : 10, difficulty: "Professional hiker", ascent : 1000, timeEx : 4},
+  {label : "Andrea best member", area: "three", length : 4, difficulty: "Tourist", ascent : 150, timeEx : 2}];
 
   const [hikes, setHikes] = useState(vett);
+
+  function filtering(area, len, dif, asc, time){
+    console.log(area, len, dif, asc, time);
+  }
 
   return (
     <>
@@ -24,7 +28,7 @@ function App() {
         <Row>
           <Col>
             <Routes>
-              <Route path='/' element={<HikesList hikes={hikes} />} />
+              <Route path='/' element={<HikesList hikes={hikes} filtering={filtering}/>} />
               <Route path='/parking' element={<ParkingLot/>} />
             </Routes>
           </Col>
