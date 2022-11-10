@@ -39,7 +39,6 @@ exports.newVerification = async (req, res) => {
 		await sendEmail(email, token);
 		return res.status(200).end();
 	} catch (err) {
-		console.log(err);
 		return res.status(500).send("Error when trying sending new mail");
 	}
 };
