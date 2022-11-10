@@ -4,10 +4,17 @@ import { Container, Row, Col } from 'react-bootstrap';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Header } from './components';
-import { ParkingLot } from './pages';
+import { ParkingLot, HikesList } from './pages';
+import { useState } from 'react';
 
 function App() {
   // const [logged,setLogged]=useState(false);
+
+  const vett = [{label : "h1", length : 100, difficulty: "Tourist"}, 
+  {label : "h2", length : 200, difficulty: "Hiker"},
+  {label : "h3", length : 300, difficulty: "Professional hiker"}];
+
+  const [hikes, setHikes] = useState(vett);
 
   return (
     <>
@@ -16,7 +23,7 @@ function App() {
         <Row>
           <Col>
             <Routes>
-              <Route path='/' element={<h1>Hike Tracker!</h1>} />
+              <Route path='/' element={<HikesList hikes={hikes} />} />
               <Route path='/parking' element={<ParkingLot/>} />
             </Routes>
           </Col>
