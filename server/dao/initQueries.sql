@@ -40,5 +40,5 @@ CREATE TABLE IF NOT EXISTS USERS (
 INSERT INTO HIKES (IDHike, Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, ReferencePoints, Description)
 VALUES  (0, 1000, 20, 50, 'TOURIST', 'Myhouse', 'YourHouse', NULL, 'This is a hike'),
         (1, 2000, 40, 150, 'HIKER', 'YourHouse', 'MyHouse', NULL, 'This is another hike'),
-        (2, 3000, 60, 250, 'TOURIST', 'HisHouse', 'HerHouse', NULL, 'This is brand new hike hike'),
+        (2, 3000, 60, 250, 'TOURIST', 'HisHouse', 'HerHouse', NULL, 'This is brand new hike'),
         (3, 4000, 80, 350, 'HIKER', 'HerHouse', 'HisHouse', NULL, 'This is a fantastic hike');
