@@ -1,54 +1,44 @@
 CREATE TABLE IF NOT EXISTS HIKES (
-	"IDHike"	INTEGER NOT NULL UNIQUE,
-	"Length"	NUMERIC NOT NULL,
-	"ExpectedTime"	NUMERIC NOT NULL,
-	"Ascent"	NUMERIC NOT NULL,
-	"Difficulty"	TEXT NOT NULL,
-	"StartPoint"	TEXT NOT NULL,
-	"EndPoint"	TEXT NOT NULL,
-	"ReferencePoints"	TEXT,
-	"Description"	TEXT,
-	PRIMARY KEY("IDHike")
+	IDHike INTEGER NOT NULL PRIMARY KEY,
+	Length INTEGER NOT NULL,
+	ExpectedTime INTEGER NOT NULL,
+	Ascent INTEGER NOT NULL,
+	Difficulty VARCHAR NOT NULL,
+	StartPoint VARCHAR NOT NULL,
+	EndPoint VARCHAR NOT NULL,
+	ReferencePoints VARCHAR,
+	Description VARCHAR
+	);
+
+CREATE TABLE IF NOT EXISTS POINTS (
+	IDPoint INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	Name VARCHAR NOT NULL,
+	Coordinates VARCHAR NOT NULL,
+	GeographicalArea VARCHAR NOT NULL,
+	TypeOfPoint VARCHAR NOT NULL
 );
 
-CREATE TABLE "POINTS" (
-	"IDPoint"	INTEGER NOT NULL,
-	"Name"	TEXT NOT NULL,
-	"Coordinates"	TEXT NOT NULL,
-	"GeographicalArea"	TEXT NOT NULL,
-	"TypeOfPoint"	TEXT NOT NULL,
-	PRIMARY KEY("IDPoint" AUTOINCREMENT)
+CREATE TABLE IF NOT EXISTS HUTS (
+	IDPoint	INTEGER NOT NULL,
+    FOREIGN KEY(IDPoint) REFERENCES POINTS(IDPoint) ON INSERT CASCADE ON UPDATE CASCADE ON DELETE CASCADE
+	PRIMARY KEY(IDPoint)
 );
 
-CREATE TABLE HUTS (
-	"IDPoint"	INTEGER NOT NULL,
-    FOREIGN KEY("IDPoint") REFERENCES "POINTS"("IDPoint") ON INSERT, ON UPDATE, ON DELETE,
-	PRIMARY KEY("IDPoint")
+CREATE TABLE IF NOT EXISTS PARKINGS (
+	IDPoint	INTEGER NOT NULL,
+    FOREIGN KEY(IDPoint) REFERENCES POINTS(IDPoint) ON INSERT CASCADE ON UPDATE CASCADE ON DELETE CASCADE,
+	PRIMARY KEY(IDPoint)
 );
 
-CREATE TABLE "PARKINGS" (
-	"IDPoint"	INTEGER NOT NULL,
-    FOREIGN KEY("IDPoint") REFERENCES "POINTS"("IDPoint") ON INSERT, ON UPDATE, ON DELETE,
-	PRIMARY KEY("IDPoint")
+CREATE TABLE IF NOT EXISTS USERS (
+    Username VARCHAR NOT NULL PRIMARY KEY,
+    Type VARCHAR NOT NULL,
+    Password VARCHAR NOT NULL,
+    Salt VARCHAR NOT NULL
 );
 
-/*
-INSERT INTO TICKETS(TicketID,Date,CounterID,ServiceID,Status)
-VALUES  (0,'2022/05/16 15:33',1,1,'DONE'),
-        (1,'2022/05/16 15:34',0,3,'DONE'),
-        (2,'2022/05/16 16:42',3,2,'DONE'),
-        (3,'2022/05/16 16:44',2,0,'PENDING'),
-        (4,'2022/05/16 16:46',3,2,'PENDING');
-INSERT INTO SERVICES_PER_COUNTER(CounterID,ServiceID)
-VALUES  (0,1),
-        (0,3),
-        (1,1),
-        (2,0),
-        (2,2),
-        (3,2);
-INSERT INTO SERVICES(ServiceID,ServiceName,TimeRequired)
-VALUES  (0,'Mail',5),
-        (1,'Billing',2),
-        (2,'Digital Identity',13),
-        (3,'Credit Card',7);
-        */
+INSERT INTO HIKES (IDHike, Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, ReferencePoints, Description)
+VALUES  (0, 1000, 20, 50, 'TOURIST', 'Myhouse', 'YourHouse', NULL, 'This is a hike'),
+        (1, 2000, 40, 150, 'HIKER', 'YourHouse', 'MyHouse', NULL, 'This is another hike'),
+        (2, 3000, 60, 250, 'TOURIST', 'HisHouse', 'HerHouse', NULL, 'This is brand new hike'),
+        (3, 4000, 80, 350, 'HIKER', 'HerHouse', 'HisHouse', NULL, 'This is a fantastic hike');
