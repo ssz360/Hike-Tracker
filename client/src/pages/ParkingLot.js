@@ -1,4 +1,4 @@
-import { Row, Form, Button } from 'react-bootstrap';
+import { Row, Form, FloatingLabel, Button } from 'react-bootstrap';
 
 function ParkingLot() {
     return(<>
@@ -6,7 +6,14 @@ function ParkingLot() {
             <h1>Describe the parking lot</h1>
         </Row>
         <Row className="mt-2 mb-4">
-            <Form.Control as="textarea"/>
+            <FloatingLabel label="Title">
+                <Form.Control type="text"/>
+            </FloatingLabel>
+        </Row>
+        <Row className="mb-4">
+            <FloatingLabel label="Description">
+                <Form.Control as="textarea" style={{height:"160px"}}/>
+            </FloatingLabel>
         </Row>
         <Button>Save</Button>
     </>);
