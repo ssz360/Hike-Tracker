@@ -2,6 +2,8 @@
 const express=require('express');
 const multer=require('multer');
 const fs=require('fs');
+const express = require('express');
+const hikes=require('./dao/hikes');
 const app=express();
 const upload=multer();
 const gpxParser = require('gpxparser');
@@ -107,9 +109,18 @@ app.listen(port, () =>
   console.log(`Server started at http://localhost:${port}.`)
 );
 
-// app.get('/api/hikes', async (req, res) => {
-//     hikes.getHikesList()
-//       .then(hikes => {res.json(hikes)})
-//       .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
-//   });
+app.get('/api/hikes', async (req, res) => {
+    hikes.getHikesList()
+      .then(hikes => {res.json(hikes)})
+      .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
+  });
+
+
+// every field can contain a value or be null -> everything null == getHikesList()
+app.post('/api/hikes', async (req, res) => {
+    hikes.getHikesListWithFilters(req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty)
+        .then(hikes => {res.json(hikes)})
+        .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
+});
+
 
