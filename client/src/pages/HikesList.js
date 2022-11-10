@@ -95,12 +95,9 @@ function Display(props){
 function HikeRow(props){
     return (
     <><Col xs={4} className="mt-2"><Card>
-    <Card.Header as="h4">{props.hike.label}</Card.Header>
+    <Card.Header as="h4">{props.hike.IDHike}</Card.Header>
     <Card.Body>
-      <Card.Text>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id laoreet elit. 
-      Vestibulum vel diam vel nunc cursus posuere. Phasellus et porttitor augue.
-      </Card.Text>
+      <Card.Text>{props.hike.Description}</Card.Text>
     </Card.Body>
   </Card>
   </Col></>);
