@@ -6,7 +6,10 @@ describe('validate if all the required data are inserted', () => {
     beforeEach(() => {
         cy.visit('/parking');
     });
-
+    Cypress.on('uncaught:exception', (err, runnable) => {
+        return false
+    })
+    
     it("just click on the 'save' button", () => {
         cy.contains("Save").click();
     });

@@ -6,6 +6,9 @@ describe('validate if all the required data are inserted', () => {
     beforeEach(() => {
         cy.visit('/login');
     });
+    Cypress.on('uncaught:exception', (err, runnable) => {
+        return false
+    })
 
     it("just click on the 'Submit' button", () => {
         cy.contains("Submit").click();
