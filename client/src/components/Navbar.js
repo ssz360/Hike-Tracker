@@ -12,6 +12,7 @@ function Header() {
             <Navbar.Brand href="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
             <Nav>
                 <Nav.Link href="/parking" className="px-4">Parking lots</Nav.Link>
+                <Nav.Link href="/newhike" className="px-4">Add Hike</Nav.Link>
             </Nav>
         </Navbar>
     </>);

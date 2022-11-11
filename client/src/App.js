@@ -4,7 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Header } from './components';
-import { ParkingLot, HikesList } from './pages';
+import { ParkingLot, HikesList, NewHike } from './pages';
 import { useState, useEffect } from 'react';
 import API from './API.js';
 
@@ -96,6 +96,7 @@ function App() {
             <Routes>
               <Route path='/' element={<HikesList hikes={hikes} filtering={filtering}/>} />
               <Route path='/parking' element={<ParkingLot/>} />
+              <Route path='/newhike' element={<NewHike/>} />
             </Routes>
           </Col>
         </Row>
