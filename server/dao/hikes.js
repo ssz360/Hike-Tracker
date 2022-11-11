@@ -9,7 +9,7 @@ getHikesList = async () => new Promise((resolve, reject) => {
             reject(err);
             return;
         }
-        const hikes = row.map((h) => ({IDHike: h.IDHike, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+        const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
         resolve(hikes);
     });
 });
@@ -35,7 +35,7 @@ getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expected
                 reject(err);
                 return;
             }
-            const hikes = row.map((h) => ({IDHike: h.IDHike, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+            const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
             resolve(hikes);
         });
     } else {   
@@ -44,7 +44,7 @@ getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expected
                 reject(err);
                 return;
             }
-            const hikes = row.map((h) => ({IDHike: h.IDHike, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+            const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
             resolve(hikes);
         });
     }
