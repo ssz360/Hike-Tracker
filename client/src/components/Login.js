@@ -44,7 +44,7 @@ function Login(props) {
                                 props.setLogged(true);
                                 navigate('/' + emp.type + '/' + emp.username);
                             } catch (error) {
-                                setError(true);
+                                setError("Error during login");
                             }
                         }
                     }}>

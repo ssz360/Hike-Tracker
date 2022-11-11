@@ -81,11 +81,11 @@ function SignUp(props) {
 
                         else {
                             try {
-                                const usr = await API.signup(email, password, name, surname, phoneNumber);
+                                const usr = await API.register(email, password, name, surname, phoneNumber);
                                 props.setLogged(true);
                                 navigate('/' + usr.type + '/' + usr.username);
                             } catch (error) {
-                                setError("Missing backend");
+                                setError("Error during registration");
                             }
                         }
                     }}>
