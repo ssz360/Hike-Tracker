@@ -81,6 +81,7 @@ function HikesList(props){
                 <Display displayedHikes={displayedHikes}/>
               }
         </Row>
+        <div className="mb-5"> </div>
         </>
       )
 
@@ -98,6 +99,8 @@ function HikeRow(props){
     <Card.Header as="h4">{props.hike.Name}</Card.Header>
     <Card.Body>
       <Card.Text>{props.hike.Description}</Card.Text>
+      <Card.Text><strong>Ascent:</strong>{props.hike.Ascent}mt <br></br>
+      <strong>Length:</strong> {props.hike.Length}km</Card.Text>
     </Card.Body>
   </Card>
   </Col></>);
