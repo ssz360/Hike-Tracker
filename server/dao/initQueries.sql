@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS USERS (
 
 INSERT INTO HIKES (Name ,Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, ReferencePoints, Description)
 VALUES  ('Beccetto Bagnour',1, 1, 200, 'Tourist', 'Myhouse', 'YourHouse', NULL, 'This is a hike'),
-	('Rocciamelone',1, 1, 250, 'Tourist', 'Myhouse', 'YourHouse',NULL,'WOoow'),
+	('Rocciamelone',1, 1.5, 350, 'Tourist', 'Myhouse', 'YourHouse',NULL,'WOoow'),
 	('MonteBianco',6, 3.5, 400, 'Hiker', 'Myhouse', 'YourHouse',NULL,'Description prova prova'),
 	('Death Mountain',12, 4, 850, 'Professional hiker', 'Myhouse', 'YourHouse',NULL,'WOoow');
 

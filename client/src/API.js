@@ -21,6 +21,9 @@ async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, ex
         const thisURL = "hikes";
         fetch(new URL(thisURL, APIURL), {
             method: 'POST',
+            headers:{
+                "Content-type": "application/json"
+            },
             body: JSON.stringify({lengthMin : lengthMin, lengthMax : lengthMax, expectedTimeMin : expectedTimeMin, 
                 expectedTimeMax : expectedTimeMax, ascentMin : ascentMin, ascentMax : ascentMax, difficulty : difficulty}),
         })

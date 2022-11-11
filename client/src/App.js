@@ -36,9 +36,13 @@ function App() {
       let ascentMin = null;
       let ascentMax = null;
 
+      if(dif == ""){
+        dif = null;
+      }
+
       if(len==1){
-        lengthMin=0;
-        lengthMax=5;  
+        lengthMin="0";
+        lengthMax="5";  
       }
       else if(len==2){
         lengthMin=6;
