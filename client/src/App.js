@@ -23,7 +23,7 @@ function App() {
               <Route path='/' element={<h1>Hike Tracker!</h1>} />
               <Route path='/parking' element={<ParkingLot/>} />
               <Route path='/login' element={<Login setLogged={setLogged}/>}/>
-              <Route path='/signup' element={<SignUp/>}/>
+              <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
             </Routes>
           </Col>
         </Row>
