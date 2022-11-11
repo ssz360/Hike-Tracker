@@ -7,9 +7,12 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local'); 
 const session=require('express-session');
 const cors = require('cors');
+const user = require("./user");
+const tokens = require("./tokens");
+
 app.use(express.json());
 passport.use(new LocalStrategy((username, password, callback)=>{
-    users.login(username, password).then((user) => { 
+    user.login(username, password).then((user) => { 
         if (!user)  return callback(null, false, { message: 'Incorrect username and/or password.' });
         return callback(null, user);
     }); 
@@ -50,6 +53,10 @@ app.post('/api/login', passport.authenticate('local'), (req,res) => {
     // req.user contains the authenticated user.
     res.json({username:req.user.username,type:req.user.type});
 });
+
+app.post("/api/register", user.register);
+app.post("/api/resendVerification", tokens.newVerification);
+app.get("/api/verify/:token", tokens.verify);
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
