@@ -12,6 +12,8 @@ function Header() {
             <Navbar.Brand href="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
             <Nav>
                 <Nav.Link href="/parking" className="px-4">Parking lots</Nav.Link>
+                <Nav.Link href="/login" className="px-4">Sign in</Nav.Link>
+                <Nav.Link href="/signup" className="px-4">Sign up</Nav.Link>
             </Nav>
         </Navbar>
     </>);
