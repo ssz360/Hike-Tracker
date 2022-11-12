@@ -28,14 +28,24 @@ const sendEmail = async (email, token) => {
 	}
 };
 
-exports.newVerification = async (req, res) => {
+exports.newVerification = async email => {
 	try {
-		const email = req.body.username;
 		let token = await tokensDao.getTokenByEmail(email);
 		if (!token) {
 			token = crypto.randomBytes(32).toString("hex");
 			await tokensDao.insertNewToken(email, token);
 		}
+		await sendEmail(email, token);
+		return true;
+	} catch (err) {
+		return false;
+	}
+};
+
+exports.resendVerification = async (req, res) => {
+	try {
+		const email = req.body.username;
+		let token = await tokensDao.getTokenByEmail(email);
 		await sendEmail(email, token);
 		return res.status(200).end();
 	} catch (err) {
