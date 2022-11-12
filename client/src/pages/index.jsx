@@ -1,3 +1,4 @@
 import ParkingLot from "./ParkingLot";
+import NewHike from "./NewHike";
 
-export { ParkingLot };
+export { ParkingLot, NewHike };
