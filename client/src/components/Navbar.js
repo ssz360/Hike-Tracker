@@ -12,7 +12,7 @@ function Header(props) {
             <Navbar.Brand href="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
             {props.logged ? (<Nav>
                 <Nav.Link href="/parking" className="px-4">Parking lots</Nav.Link>
-                <Nav.Link href="/newhike" className="px-4">Add Hike</Nav.Link>
+                <Nav.Link href="/newhut" className="px-4">Add Hike</Nav.Link>
             
             </Nav>) : 
             (<Nav>

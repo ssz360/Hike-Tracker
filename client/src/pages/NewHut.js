@@ -1,6 +1,6 @@
 import { Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap';
 
-function NewHike() {
+function NewHut() {
     return(<>
         <Row className="mt-4">
             <h1>Add a new hike</h1>
@@ -52,4 +52,4 @@ function NewHike() {
     </>);
 }
 
-export default NewHike;
+export default NewHut;

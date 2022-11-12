@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 import { Header } from './components';
-import { ParkingLot, NewHike } from './pages';
+import { ParkingLot, NewHut } from './pages';
 import { Login } from './components';
 import { SignUp } from './components';
 function App() {
@@ -22,7 +22,7 @@ function App() {
             <Routes>
               <Route path='/' element={<h1>Hike Tracker!</h1>} />
               <Route path='/parking' element={<ParkingLot/>} />
-              <Route path='/newhike' element={<NewHike/>} />
+              <Route path='/newhut' element={<NewHut/>} />
               <Route path='/login' element={<Login setLogged={setLogged}/>}/>
               <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
             </Routes>
