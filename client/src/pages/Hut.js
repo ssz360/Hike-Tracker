@@ -1,16 +1,37 @@
-import { Row, Form, FloatingLabel, Button } from 'react-bootstrap';
+import { Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap';
 
 function Hut() {
     return(<>
         <Row className="mt-4">
-            <h1>Describe the hut</h1>
+            <h1>Add a new hut</h1>
         </Row>
-            <FloatingLabel controlId="floatingInput" label="Title" className="mb-3">
-                <Form.Control type="text" placeholder="Title"/>
+        <Row><Col xs={6}>
+            <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
+                <Form.Control type="text" placeholder="Name"/>
             </FloatingLabel>
-            <FloatingLabel controlId="floatingTextarea" label="Description" className="mb-3">
-                <Form.Control as="textarea" placeholder="Description" style={{height:"160px"}}/>
+            </Col>
+            <Col xs={6}>
+            <FloatingLabel controlId="floatingInput" label="Country" className="mb-3">
+                <Form.Control type="text" placeholder="Country"/>
             </FloatingLabel>
+            </Col>
+        </Row>    
+        <Row><Col xs={4}>
+            <FloatingLabel controlId="floatingInput" label="Number of guest" className="mb-3">
+                <Form.Control type="number" min={0} placeholder="NumOfGuest"/>
+            </FloatingLabel>
+            </Col>
+            <Col xs={4}>
+            <FloatingLabel controlId="floatingInput" label="Number of bedrooms" className="mb-3">
+            <Form.Control type="number" min={0} placeholder="NumOfRooms"/>
+            </FloatingLabel>
+            </Col>
+            <Col xs={4}>
+            <FloatingLabel controlId="floatingInput" label="Coordinates" className="mb-3">
+                <Form.Control type="text" placeholder="Coordinates"/>
+            </FloatingLabel>
+            </Col>
+        </Row>
         <Button>Save</Button>
     </>);
 }
