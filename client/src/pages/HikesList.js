@@ -1,5 +1,6 @@
 import { Col, Row, Form, Button, Card } from 'react-bootstrap';
 import { useState } from 'react';
+import HikeMap from '../components/hikeMap';
 
 function HikesList(props){
 
@@ -95,9 +96,12 @@ function Display(props){
 function HikeRow(props){
     return (
     <><Col xs={4} className="mt-2"><Card>
-    <Card.Header as="h4">{props.hike.IDHike}</Card.Header>
+    <Card.Header as="h4">
+      {props.hike.name}
+    </Card.Header>
     <Card.Body>
-      <Card.Text>{props.hike.Description}</Card.Text>
+    <HikeMap hike={props.hike}/>
+      <Card.Text>{props.hike.description}</Card.Text>
     </Card.Body>
   </Card>
   </Col></>);
