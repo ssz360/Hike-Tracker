@@ -10,9 +10,9 @@ function Header(props) {
     return(<>
         <Navbar bg="dark" variant="dark">
             <Navbar.Brand href="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
-            {props.logged ? (<Nav>
+            {!props.logged ? (<Nav>
                 <Nav.Link href="/parking" className="px-4">Parking lots</Nav.Link>
-                <Nav.Link href="/newhut" className="px-4">Add Hike</Nav.Link>
+                <Nav.Link href="/hut" className="px-4">Add Hut</Nav.Link>
             
             </Nav>) : 
             (<Nav>

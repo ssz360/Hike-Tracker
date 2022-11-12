@@ -1,4 +1,4 @@
 import ParkingLot from "./ParkingLot";
-import NewHut from "./NewHut";
+import Hut from "./Hut";
 
-export { ParkingLot, NewHut };
+export { ParkingLot, Hut };
