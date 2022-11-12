@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+import HikesForHikers from './pages/HikesForHikers';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -14,7 +15,7 @@ function App() {
         <Row>
           <Col>
             <Routes>
-              <Route path='/hiker-hikes'/>
+              <Route path='/hikes' element={<HikesForHikers/>} />
             </Routes>
           </Col>
         </Row>
