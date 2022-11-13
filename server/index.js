@@ -92,10 +92,10 @@ app.listen(port, () =>
   console.log(`Server started at http://localhost:${port}.`)
 );
 
-/*app.get('/api/hikes', async (req, res) => {
-    hikes.getHikesList()
+app.get('/api/hikes', async (req, res) => {
+    hikesdao.getHikesList()
       .then(hikes => {res.json(hikes)})
       .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
-  });*/
+  });
 
 
