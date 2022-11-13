@@ -1,6 +1,39 @@
 const db=require('./dao');
 const MAXDOUBLE = 4294967295;
 
+getHikesWithMapList = async () => new Promise((resolve, reject) => {
+    const sql = 'SELECT H.IDHike AS IDHike,Name,Length,ExpectedTime,Ascent,Difficulty,StartPoint,EndPoint,ReferencePoints,Description,Coordinates,Center FROM HIKES H,HIKESMAPDATA M WHERE H.IDHike=M.IDHike'              
+    db.all(sql, [], async (err, rows) => {
+        if(err) {
+            reject(err);
+            return;
+        }
+        resolve(rows.map(h=>({id:h.IDHike,name:h.Name,length:h.Length,
+            expectedTime:h.ExpectedTime,ascent:h.Ascent,
+            difficulty:h.Difficulty,startPoint:h.StartPoint,
+            endPoint:h.EndPoint,referencePoints:h.ReferencePoints,
+            description:h.Description,coordinates:JSON.parse(h.Coordinates),
+            center:JSON.parse(h.Center)})));
+    });
+});
+
+newHike=async (name,author,len,ascent,desc,difficulty,startPoint,endPoint,referencePoints,coordinates,center,bounds)=>new Promise((resolve, reject) => {
+    const sqlhike="INSERT INTO HIKES (Name , Author, Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, ReferencePoints, Description) VALUES(?,?,?,?,?,?,?,?,?,?)";
+    const sqlmap="INSERT INTO HIKESMAPDATA(Coordinates,Center,Bounds) VALUES(?,?,?)";
+    db.run(sqlhike,[name,author,len,0,ascent,difficulty,startPoint,endPoint,referencePoints,desc],err=>{
+        if (err){
+            console.log("Err hike query",err);
+            reject({status:503,message:{err}});
+        }
+        else db.run(sqlmap,[coordinates,center,bounds],errmap=>{
+            if (errmap){
+                console.log("Err hikemapdata",err);
+                reject({status:503,message:{err}});
+            }
+            else resolve();
+        });
+    });
+});
 
 getHikesList = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKES'              
@@ -50,5 +83,5 @@ getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expected
     }
 });
 
-const hikes = {getHikesList, getHikesListWithFilters}
+const hikes = {getHikesList,getHikesWithMapList, getHikesListWithFilters,newHike};
 module.exports = hikes;

@@ -1,3 +1,8 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+import HikesTable from './components/hikesTable';
+import LocalGuide from './components/localGuide';
+import GlobalMap from './components/globalMap';
 // import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
