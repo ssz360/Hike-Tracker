@@ -14,17 +14,25 @@ import { useState, useEffect } from 'react';
 import API from './API.js';
 
 function App() {
-  // const [logged,setLogged]=useState(false);
+  const [logged,setLogged]=useState(false);
 
   const [hikes, setHikes] = useState([]);
   const [message, setMessage] = useState('');
 
 
   useEffect(() => {
-    API.getHikesList()
-      .then((hikes) => setHikes(hikes))
-      .catch(err => setMessage(err));
-  }, [])
+    const getHikesUseEff=async ()=>{
+      try {
+        let h=null;
+        if (logged) h=await API.getHikersHikesList();
+        else h=await API.getHikesList();
+        setHikes(h);
+      } catch (error) {
+        setMessage(error);
+      }
+    }
+    getHikesUseEff();
+}, [])
 
   async function filtering(area, len, dif, asc, time){
     //lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty
@@ -99,7 +107,7 @@ function App() {
         <Row>
           <Col>
             <Routes>
-              <Route path='/' element={<HikesList hikes={hikes} filtering={filtering}/>} />
+              <Route path='/' element={<HikesList logged={logged} hikes={hikes} filtering={filtering}/>} />
               <Route path='/parking' element={<ParkingLot/>} />
             </Routes>
           </Col>

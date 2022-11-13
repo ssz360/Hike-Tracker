@@ -64,7 +64,7 @@ app.post('/api/login', passport.authenticate('local'), (req,res) => {
 
 app.get('/api/hiker/hikes',isLoggedIn,async (req,res)=>{
     try {
-        const ret=await hikesdao.getHikesWithMapList();
+        const ret=await hikes.getHikesWithMapList();
         res.status(200).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message);
@@ -73,7 +73,6 @@ app.get('/api/hiker/hikes',isLoggedIn,async (req,res)=>{
 
 app.post('/api/newHike',isLoggedIn,upload.single('file'),async (req,res)=>{
     try {
-        console.log("body",req.body);
         await hikes.newHike(req.body["name"],req.user,req.body["description"],req.body["difficulty"],req.file.buffer.toString());
         res.status(201).end();
     } catch (error) {
@@ -88,14 +87,14 @@ app.post('/api/hikes', async (req, res) => {
         .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
 });
 
+app.get('/api/hikes', async (req, res) => {
+    hikesdao.getHikesList()
+      .then(hikes => {res.json(hikes)})
+      .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
+  });
+
 app.listen(port, () =>
   console.log(`Server started at http://localhost:${port}.`)
 );
-
-/*app.get('/api/hikes', async (req, res) => {
-    hikes.getHikesList()
-      .then(hikes => {res.json(hikes)})
-      .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
-  });*/
 
 

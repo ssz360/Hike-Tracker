@@ -90,7 +90,7 @@ function HikesList(props){
 
 
 function Display(props){
-    return props.displayedHikes.map((hike) => <HikeRow hike={hike}/>)
+    return props.displayedHikes.map((hike) => <HikeRow key={hike.id} hike={hike}/>)
 }
 
 
@@ -101,7 +101,7 @@ function HikeRow(props){
       {props.hike.name}
     </Card.Header>
     <Card.Body>
-    <HikeMap hike={props.hike}/>
+      {props.logged?<HikeMap hike={props.hike}/>:<></>}
       <Card.Text>{props.hike.description}</Card.Text>
     </Card.Body>
   </Card>
