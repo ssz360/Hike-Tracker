@@ -8,7 +8,7 @@ async function insertHut(name, country, numberOfGuests, numberOfBedrooms, coordi
             headers:{
                 "Content-type": "application/json"
             },
-            body: JSON.stringify({name : name, country: country, numberOfGuests: numberOfGuests, numberOfBedrooms: numberOfBedrooms, coordinate: coordinate}),
+            body: JSON.stringify({name, country, numberOfGuests, numberOfBedrooms, coordinate}),
         })
             .then((response) => {
                 if (response.ok) {

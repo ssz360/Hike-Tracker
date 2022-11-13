@@ -9,7 +9,7 @@ function Hut(props) {
     const [country, setCountry] = useState("");
     const [numGuest, setNumGuest] = useState("");
     const [numBed, setNumBed] = useState("");
-    const [coord, setCoord] = useState("41.000144, 14.534893")
+    const [coord, setCoord] = useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -17,7 +17,7 @@ function Hut(props) {
     
     }
 
-    return(<>{openArea ? (<PointMap openArea={openArea} setOpenArea={setOpenArea}/>) : <></>}
+    return(<>{openArea ? (<PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoord}/>) : <></>}
         <Row className="mt-4">
             <h1>Add a new hut</h1>
         </Row>

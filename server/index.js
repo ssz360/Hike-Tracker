@@ -95,8 +95,8 @@ app.post('/api/huts', async (req, res) => {
     //     "coordinates":"41.000144, 14.534893"
     //  }
 
-    const { name, country, numberOfGuests, numberOfBedrooms, coordinates } = req.body;
-    huts.insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinates)
+    const { name, country, numberOfGuests, numberOfBedrooms, coordinate } = req.body;
+    huts.insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate)
         .then(lastId => res.json(lastId))
         .catch(err => res.status(500).json('Error on inserting hut: \r\n' + err));
 });

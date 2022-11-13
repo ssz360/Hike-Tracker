@@ -32,6 +32,8 @@ function PointMap(props){
                         e.preventDefault();
                         e.stopPropagation();
                         props.setOpenArea(false);
+                        props.setCoord(coors);
+                        console.log(coors);
                     }}>Submit</Button>
                 </Modal.Footer>
             </Modal>
