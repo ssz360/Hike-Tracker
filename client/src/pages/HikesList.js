@@ -1,15 +1,17 @@
 import { Col, Row, Form, Button, Card } from 'react-bootstrap';
 import { useState } from 'react';
+import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
 
 function HikesList(props){
 
     let displayedHikes = [];
-    const [area, setArea] = useState("");
+    const [area, setArea] = useState();
     const [len, setLen] = useState("");
     const [dif, setDif] = useState("");
     const [asc, setAsc] = useState("");
     const [time, setTime] = useState("");
+    const [openArea, setOpenArea] = useState(false);
 
 
     props.hikes.forEach(hike => displayedHikes.push(hike));
@@ -22,17 +24,15 @@ function HikesList(props){
     }
 
     return (
-        <><Row className="mt-2">
+        <>{openArea ? (<AreaMap area={area} setArea={setArea} openArea={openArea} setOpenArea={setOpenArea}/>) : <></>}
+        <Row className="mt-2">
         <div className="text-center"><h4>Search your favorite hike with the filters!</h4></div>
         </Row>
         <div className="mt-2">
         <Row className="justify-content-md-center">
-            <Col xs lg="3"> <Form.Select aria-label="Area" onChange={(event) => setArea(event.target.value)}>
-                    <option value="">Area</option>
-                    <option value="one">One</option>
-                    <option value="two">Two</option>
-                    <option value="three">Three</option>
-                    </Form.Select>
+            <Col xs lg="3"><div className="d-grid gap-2"> 
+            <Button variant={area!==undefined?"success":"outline-dark"} onClick={() => setOpenArea(true)}>{area!==undefined?"Area selected!":"Select Area..."}</Button>
+            </div>
             </Col>
             
             <Col xs lg="3"> <Form.Select aria-label="Length" onChange={(event) => setLen(event.target.value)}>
@@ -56,9 +56,9 @@ function HikesList(props){
         <Row className="justify-content-md-center">
             <Col xs lg="3"> <Form.Select aria-label="Difficulty" onChange={(event) => setDif(event.target.value)}>
                     <option value ="">Difficulty</option>
-                    <option value="Tourist">Tourist</option>
-                    <option value="Hiker">Hiker</option>
-                    <option value="Professional hiker">Professional hiker</option>
+                    <option value="TOURIST">Tourist</option>
+                    <option value="HIKER">Hiker</option>
+                    <option value="PROFESSIONAL HIKER">Professional hiker</option>
                     </Form.Select>
             </Col>
             <Col xs lg="3"> <Form.Select aria-label="Expected Time" onChange={(event) => setTime(event.target.value)}>
