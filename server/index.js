@@ -94,9 +94,6 @@ app.post("/api/register", user.register);
 app.post("/api/resendVerification", isLoggedIn, tokens.resendVerification);
 app.get("/api/verify/:token", tokens.verify);
 
-app.listen(port, () =>
-    console.log(`Server started at http://localhost:${port}.`)
-);
 
 app.get('/api/hikes', async (req, res) => {
     hikes.getHikesList()
@@ -138,3 +135,7 @@ app.post('/api/huts', async (req, res) => {
         .then(lastId => res.json(lastId))
         .catch(err => res.status(500).json('Error on inserting hut: \r\n' + err));
 });
+
+app.listen(port, () =>
+    console.log(`Server started at http://localhost:${port}.`)
+);

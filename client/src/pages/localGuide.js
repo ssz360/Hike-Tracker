@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Alert, Button } from "react-bootstrap";
 import AddHikeForm from "../components/addHikeForm";
+import Hut from "./Hut";
 import ParkingLot from "./ParkingLot";
 
 

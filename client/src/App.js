@@ -10,13 +10,8 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Header } from './components';
-import { ParkingLot, HikesList } from './pages';
-import { useState, useEffect } from 'react';
+import { ParkingLot, HikesList,Hut} from './pages';
 import API from './API.js';
-
-
-import { Header } from './components';
-import { ParkingLot, Hut } from './pages';
 import { Login } from './components';
 import { SignUp } from './components';
 function App() {
@@ -105,7 +100,6 @@ function App() {
       throw error;
     }
   }
- const [logged,setLogged]=useState(false);
 
  async function newHut(name, country, numberOfGuests, numberOfBedrooms, coordinate){
   try {
