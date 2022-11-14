@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import HikesTable from './components/hikesTable';
-import LocalGuide from './components/localGuide';
+import LocalGuide from './pages/localGuide';
 import GlobalMap from './components/globalMap';
 // import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
@@ -109,6 +109,7 @@ function App() {
             <Routes>
               <Route path='/' element={<HikesList logged={logged} hikes={hikes} filtering={filtering}/>} />
               <Route path='/parking' element={<ParkingLot/>} />
+              <Route path='/localGuide' element={<LocalGuide></LocalGuide>}></Route>
             </Routes>
           </Col>
         </Row>

@@ -61,5 +61,20 @@ const getHikersHikesList= async ()=>{
     else throw res.status;
 }
 
-const API ={getHikesList,getHikesListWithFilters,getHikersHikesList}
+const addHike= async (file,name,desc,difficulty)=>{
+    const data=new FormData();
+    data.append('file',file);
+    data.append('name',name);
+    data.append('description',desc);
+    data.append('difficulty',difficulty);
+    const res=await fetch('http://localhost:3001/api/newHike',{
+        method:'POST',
+        body: data
+    });
+    const ret=await res.json();
+    if(res.ok) return;
+    else throw ret;
+}
+
+const API ={getHikesList,getHikesListWithFilters,getHikersHikesList,addHike}
 export default API;

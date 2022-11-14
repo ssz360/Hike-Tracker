@@ -71,8 +71,10 @@ app.get('/api/hiker/hikes',isLoggedIn,async (req,res)=>{
     }
 })
 
-app.post('/api/newHike',isLoggedIn,upload.single('file'),async (req,res)=>{
+app.post('/api/newHike',upload.single('file'),async (req,res)=>{
     try {
+        res.setHeader("Access-Control-Allow-Origin","*");
+
         await hikes.newHike(req.body["name"],req.user,req.body["description"],req.body["difficulty"],req.file.buffer.toString());
         res.status(201).end();
     } catch (error) {
