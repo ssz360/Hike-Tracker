@@ -47,22 +47,22 @@ getHikesList = async () => new Promise((resolve, reject) => {
     });
 });
 
-isHikeInArea= async (id,maxlen,minlen,maxlon,minlon)=> new Promise((resolve, reject) => {
+isHikeInArea= async (hike,maxlen,minlen,maxlon,minlon)=> new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKESMAPDATA WHERE IDHike=?';    
-    console.log("In ishikeinarea" ,id);          
-    db.get(sql, [id], (err, row) => {
+    console.log("In ishikeinarea" ,hike.IDHike,"and ",maxlen,minlen,maxlon,minlon);          
+    db.get(sql, [hike.IDHike], (err, row) => {
         if(err) {
             console.log("Eerr",err);
             resolve(false);
             return;
         }
-        console.log("bbb");
+        console.log("bbb",row);
         let b;
         const center=JSON.parse(row.Center);
         if (center[0]<=maxlen && center[0]>=minlen && center[1]<=maxlon && center[1]>=minlon)   b=true;
         else b=false;
-        console.log(b,"for id",id);
-        resolve(b?id:-1);
+        console.log(b,"for id",hike.IDHike);
+        resolve(b?hike:undefined);
     });
 });
 
@@ -77,34 +77,60 @@ getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expected
     
     const ascMin = ascentMin == null ? 0 : ascentMin;
     const ascMax = ascentMax == null ? MAXDOUBLE : ascentMax;
-
+    console.log("lenMin",lenMin,"lenMax",lenMax,"expmin",expMin,"expmax",expMax,"ascmin",ascMin,"ascmax",ascMax);
     let sql2 = sql;
     
     if (difficulty != null) {
         sql2 = sql + " AND Difficulty = ?";
+        console.log("Sql ",sql2);
         db.all(sql2, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, difficulty], (err, row) => {
             if(err) {
                 reject(err);
                 return;
             }
             let hikes;
-            if(maxlen===undefined) hikes=row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
-            else hikes=row.filter(r=>isHikeInArea(r.IDHike,maxlen,minlen,maxlon,minlon)).map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
-            console.log("hikes",hikes);
-            resolve(hikes);
+            console.log("Rows are",row);
+            if(maxlen===undefined){
+                resolve(hikes);
+                hikes=row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+            }
+            else{
+                const proms=[];
+                let hikes=[];
+                row.forEach(r=>proms.push(isHikeInArea({IDHike: r.IDHike, Name: r.Name, Length: r.Length, ExpectedTime: r.ExpectedTime, Ascent: r.Ascent, Difficulty: r.Difficulty, StartPoint: r.StartPoint, EndPoint: r.EndPoint, ReferencePoints: r.ReferencePoints, Description: r.Description},maxle,minlen,maxlon,minlon)));
+                Promise.all(proms).then(res=>{
+                    res.forEach(h=>{
+                        if(h!==undefined) hikes.push(h);
+                    });
+                    console.log("hikes with area",hikes);
+                    resolve(hikes);
+                });
+            }
         });
     } else {   
+        console.log("Sql no  diff ",sql2);
         db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax], (err, row) => {
             if(err) {
                 reject(err);
                 return;
             }
-            let hikes;
-            if (maxlen===undefined) hikes=row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
-            else
-                hikes=row.filter(r=>isHikeInArea(r.IDHike,maxlen,minlen,maxlon,minlon)).map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
-            console.log("hikes",hikes);
-            resolve(hikes);
+            let hikes=[];
+            console.log("Rows are",row);
+            if (maxlen===undefined){
+                hikes=row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}));
+                resolve(hikes);
+            }
+            else{
+                const proms=[];
+                row.forEach(r=>proms.push(isHikeInArea({IDHike: r.IDHike, Name: r.Name, Length: r.Length, ExpectedTime: r.ExpectedTime, Ascent: r.Ascent, Difficulty: r.Difficulty, StartPoint: r.StartPoint, EndPoint: r.EndPoint, ReferencePoints: r.ReferencePoints, Description: r.Description},maxlen,minlen,maxlon,minlon)));
+                Promise.all(proms).then(res=>{
+                    res.forEach(h=>{
+                        if(h!==undefined) hikes.push(h);
+                    });
+                    console.log("hikes with area",hikes);
+                    resolve(hikes);
+                });
+            }
         });
     }
 });

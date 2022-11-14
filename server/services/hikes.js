@@ -1,10 +1,10 @@
 const hikesdao=require('../dao/hikes');
 const usersdao=require('../dao/users');
 const gpxParser = require('gpxparser');
-const newHike=async (name,user,desc,difficulty,file)=>{
+const newHike=async (name,desc,difficulty,file)=>{
     try {
-        const typeUser=await usersdao.getUserType(user);
-        if(typeUser!=="Local Guide")    throw {status:401,message:"This type of user can't describe a new hut"};
+        //const typeUser=await usersdao.getUserType(user);
+        //if(typeUser!=="Local Guide")    throw {status:401,message:"This type of user can't describe a new hut"};
         const gpx = new gpxParser();gpx.parse(file);
         if(gpx.tracks[0]===undefined) throw {status:244,message:"The gpx file provided is not a valid one"}
         const coors=[];
@@ -17,7 +17,7 @@ const newHike=async (name,user,desc,difficulty,file)=>{
             [Math.max(...lats), Math.max(...lons)],
             [Math.min(...lats), Math.min(...lons)]
         ]);
-        await hikesdao.newHike(name,user,len,ascent,desc,difficulty.toUpperCase(),JSON.stringify(coors[0]),JSON.stringify(coors[coors.length-1]),"",JSON.stringify(coors),center,bounds);
+        await hikesdao.newHike(name,"",len,ascent,desc,difficulty.toUpperCase(),JSON.stringify(coors[0]),JSON.stringify(coors[coors.length-1]),"",JSON.stringify(coors),center,bounds);
     } catch (error) {
         throw {status:error.status,message:error.message};
     }

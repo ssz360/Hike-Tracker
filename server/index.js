@@ -99,7 +99,7 @@ app.post('/api/hikes', async (req, res) => {
         maxlen=Math.max(bounds[0][0],bounds[1][0]);
         minlen=Math.min(bounds[0][0],bounds[1][0]);
         maxlon=Math.max(bounds[0][1],bounds[1][1]);
-        minlon=Math.min(bounds[1][1],bounds[1][1]);
+        minlon=Math.min(bounds[0][1],bounds[1][1]);
         console.log("Maxlen",maxlen,"minlen",minlen,"maxlon",maxlon,"minlon",minlon);
     }
     hikesdao.getHikesListWithFilters(req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,maxlen,minlen,maxlon,minlon)
@@ -119,7 +119,7 @@ app.get('/api/hiker/hikes',isLoggedIn,async (req,res)=>{
 app.post('/api/newHike',upload.single('file'),async (req,res)=>{
     try {
         res.setHeader("Access-Control-Allow-Origin","*");
-        await hikes.newHike(req.body["name"],req.user,req.body["description"],req.body["difficulty"],req.file.buffer.toString());
+        await hikes.newHike(req.body["name"],"",req.body["description"],req.body["difficulty"],req.file.buffer.toString());
         res.status(201).end();
     } catch (error) {
         res.status(error.status).json(error.message);

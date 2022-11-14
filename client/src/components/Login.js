@@ -42,7 +42,7 @@ function Login(props) {
                             try {
                                 const emp = await API.login(username, password);
                                 props.setLogged(true);
-                                navigate('/' + emp.type + '/' + emp.username);
+                                navigate('/' + emp.type);
                             } catch (error) {
                                 setError("Error during login");
                             }

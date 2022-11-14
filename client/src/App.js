@@ -33,7 +33,7 @@ function App() {
       }
     }
     getHikesUseEff();
-}, [])
+}, [logged])
 
   async function filtering(area, len, dif, asc, time){
     //lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty
