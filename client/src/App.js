@@ -4,7 +4,7 @@ import HikesTable from './components/hikesTable';
 import LocalGuide from './pages/localGuide';
 import GlobalMap from './components/globalMap';
 // import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,16 +20,34 @@ function App() {
   const [hikes, setHikes] = useState([]);
   const [message, setMessage] = useState('');
   const [user,setUser]=useState('');
-
+  const location=useLocation();
+  const path=location.pathname;
+  const navigate=useNavigate();
   useEffect(() => {
     const getHikesUseEff=async ()=>{
       try {
         let h=null;
-        if (logged) h=await API.getHikersHikesList();
-        else h=await API.getHikesList();
+        h=await API.getHikersHikesList();
         setHikes(h);
+        setLogged(true);
       } catch (error) {
-        setMessage(error);
+        if(error.status===401){
+          try {
+            let hikesnotauth=await API.getHikesList();
+            setHikes(hikesnotauth);
+            setLogged(false);
+            if(path!=="/login") navigate('/');
+          } catch (error) {
+            setMessage(error.message);
+            setLogged(false);
+            if(path!=="/login") navigate('/');
+          }
+        }
+        else{
+          setLogged(false);
+          setMessage(error);
+          if(path!=="/login") navigate('/');
+        }
       }
     }
     getHikesUseEff();

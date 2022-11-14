@@ -64,11 +64,11 @@ async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, ex
                     });
                 } else {
                     response.json()
-                        .then((message) => { reject(message); })
+                        .then((msg) => { reject({status:response.status,message:msg}) })
                         .catch(() => { reject({ error: "Cannot parse server response. " }) });
                 }
             })
-            .catch(() => reject({ error: "Cannot communicate with the server. " }));
+            .catch(() => reject({ status:503, error: "Cannot communicate with the server. " }));
     });
 }
 
@@ -88,7 +88,7 @@ const getHikersHikesList= async (lengthMin, lengthMax, expectedTimeMin, expected
         console.log("Returning",arr);
         return arr;
     }
-    else throw res.status;
+    else throw {status:res.status,message:ret};
 }
 
 const addHike= async (file,name,desc,difficulty)=>{
