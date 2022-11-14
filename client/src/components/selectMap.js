@@ -21,9 +21,9 @@ function SelectMap(props) {
     map.selectArea.enable();
     map.selectArea.setControlKey(false);
     map.on("areaselected", (e) => {
-      console.log(e.bounds.toBBoxString()); // lon, lat, lon, lat
+      //console.log(e.bounds.toBBoxString()); // lon, lat, lon, lat
       props.setAreaBounds(e.bounds);
-      console.log("SELECTED ",e.bounds);
+      //console.log("SELECTED ",e.bounds);
     });
 
     // You can restrict selection area like this:
@@ -41,12 +41,12 @@ function SelectMap(props) {
         <div className={POSITION_CLASSES.topright}>
             <div className="leaflet-control">
                 {selecting?
-                    <Button variant="outline-info" onClick={()=>{console.log("Clicked to set false");setSelecting(false)}}>Move</Button>
+                    <Button variant="outline-info" onClick={()=>setSelecting(false)}>Move</Button>
                 :
-                    <Button variant="outline-danger" onClick={()=>{console.log("Clicked to set TRUEEE");setSelecting(true)}}>Select</Button>
+                    <Button variant="outline-danger" onClick={()=>setSelecting(true)}>Select</Button>
                 }
                 {props.areaBounds!==undefined?
-                  <Button variant="outline-danger" onClick={()=>{console.log("Clicked to set false");props.setAreaBounds(undefined)}}>Clear</Button>
+                  <Button variant="outline-danger" onClick={()=>props.setAreaBounds(undefined)}>Clear</Button>
                 :
                   <></>
                 }

@@ -12,5 +12,14 @@ getType = async () => new Promise((resolve, reject) => {
     });
 });
 
-const users = {getType}
+getUserType= async u=> new Promise((resolve, reject) => {
+    const sql = 'SELECT Type FROM USERS WHERE Username = ?'              
+    db.all(sql, [u], (err, row) => {
+        if(err) reject({status:503,message:err});
+        else if(row===undefined) reject({status:404,message:"This user doesn't exists"});
+        else resolve(row.Type);
+    });
+});
+
+const users = {getType,getUserType}
 module.exports = users;

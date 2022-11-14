@@ -6,7 +6,7 @@ import { Modal } from "react-bootstrap";
 function HikeMap(props){
     const limeOptions = { color: 'red' }
     const [show,setShow]=useState(false);
-    console.log("Displaying map with hike",props.hike);
+    //console.log("Displaying map with hike",props.hike);
     return(
         <>
             {show?
@@ -25,7 +25,7 @@ function HikeMap(props){
                         e.stopPropagation();
                         setShow(true);
                     }}>
-                        <MapContainer bounds={props.hike.bounds} style={{ height: "100%", minHeight: "100%" }} scrollWheelZoom={true}>
+                        <MapContainer bounds={props.hike.bounds} style={{ height: "100%", minHeight: "100%" }} scrollWheelZoom={false}>
                             <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                             <Polyline pathOptions={limeOptions} positions={props.hike.coordinates} />
                         </MapContainer>

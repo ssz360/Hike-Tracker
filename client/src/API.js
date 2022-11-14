@@ -35,7 +35,7 @@ async function getHikesList() {
                         resolve(arr);
                     });
                 } else {
-                    console.log("Error in gethikeslist");
+                    //console.log("Error in gethikeslist");
                     response.json()
                         .then((message) => { reject(message); })
                         .catch(() => { reject({ error: "Cannot parse server response. " }) });
@@ -85,7 +85,7 @@ const getHikersHikesList= async (lengthMin, lengthMax, expectedTimeMin, expected
     const ret=await res.json();
     if(res.ok){
         const arr=[];ret.forEach(h=>arr.push(new Hike(h.id,h.name,h.author,h.length,h.ascent,h.difficulty,h.expectedTime,h.startPoint,h.endPoint,h.referencePoints,h.description,h.coordinates,h.center,h.bounds)));
-        console.log("Returning",arr);
+        //console.log("Returning",arr);
         return arr;
     }
     else throw {status:res.status,message:ret};
@@ -97,15 +97,18 @@ const addHike= async (file,name,desc,difficulty)=>{
     data.append('name',name);
     data.append('description',desc);
     data.append('difficulty',difficulty);
-    console.log("Adding a new hike with formdata",data);
+    //console.log("Adding a new hike with formdata",data);
     const res=await fetch('http://localhost:3001/api/newHike',{
         method:'POST',
         credentials:"include",
         body: data
     });
-    const ret=await res.json();
+    //console.log("Finished the new hike query with res.status",res.status);
     if(res.ok) return;
-    else throw ret;
+    else{
+        const ret=await res.json();
+        throw ret;
+    }
 }
 
 const API ={getHikesList,getHikesListWithFilters,getHikersHikesList,addHike,insertHut}

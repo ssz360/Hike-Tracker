@@ -26,23 +26,18 @@ passport.use(new LocalStrategy((username, password, callback)=>{
 }));
 
 passport.serializeUser(function (user, cb) {
-    console.log("Serializing user",user);
     cb(null, user);
 });
 
 passport.deserializeUser(function (user, cb) { // this user is id + email + name
-    console.log("DESERIALIZING user",user);
     return cb(null, user);
     // if needed, we can do extra check here (e.g., double check that the user is still in the database, etc.)
 });
 
 const isLoggedIn = (req, res, next) => {
-    console.log("In isloggedin with",req.user);
     if (req.isAuthenticated()) {
-        console.log("LOGGED!");
         return next();
     }
-    console.log("NOT LOGGED!!!!!!!");
     return res.status(401).json({ error: 'Not authorized' });
 }
 const corsOptions = {
@@ -59,7 +54,6 @@ app.use(session({
 app.use(passport.authenticate('session'));
 
 app.delete('/api/logout', isLoggedIn, async (req, res) => {
-    console.log("LOGOUT LOGOUT");
     req.logOut(() => {
         return res.status(204).end();
     });
@@ -67,7 +61,6 @@ app.delete('/api/logout', isLoggedIn, async (req, res) => {
 
 app.post('/api/login', passport.authenticate('local'), (req, res) => {
 
-    console.log("Login corrected");
     // This function is called if authentication is successful.
     // req.user contains the authenticated user.
     res.json({ username: req.user.username, type: req.user.type });
@@ -76,10 +69,6 @@ app.post('/api/login', passport.authenticate('local'), (req, res) => {
 app.post("/api/register", user.register);
 app.post("/api/resendVerification", isLoggedIn, tokens.resendVerification);
 app.get("/api/verify/:token", tokens.verify);
-
-app.listen(port, () =>
-    console.log(`Server started at http://localhost:${port}.`)
-);
 
 app.get('/api/hikes', async (req, res) => {
     hikesdao.getHikesList()
@@ -90,7 +79,7 @@ app.get('/api/hikes', async (req, res) => {
 
 // every field can contain a value or be null -> everything null == getHikesList()
 app.post('/api/hikes', async (req, res) => {
-    console.log("In hikes");
+    //console.log("In hikes");
     let bounds=[];
     let maxlen,minlen,maxlon,minlon;
     if (req.body.area===undefined){
@@ -103,20 +92,20 @@ app.post('/api/hikes', async (req, res) => {
         const boundsa=req.body.area;
         bounds.push([boundsa._southWest.lat,boundsa._southWest.lng]);
         bounds.push([boundsa._northEast.lat,boundsa._northEast.lng]);
-        console.log(bounds);
+        //console.log(bounds);
         maxlen=Math.max(bounds[0][0],bounds[1][0]);
         minlen=Math.min(bounds[0][0],bounds[1][0]);
         maxlon=Math.max(bounds[0][1],bounds[1][1]);
         minlon=Math.min(bounds[0][1],bounds[1][1]);
     }
     hikesdao.getHikesListWithFilters(false,req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,maxlen,minlen,maxlon,minlon)
-        .then(hikes => { console.log("Returning",hikes); res.json(hikes) })
-        .catch(error => {console.log("Error",error);res.status(error.status).json(error.message).end()});
+        .then(hikes => res.json(hikes) )
+        .catch(error => res.status(error.status).json(error.message).end());
 });
 
 app.post('/api/user/hikes',isLoggedIn,async (req,res)=>{
     try {
-        console.log("In user/hikes");
+        //console.log("In user/hikes");
         let bounds=[];
         let maxlen,minlen,maxlon,minlon;
         if (req.body.area===undefined){
@@ -129,14 +118,14 @@ app.post('/api/user/hikes',isLoggedIn,async (req,res)=>{
             const boundsa=req.body.area;
             bounds.push([boundsa._southWest.lat,boundsa._southWest.lng]);
             bounds.push([boundsa._northEast.lat,boundsa._northEast.lng]);
-            console.log(bounds);
+            //console.log(bounds);
             maxlen=Math.max(bounds[0][0],bounds[1][0]);
             minlen=Math.min(bounds[0][0],bounds[1][0]);
             maxlon=Math.max(bounds[0][1],bounds[1][1]);
             minlon=Math.min(bounds[0][1],bounds[1][1]);
         }
         const ret=await hikesdao.getHikesListWithFilters(true,req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,maxlen,minlen,maxlon,minlon);
-        console.log("\n\n\n\tReturning\n",ret);
+        //console.log("\n\n\n\tReturning\n",ret);
         res.status(200).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message);
@@ -145,10 +134,12 @@ app.post('/api/user/hikes',isLoggedIn,async (req,res)=>{
 
 app.post('/api/newHike',isLoggedIn,upload.single('file'),async (req,res)=>{
     try {
-        console.log("In new HIKE with",req.file.buffer.toString())
+        //console.log("In new HIKE");
         await hikes.newHike(req.body["name"],req.user,req.body["description"],req.body["difficulty"],req.file.buffer.toString());
-        res.status(201).end();
+        //console.log("Finished new hike");
+        return res.status(201).end();
     } catch (error) {
+        //console.log("Error in index new hike",error);
         res.status(error.status).json(error.message);
     }
 })
@@ -188,3 +179,7 @@ app.post('/api/parking', async (req,res) => {
     res.status(503).json({error:`Database error during the creation of the parking lot`});
   }
 });
+
+app.listen(port, () =>
+    console.log(`Server started at http://localhost:${port}.`)
+);

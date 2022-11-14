@@ -42,7 +42,7 @@ function Login(props) {
                         else {
                             try {
                                 const emp = await api.login(username, password);
-                                console.log("emp is",emp);
+                                //console.log("emp is",emp);
                                 props.setUser(emp);
                                 props.setLogged(true);
                                 navigate('/');

@@ -12,7 +12,7 @@ function HikesList(props){
     const [asc, setAsc] = useState("");
     const [time, setTime] = useState("");
     const [openArea, setOpenArea] = useState(false);
-    console.log("Displaying with logged?",props.logged);
+    //console.log("Displaying with logged?",props.logged);
 
     props.hikes.forEach(hike => displayedHikes.push(hike));
 

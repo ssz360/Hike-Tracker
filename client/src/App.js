@@ -111,7 +111,7 @@ function App() {
       }
 
       const newList=logged?await API.getHikersHikesList(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif,area): await API.getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif,area);
-      console.log(newList);
+      //console.log(newList);
       setHikes(newList);
     } catch (error) {
       setHikes(-1);
@@ -121,7 +121,7 @@ function App() {
 
  async function newHut(name, country, numberOfGuests, numberOfBedrooms, coordinate){
   try {
-    console.log(name, country, numberOfGuests, numberOfBedrooms, coordinate);
+    //console.log(name, country, numberOfGuests, numberOfBedrooms, coordinate);
     await API.insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate);
   } catch (error) {
     throw error;

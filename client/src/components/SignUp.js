@@ -55,7 +55,7 @@ function SignUp(props) {
                         e.stopPropagation();
 
                         if (password !== password2) {
-                            console.log(password + " " + password2)
+                            //console.log(password + " " + password2)
                             setError('Passwords are different');
                         }
 
