@@ -8,21 +8,18 @@ import { Routes, Route } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Header } from './components';
-import { ParkingLot, HikesList,Hut} from './pages';
+import { ParkingLot, AddParkingLot,HikesList,Hut} from './pages';
 import API from './API.js';
-import { Login } from './components';
-import { SignUp } from './components';
 
 
 import { Header, Login, SignUp } from './components';
-import { ParkingLot, AddParkingLot } from './pages';
+import { useEffect, useState } from 'react';
 function App() {
   const [logged,setLogged]=useState(false);
 
   const [hikes, setHikes] = useState([]);
   const [message, setMessage] = useState('');
-
+  const [user,setUser]=useState('');
 
   useEffect(() => {
     const getHikesUseEff=async ()=>{
@@ -95,7 +92,7 @@ function App() {
         ascentMin=1001;
       }
 
-      const newList=await API.getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif,area);
+      const newList=logged?await API.getHikersHikesList(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif,area): await API.getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif,area);
       console.log(newList);
       setHikes(newList);
     } catch (error) {
@@ -115,7 +112,7 @@ function App() {
 
   return (
     <>
-      <Header logged={logged}/>
+      <Header logged={logged} user={user}/>
       <Container>
         <Row>
           <Col>
@@ -125,7 +122,7 @@ function App() {
               <Route path='/localGuide' element={<LocalGuide></LocalGuide>}></Route>
               <Route path='/hut' element={<Hut newHut={newHut}/>} />
               <Route path='/parking/add' element={<AddParkingLot/>} />
-              <Route path='/login' element={<Login setLogged={setLogged}/>}/>
+              <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
               <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
             </Routes>
           </Col>

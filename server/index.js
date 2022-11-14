@@ -14,29 +14,35 @@ const LocalStrategy = require('passport-local');
 const session = require('express-session');
 const cors = require('cors');
 const user = require("./user");
+const userdao= require('./dao/user-dao');
 const tokens = require("./tokens");
 
 app.use(express.json());
 passport.use(new LocalStrategy((username, password, callback)=>{
-    user.login(username, password).then((user) => { 
+    userdao.login(username, password).then((user) => { 
         if (!user)  return callback(null, false, { message: 'Incorrect username and/or password.' });
         return callback(null, user);
     });
 }));
 
 passport.serializeUser(function (user, cb) {
+    console.log("Serializing user",user);
     cb(null, user);
 });
 
 passport.deserializeUser(function (user, cb) { // this user is id + email + name
+    console.log("DESERIALIZING user",user);
     return cb(null, user);
     // if needed, we can do extra check here (e.g., double check that the user is still in the database, etc.)
 });
 
 const isLoggedIn = (req, res, next) => {
+    console.log("In isloggedin with",req.user);
     if (req.isAuthenticated()) {
+        console.log("LOGGED!");
         return next();
     }
+    console.log("NOT LOGGED!!!!!!!");
     return res.status(401).json({ error: 'Not authorized' });
 }
 const corsOptions = {
@@ -53,12 +59,15 @@ app.use(session({
 app.use(passport.authenticate('session'));
 
 app.delete('/api/logout', isLoggedIn, async (req, res) => {
+    console.log("LOGOUT LOGOUT");
     req.logOut(() => {
         return res.status(204).end();
     });
 })
 
 app.post('/api/login', passport.authenticate('local'), (req, res) => {
+
+    console.log("Login corrected");
     // This function is called if authentication is successful.
     // req.user contains the authenticated user.
     res.json({ username: req.user.username, type: req.user.type });
@@ -81,7 +90,7 @@ app.get('/api/hikes', async (req, res) => {
 
 // every field can contain a value or be null -> everything null == getHikesList()
 app.post('/api/hikes', async (req, res) => {
-    console.log("Received with area",req.body.area);
+    console.log("In hikes");
     let bounds=[];
     let maxlen,minlen,maxlon,minlon;
     if (req.body.area===undefined){
@@ -92,7 +101,6 @@ app.post('/api/hikes', async (req, res) => {
     }
     else{
         const boundsa=req.body.area;
-        console.log("parse",boundsa);
         bounds.push([boundsa._southWest.lat,boundsa._southWest.lng]);
         bounds.push([boundsa._northEast.lat,boundsa._northEast.lng]);
         console.log(bounds);
@@ -100,26 +108,45 @@ app.post('/api/hikes', async (req, res) => {
         minlen=Math.min(bounds[0][0],bounds[1][0]);
         maxlon=Math.max(bounds[0][1],bounds[1][1]);
         minlon=Math.min(bounds[0][1],bounds[1][1]);
-        console.log("Maxlen",maxlen,"minlen",minlen,"maxlon",maxlon,"minlon",minlon);
     }
-    hikesdao.getHikesListWithFilters(req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,maxlen,minlen,maxlon,minlon)
-        .then(hikes => { res.json(hikes) })
-        .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
+    hikesdao.getHikesListWithFilters(false,req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,maxlen,minlen,maxlon,minlon)
+        .then(hikes => { console.log("Returning",hikes); res.json(hikes) })
+        .catch(error => {console.log("Error",error);res.status(error.status).json(error.message).end()});
 });
 
-app.get('/api/hiker/hikes',isLoggedIn,async (req,res)=>{
+app.post('/api/user/hikes',isLoggedIn,async (req,res)=>{
     try {
-        const ret=await hikes.getHikesWithMapList();
+        console.log("In user/hikes");
+        let bounds=[];
+        let maxlen,minlen,maxlon,minlon;
+        if (req.body.area===undefined){
+            maxlen=undefined;
+            minlen=undefined;
+            maxlon=undefined;
+            minlon=undefined;
+        }
+        else{
+            const boundsa=req.body.area;
+            bounds.push([boundsa._southWest.lat,boundsa._southWest.lng]);
+            bounds.push([boundsa._northEast.lat,boundsa._northEast.lng]);
+            console.log(bounds);
+            maxlen=Math.max(bounds[0][0],bounds[1][0]);
+            minlen=Math.min(bounds[0][0],bounds[1][0]);
+            maxlon=Math.max(bounds[0][1],bounds[1][1]);
+            minlon=Math.min(bounds[0][1],bounds[1][1]);
+        }
+        const ret=await hikesdao.getHikesListWithFilters(true,req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,maxlen,minlen,maxlon,minlon);
+        console.log("\n\n\n\tReturning\n",ret);
         res.status(200).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message);
     }
 })
 
-app.post('/api/newHike',upload.single('file'),async (req,res)=>{
+app.post('/api/newHike',isLoggedIn,upload.single('file'),async (req,res)=>{
     try {
-        res.setHeader("Access-Control-Allow-Origin","*");
-        await hikes.newHike(req.body["name"],"",req.body["description"],req.body["difficulty"],req.file.buffer.toString());
+        console.log("In new HIKE with",req.file.buffer.toString())
+        await hikes.newHike(req.body["name"],req.user,req.body["description"],req.body["difficulty"],req.file.buffer.toString());
         res.status(201).end();
     } catch (error) {
         res.status(error.status).json(error.message);

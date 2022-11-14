@@ -14,9 +14,12 @@ function AddHikeForm(props){
             if(!props.difficulty) err+="No difficulty was selected. "
             if(!props.file) err+="The track file was not provided. ";
             if(err!=="") throw err;
-            await API.newHike(props.file,props.name,props.desc,props.difficulty);
+            console.log("Trying to send an api call")
+            await API.addHike(props.file,props.name,props.desc,props.difficulty);
+            console.log("Success in api call");
             setSuccess(true);
         } catch (error) {
+            console.log("Error in try catch",error);
             setSuccess(false);
             setError(error);
         }

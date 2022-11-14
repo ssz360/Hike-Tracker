@@ -59,7 +59,7 @@ async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, ex
             .then((response) => {
                 if (response.ok) {
                     response.json().then(ret=>{
-                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,"",h.Length,h.Ascent,h.Difficulty,"",h.StartPoint,h.EndPoint,h.ReferencePoints,h.Description,[[0,0]],[0,0])));
+                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.id,h.name,h.author,h.length,h.ascent,h.difficulty,h.expectedTime,h.startPoint,h.endPoint,h.referencePoints,h.description,[[0,0]],[0,0],[[0.1,0.1],[-0.1,-0.1]])));
                         resolve(arr);
                     });
                 } else {
@@ -72,13 +72,20 @@ async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, ex
     });
 }
 
-const getHikersHikesList= async ()=>{
-    const res=await fetch('http://localhost:3001/api/hiker/hikes');/*,{
-        credentials:"include"
-    });*/
+const getHikersHikesList= async (lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty, area)=>{
+    const res=await fetch('http://localhost:3001/api/user/hikes',{
+        credentials:"include",
+        method:"POST",
+        headers:{
+                "Content-type": "application/json"
+        },
+        body: JSON.stringify({lengthMin : lengthMin, lengthMax : lengthMax, expectedTimeMin : expectedTimeMin, 
+                expectedTimeMax : expectedTimeMax, ascentMin : ascentMin, ascentMax : ascentMax, difficulty : difficulty,area: area})
+    });
     const ret=await res.json();
     if(res.ok){
-        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,"",h.Length,h.Ascent,h.Difficulty,"",h.StartPoint,h.EndPoint,h.ReferencePoints,h.Description,[[0,0]],[0,0])));
+        const arr=[];ret.forEach(h=>arr.push(new Hike(h.id,h.name,h.author,h.length,h.ascent,h.difficulty,h.expectedTime,h.startPoint,h.endPoint,h.referencePoints,h.description,h.coordinates,h.center,h.bounds)));
+        console.log("Returning",arr);
         return arr;
     }
     else throw res.status;
@@ -90,8 +97,10 @@ const addHike= async (file,name,desc,difficulty)=>{
     data.append('name',name);
     data.append('description',desc);
     data.append('difficulty',difficulty);
+    console.log("Adding a new hike with formdata",data);
     const res=await fetch('http://localhost:3001/api/newHike',{
         method:'POST',
+        credentials:"include",
         body: data
     });
     const ret=await res.json();

@@ -12,6 +12,16 @@ function Header(props) {
         <Navbar bg="dark" variant="dark">
             <Navbar.Brand href="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
             {props.logged ? (<Nav>
+                {props.user.type==="localGuide"?
+                    <><Nav.Link href="/localGuide">Local guide dashboard</Nav.Link>
+                    <Nav.Link href="/" className="px-4" onClick={async e=>{
+                        try {
+                            await api.logout();
+                        } catch (error) {
+                            navigate('/');
+                        }
+                    }}>Log out</Nav.Link></>
+                :
                 <Nav.Link href="/" className="px-4" onClick={async e=>{
                     try {
                         await api.logout();
@@ -19,6 +29,7 @@ function Header(props) {
                         navigate('/');
                     }
                 }}>Log out</Nav.Link>
+            }
             </Nav>) : 
             (<Nav>
                 <Nav.Link href="/login" className="px-4">Sign in</Nav.Link>

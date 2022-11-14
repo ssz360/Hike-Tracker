@@ -12,7 +12,7 @@ function HikesList(props){
     const [asc, setAsc] = useState("");
     const [time, setTime] = useState("");
     const [openArea, setOpenArea] = useState(false);
-
+    console.log("Displaying with logged?",props.logged);
 
     props.hikes.forEach(hike => displayedHikes.push(hike));
 
@@ -79,7 +79,7 @@ function HikesList(props){
         </div>
         <Row className="mt-2">
               {
-                <Display displayedHikes={displayedHikes}/>
+                <Display logged={props.logged} displayedHikes={displayedHikes}/>
               }
         </Row>
         <div className="mb-5"> </div>
@@ -90,7 +90,7 @@ function HikesList(props){
 
 
 function Display(props){
-    return props.displayedHikes.map((hike) => <HikeRow key={hike.id} hike={hike}/>)
+    return props.displayedHikes.map((hike) => <HikeRow logged={props.logged} key={hike.id} hike={hike}/>)
 }
 
 
