@@ -62,7 +62,7 @@ isHikeInArea= async (id,maxlen,minlen,maxlon,minlon)=> new Promise((resolve, rej
         if (center[0]<=maxlen && center[0]>=minlen && center[1]<=maxlon && center[1]>=minlon)   b=true;
         else b=false;
         console.log(b,"for id",id);
-        resolve(b);
+        resolve(b?id:-1);
     });
 });
 
