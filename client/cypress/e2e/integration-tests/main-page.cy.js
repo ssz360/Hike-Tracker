@@ -17,4 +17,24 @@ describe('select listboxes and click search', () => {
 
         cy.get("button[type='submit']").click();
     });
+
+    
+    it("select on the map", () => {
+
+        cy.contains("Select Area...").click();
+
+        cy.get(".modal-body").contains("Select").click();
+        cy.contains("Move").should("be.visible");
+
+
+        cy.get(".modal-body").get('.leaflet-touch')
+            .trigger("mouseover")
+            .trigger("mousedown", { which: 1 })
+            .trigger("mousemove", { clientX: 10, clientY: 10, screenX: 10, screenY: 10, pageX: 10, pageY: 10 })
+            .trigger("mouseup", { which: 1 });
+
+        cy.contains("Clear").should("be.visible");
+
+        cy.get(".modal-footer").contains("Submit").click();
+    })
 })
