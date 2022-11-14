@@ -45,7 +45,7 @@ async function getHikesList() {
     });
 }
 
-async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty) {
+async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty, area) {
     return new Promise((resolve, reject) => {
         const thisURL = "hikes";
         fetch(new URL(thisURL, APIURL), {
@@ -54,7 +54,7 @@ async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, ex
                 "Content-type": "application/json"
             },
             body: JSON.stringify({lengthMin : lengthMin, lengthMax : lengthMax, expectedTimeMin : expectedTimeMin, 
-                expectedTimeMax : expectedTimeMax, ascentMin : ascentMin, ascentMax : ascentMax, difficulty : difficulty}),
+                expectedTimeMax : expectedTimeMax, ascentMin : ascentMin, ascentMax : ascentMax, difficulty : difficulty,area: area}),
         })
             .then((response) => {
                 if (response.ok) {

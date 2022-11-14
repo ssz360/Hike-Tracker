@@ -92,7 +92,7 @@ function App() {
         ascentMin=1001;
       }
 
-      const newList=await API.getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif);
+      const newList=await API.getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif,area);
       console.log(newList);
       setHikes(newList);
     } catch (error) {

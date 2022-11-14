@@ -47,7 +47,26 @@ getHikesList = async () => new Promise((resolve, reject) => {
     });
 });
 
-getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty) => new Promise((resolve, reject) => {
+isHikeInArea= async (id,maxlen,minlen,maxlon,minlon)=> new Promise((resolve, reject) => {
+    const sql = 'SELECT * FROM HIKESMAPDATA WHERE IDHike=?';    
+    console.log("In ishikeinarea" ,id);          
+    db.get(sql, [id], (err, row) => {
+        if(err) {
+            console.log("Eerr",err);
+            resolve(false);
+            return;
+        }
+        console.log("bbb");
+        let b;
+        const center=JSON.parse(row.Center);
+        if (center[0]<=maxlen && center[0]>=minlen && center[1]<=maxlon && center[1]>=minlon)   b=true;
+        else b=false;
+        console.log(b,"for id",id);
+        resolve(b);
+    });
+});
+
+getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty,maxlen,minlen,maxlon,minlon) => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKES WHERE Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ?';
     
     const lenMin = lengthMin == null ? 0 : lengthMin;
@@ -68,7 +87,10 @@ getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expected
                 reject(err);
                 return;
             }
-            const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+            let hikes;
+            if(maxlen===undefined) hikes=row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+            else hikes=row.filter(r=>isHikeInArea(r.IDHike,maxlen,minlen,maxlon,minlon)).map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+            console.log("hikes",hikes);
             resolve(hikes);
         });
     } else {   
@@ -77,7 +99,11 @@ getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expected
                 reject(err);
                 return;
             }
-            const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+            let hikes;
+            if (maxlen===undefined) hikes=row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+            else
+                hikes=row.filter(r=>isHikeInArea(r.IDHike,maxlen,minlen,maxlon,minlon)).map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+            console.log("hikes",hikes);
             resolve(hikes);
         });
     }

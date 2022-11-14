@@ -17,7 +17,7 @@ function Hut(props) {
     
     }
 
-    return(<>{openArea ? (<PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoord}/>) : <></>}
+    return(<>{openArea ? (<PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoord} coord={coord}/>) : <></>}
         <Row className="mt-4">
             <h1>Add a new hut</h1>
         </Row>

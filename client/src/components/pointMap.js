@@ -11,17 +11,16 @@ function GetPoint(props){
     return <></>
 }
 function PointMap(props){
-    const [coors,setCoors]=useState();
     return(
         <>
-            <Modal show={true}>
-                <Modal.Header>Select the desired area</Modal.Header>
+            <Modal show={props.openArea} onHide={e=>props.setOpenArea(false)}>
+                <Modal.Header closeButton>Select the desired area</Modal.Header>
                 <Modal.Body>
                     <MapContainer whenReady={m=>m.target.locate({setView:true})} center={[0,0]} zoom={13} style={{ height: "50vh", minHeight: "100%" }} scrollWheelZoom={true}>
                         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                        <GetPoint setCoors={setCoors}/>
-                        {coors!==undefined?
-                            <Marker position={coors}/>
+                        <GetPoint setCoors={props.setCoord}/>
+                        {props.coord!==undefined?
+                            <Marker position={props.coord}/>
                             :
                             <></>
                         }
@@ -32,8 +31,7 @@ function PointMap(props){
                         e.preventDefault();
                         e.stopPropagation();
                         props.setOpenArea(false);
-                        props.setCoord(coors);
-                        console.log(coors);
+                        props.setCoord(props.coord);
                     }}>Submit</Button>
                 </Modal.Footer>
             </Modal>
