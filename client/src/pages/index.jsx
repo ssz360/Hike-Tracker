@@ -1,4 +1,6 @@
 import ParkingLot from "./ParkingLot";
 import HikesList from "./HikesList";
 
-export { ParkingLot, HikesList };
+import Hut from "./Hut";
+
+export { ParkingLot, Hut ,HikesList};

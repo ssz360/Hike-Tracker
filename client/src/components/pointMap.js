@@ -17,7 +17,7 @@ function PointMap(props){
             <Modal show={true}>
                 <Modal.Header>Select the desired area</Modal.Header>
                 <Modal.Body>
-                    <MapContainer whenReady={m=>m.target.locate({setView:true})} center={[0,0]} zoom={13} style={{ height: "100vh", minHeight: "100%" }} scrollWheelZoom={true}>
+                    <MapContainer whenReady={m=>m.target.locate({setView:true})} center={[0,0]} zoom={13} style={{ height: "50vh", minHeight: "100%" }} scrollWheelZoom={true}>
                         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                         <GetPoint setCoors={setCoors}/>
                         {coors!==undefined?
@@ -27,6 +27,15 @@ function PointMap(props){
                         }
                     </MapContainer>
                 </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-success" onClick={e=>{
+                        e.preventDefault();
+                        e.stopPropagation();
+                        props.setOpenArea(false);
+                        props.setCoord(coors);
+                        console.log(coors);
+                    }}>Submit</Button>
+                </Modal.Footer>
             </Modal>
         </>
     )
