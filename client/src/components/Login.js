@@ -36,13 +36,13 @@ function Login(props) {
                         e.stopPropagation();
 
                         if (!emailValidator.is_email_valid(username)) {
-                            setError('Email is incorrect')
+                            setError('Email has a wrong format')
                         }
                         else {
                             try {
-                                const emp = await API.login(username, password);
+                                const usr = await API.login(username, password);
                                 props.setLogged(true);
-                                navigate('/' + emp.type + '/' + emp.username);
+                                navigate('/');
                             } catch (error) {
                                 setError("Error during login");
                             }

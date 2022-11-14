@@ -6,10 +6,9 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-import { Header } from './components';
+import { CheckEmail, Header, Login, SignUp  } from './components';
 import { ParkingLot, Hut } from './pages';
-import { Login } from './components';
-import { SignUp } from './components';
+
 function App() {
  const [logged,setLogged]=useState(false);
 
@@ -25,6 +24,7 @@ function App() {
               <Route path='/hut' element={<Hut/>} />
               <Route path='/login' element={<Login setLogged={setLogged}/>}/>
               <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
+              <Route path='/checkemail' element={<CheckEmail/>}/>
             </Routes>
           </Col>
         </Row>

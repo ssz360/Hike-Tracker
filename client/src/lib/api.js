@@ -9,9 +9,10 @@ const register=async(username,password, name, surname, phone)=>{
         body: JSON.stringify({username:username, password:password, first_name: name, last_name: surname, phone: phone}),
         credentials:"include"
     });
-    const emp=await res.json();
-    if(res.ok) return emp;
-    else throw emp;
+    const usr=await res.json();
+    console.log(usr);
+    if(res.ok) return usr;
+    else throw usr;
 }
 
 const login=async(username,password)=>{
