@@ -51,5 +51,23 @@ const logout=async()=>{
         throw ret;
     }
 }
-const api={login, logout, register};
+
+async function getParkings() {
+    const response = await fetch(APIBASE+'parkings');
+    const pks = await response.json();
+    if(response.ok) return pks;
+    else throw pks;
+};
+
+async function addParking(pk) {
+  const response = await fetch(APIBASE+'parking',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(pk)
+  });
+  if(response.ok) return;
+  else throw pk;
+};
+
+const api={login, logout, register, getParkings, addParking};
 export default api;

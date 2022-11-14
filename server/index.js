@@ -142,3 +142,22 @@ app.post('/api/huts', async (req, res) => {
         .then(lastId => res.json(lastId))
         .catch(err => res.status(500).json('Error on inserting hut: \r\n' + err));
 });
+app.get('/api/parkings', async (req,res) => {
+    parkings.getParkingsList()
+    .then(pks => {res.json(pks)})
+    .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
+});
+
+app.post('/api/parking', async (req,res) => {
+  const pk = {
+    "name":req.body.name,
+    "desc":req.body.desc,
+    "slots":req.body.slots
+  };
+  try {
+    await parkings.addParking(pk);
+    res.status(201).end();
+  } catch(err) {
+    res.status(503).json({error:`Database error during the creation of the parking lot`});
+  }
+});
