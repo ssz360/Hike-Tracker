@@ -63,7 +63,7 @@ function Hut() {
 			</Row>
 			<Button
 				onClick={async () => {
-					if (validateInfo(country, coordinate, setMessage)) {
+					if (validateInfo(name, country, numberOfGuests, numberOfBedrooms, coordinate, setMessage)) {
 						setMessage("");
 						await API.insertNewHut(name, country, numberOfGuests, numberOfBedrooms, coordinate);
 						navigate("/");
@@ -80,7 +80,15 @@ function Hut() {
 	);
 }
 
-const validateInfo = (country, coordinate, setMessage) => {
+const validateInfo = (name, country, numberOfGuests, numberOfBedrooms, coordinate, setMessage) => {
+	if ([name, country, numberOfGuests, numberOfBedrooms, coordinate, setMessage].some(t => t.length === 0)) {
+		setMessage("All fields should to be filled");
+		return false;
+	}
+	if (name.match(/^\s+$/)) {
+		setMessage("Invalid hut name.");
+		return false;
+	}
 	if (!country.match(/^[a-zA-Z]+[a-zA-Z]+$/)) {
 		setMessage("Invalid country name.");
 		return false;

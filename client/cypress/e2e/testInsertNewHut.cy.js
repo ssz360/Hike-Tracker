@@ -1,7 +1,7 @@
-const testFactory = (testName, country, cord, expectedWarning) => {
-	it("Test", () => {
+const testFactory = (testName, name, country, cord, expectedWarning) => {
+	it(testName, () => {
 		cy.reload();
-		cy.get("input[placeholder=Name]").type("Bad hut" + Math.floor(Math.random() * 10).toString());
+		cy.get("input[placeholder=Name]").type(name);
 		cy.get("input[placeholder=Country]").type(country);
 		cy.get("input[placeholder=NumOfGuest]").type(Math.floor(Math.random() * 100));
 		cy.get("input[placeholder=NumOfRooms]").type(Math.floor(Math.random() * 100));
@@ -113,15 +113,54 @@ describe("Login", () => {
 });
 
 describe("Test submit huts", () => {
-	testFactory("testInvalidCountryName", "123123213", "2,2", "country");
-	testFactory("testNonTwoDimensionalCoordiante1", "Italy", "1", "coordinates");
-	testFactory("testNonTwoDimensionalCoordiante2", "Italy", "1,2,3", "coordinates");
-	testFactory("testNonNumericalCoordiante", "Italy", "qwdqwd", "coordinates");
-	testFactory("testNonNumericalCoordiante", "Italy", "2,3123qwdqwd", "coordinates");
+	testFactory("testInvalidHutName", "     ", "123123213", "2,2", "hut");
+	testFactory(
+		"testInvalidCountryName",
+		"Bad hut" + Math.floor(Math.random() * 10).toString(),
+		"123123213",
+		"2,2",
+		"country"
+	);
+	testFactory(
+		"testNonTwoDimensionalCoordiante1",
+		"Bad hut" + Math.floor(Math.random() * 10).toString(),
+		"Italy",
+		"1",
+		"coordinates"
+	);
+	testFactory(
+		"testNonTwoDimensionalCoordiante2",
+		"Bad hut" + Math.floor(Math.random() * 10).toString(),
+		"Italy",
+		"1,2,3",
+		"coordinates"
+	);
+	testFactory(
+		"testNonNumericalCoordiante",
+		"Bad hut" + Math.floor(Math.random() * 10).toString(),
+		"Italy",
+		"qwdqwd",
+		"coordinates"
+	);
+	testFactory(
+		"testNonNumericalCoordiante",
+		"Bad hut" + Math.floor(Math.random() * 10).toString(),
+		"Italy",
+		"2,3123qwdqwd",
+		"coordinates"
+	);
+});
+
+describe("Empty Submit", () => {
+	it("Test", () => {
+		cy.reload();
+		cy.contains("Save").click();
+		cy.get("div[role=alert]").should("contain", "fields");
+	});
 });
 
 describe("Good Submit", () => {
-	it("Visit homepage", () => {
+	it("Test", () => {
 		cy.reload();
 		cy.get("input[placeholder=Name]").type("Good hut");
 		cy.get("input[placeholder=Country]").type("Italy");
