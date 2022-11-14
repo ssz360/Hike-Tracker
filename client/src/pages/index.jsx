@@ -1,3 +1,4 @@
 import ParkingLot from "./ParkingLot";
+import AddParkingLot from "./AddParkingLot";
 
-export { ParkingLot };
+export { ParkingLot, AddParkingLot };
