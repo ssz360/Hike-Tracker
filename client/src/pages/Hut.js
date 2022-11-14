@@ -7,13 +7,13 @@ function Hut(props) {
     const [openArea, setOpenArea] = useState(false);
     const [name, setName] = useState("");
     const [country, setCountry] = useState("");
-    const [numGuest, setNumGuest] = useState("");
-    const [numBed, setNumBed] = useState("");
-    const [coord, setCoord] = useState("");
+    const [numGuests, setNumGuests] = useState("");
+    const [numBeds, setNumBeds] = useState("");
+    const [coord, setCoord] = useState();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        props.newHut(name, country, numGuest, numBed, coord);
+        props.newHut(name, country, numGuests, numBeds, coord);
     
     }
 
@@ -35,12 +35,12 @@ function Hut(props) {
         <Row><Col xs={4}>
             <FloatingLabel controlId="floatingInput" label="Number of guest" className="mb-3">
                 <Form.Control type="number" min={0} placeholder="NumOfGuest" 
-                value={numGuest} onChange={(event) => setNumGuest(event.target.value)}/>
+                value={numGuests} onChange={(event) => setNumGuests(event.target.value)}/>
             </FloatingLabel>
             </Col>
             <Col xs={4}>
             <FloatingLabel controlId="floatingInput" label="Number of bedrooms" className="mb-3">
-            <Form.Control type="number" min={0} placeholder="NumOfRooms" value={numBed} onChange={(event) => setNumBed(event.target.value)}/>
+            <Form.Control type="number" min={0} placeholder="NumOfRooms" value={numBeds} onChange={(event) => setNumBeds(event.target.value)}/>
             </FloatingLabel>
             </Col>
             <Col xs={4}><div className="d-grid gap-2"> 
