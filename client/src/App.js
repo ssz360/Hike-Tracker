@@ -15,14 +15,15 @@ import API from './API.js';
 import { Header, Login, SignUp } from './components';
 import { useEffect, useState } from 'react';
 function App() {
+  
   const [logged,setLogged]=useState(false);
-
   const [hikes, setHikes] = useState([]);
   const [message, setMessage] = useState('');
   const [user,setUser]=useState('');
   const location=useLocation();
   const path=location.pathname;
   const navigate=useNavigate();
+
   useEffect(() => {
     const getHikesUseEff=async ()=>{
       try {
@@ -36,17 +37,17 @@ function App() {
             let hikesnotauth=await API.getHikesList();
             setHikes(hikesnotauth);
             setLogged(false);
-            if(path!=="/login") navigate('/');
+            if(path!=="/login" && path!=="/signup") navigate('/');
           } catch (error) {
             setMessage(error.message);
             setLogged(false);
-            if(path!=="/login") navigate('/');
+            if(path!=="/login" && path!=="/signup") navigate('/');
           }
         }
         else{
           setLogged(false);
           setMessage(error);
-          if(path!=="/login") navigate('/');
+          if(path!=="/login" && path!=="/signup") navigate('/');
         }
       }
     }

@@ -17,6 +17,7 @@ function SignUp(props) {
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     var emailValidator = require("node-email-validation");
 
@@ -83,7 +84,8 @@ function SignUp(props) {
                             try {
                                 const usr = await API.register(email, password, name, surname, phoneNumber);
                                 props.setLogged(true);
-                                navigate('/' + usr.type + '/' + usr.username);
+                                //navigate('/' + usr.type + '/' + usr.username);
+                                setSuccess('Registration completed. Please check your email for the confirmation link')
                             } catch (error) {
                                 setError("Error during registration");
                             }
@@ -125,6 +127,7 @@ function SignUp(props) {
                         </Form.Group>
 
                         {error != '' ? <Alert className="my-3" variant="danger">{error}</Alert> : <></>}
+                        {success != '' ? <Alert className="my-3" variant="success">{error}</Alert> : <></>}
                             <Button style={{ justifyContent: 'right'}} variant="secondary" type="submit">Submit</Button>
                     </Form>
                 </Col>
