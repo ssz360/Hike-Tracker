@@ -11,7 +11,7 @@ function SignUp(props) {
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
-    const [type, setType] = useState('');
+    //const [type, setType] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -125,6 +125,7 @@ function SignUp(props) {
                         </Form.Group>
 
                         {error != '' ? <Alert className="my-3" variant="danger">{error}</Alert> : <></>}
+                        {success != '' ? <Alert className="my-3" variant="success">{error}</Alert> : <></>}
                             <Button style={{ justifyContent: 'right'}} variant="secondary" type="submit">Submit</Button>
                     </Form>
                 </Col>

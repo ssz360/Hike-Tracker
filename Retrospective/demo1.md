@@ -13,11 +13,11 @@ sections:
 ### Macro statistics
 
 - Number of stories committed vs. done
-- - 6 vs 3
+- 6 vs 3
 - Total points committed vs. done 
-- - 25 vs 9
+- 25 vs 9
 - Nr of hours planned vs. spent (as a team)
-- - 77 vs 76
+- 77 vs 66
 
 **Remember** a story is done ONLY if it fits the Definition of Done:
 
@@ -33,16 +33,16 @@ sections:
 | Story | # Tasks | Points | Hours est. | Hours actual |
 | ----- | ------- | ------ | ---------- | ------------ |
 | #1    | 5       | 5      | 15         | 9            |
-| #2    | 6       | 3      | 15         |              |
+| #2    | 6       | 3      | 15         | 12             |
 | #3    | 4       | 3      | 7          | 10           |
-| #4    | 5       | 8      | 20         |              |
+| #4    | 5       | 8      | 20         | 12           |
 | #5    | 4       | 3      | 8          | 11           |
 | #6    | 4       | 3      | 8          | 7            |
 
 
 > place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
 
-- Hours per task average, standard deviation (estimate and actual)
+- Hours per task average, standard deviation (estimate and actual) 
 
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent - 1
 
@@ -51,13 +51,13 @@ sections:
 ## QUALITY MEASURES 
 
 - Unit Testing:
-  - Total hours estimated 
-  - Total hours spent
-  - Nr of automated unit test cases 
-  - Coverage (if available)
+  - Total hours estimated 8
+  - Total hours spent 4
+  - Nr of automated unit test cases 8
+  - Coverage (if available) not available
 - E2E testing:
-  - Total hours estimated
-  - Total hours spent
+  - Total hours estimated 16
+  - Total hours spent  13 
 - Code review 
   - Total hours estimated 4
   - Total hours spent 3
