@@ -37,7 +37,7 @@ function Login(props) {
                         e.stopPropagation();
 
                         if (!emailValidator.is_email_valid(username)) {
-                            setError('Email is incorrect')
+                            setError('Email has a wrong format')
                         }
                         else {
                             try {

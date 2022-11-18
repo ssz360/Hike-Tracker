@@ -52,4 +52,24 @@ function Hut(props) {
     </>);
 }
 
+const validateInfo = (name, country, numberOfGuests, numberOfBedrooms, coordinate, setMessage) => {
+	if ([name, country, numberOfGuests, numberOfBedrooms, coordinate, setMessage].some(t => t.length === 0)) {
+		setMessage("All fields should to be filled");
+		return false;
+	}
+	if (name.match(/^\s+$/)) {
+		setMessage("Invalid hut name.");
+		return false;
+	}
+	if (!country.match(/^[a-zA-Z]+[a-zA-Z]+$/)) {
+		setMessage("Invalid country name.");
+		return false;
+	}
+	if (!(coordinate.split(",").length === 2 && coordinate.split(",").every(t => t.match(/^([0-9]*[.])?[0-9]+$/)))) {
+		setMessage("The coordinates should be two numbers separated by comma");
+		return false;
+	}
+	return true;
+};
+
 export default Hut;

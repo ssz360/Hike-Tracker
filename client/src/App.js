@@ -12,7 +12,7 @@ import { ParkingLot, AddParkingLot,HikesList,Hut} from './pages';
 import API from './API.js';
 
 
-import { Header, Login, SignUp } from './components';
+import { Header, Login, SignUp,CheckEmail } from './components';
 import { useEffect, useState } from 'react';
 function App() {
   
@@ -143,6 +143,7 @@ function App() {
               <Route path='/parking/add' element={<AddParkingLot/>} />
               <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
               <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
+              <Route path='/checkemail' element={<CheckEmail/>}/>
             </Routes>
           </Col>
         </Row>
