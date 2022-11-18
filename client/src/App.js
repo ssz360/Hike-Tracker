@@ -9,6 +9,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ParkingLot, AddParkingLot,HikesList,Hut} from './pages';
+import HikesForHikers from './pages/HikesForHikers';
 import API from './API.js';
 
 
@@ -144,6 +145,7 @@ function App() {
               <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
               <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
               <Route path='/checkemail' element={<CheckEmail/>}/>
+              <Route path='/hikes' element={<HikesForHikers/>} />
             </Routes>
           </Col>
         </Row>
