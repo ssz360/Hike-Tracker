@@ -28,6 +28,13 @@ const login=async(username,password)=>{
     else throw emp;
 }
 
+/*const getHikes=async ()=>{
+    const res=await fetch(APIBASE+'hikes');
+    const hikes=await res.json();
+    if(res.ok)  return hikes.map(h=>new Hike);
+    else throw res.status;
+}*/
+
 
 
 const logout=async()=>{

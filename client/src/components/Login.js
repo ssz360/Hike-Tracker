@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import API from "../lib/api";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { Row, Col } from 'react-bootstrap';
+import api from "../lib/api";
 
 function Login(props) {
     const navigate = useNavigate();
@@ -40,9 +41,11 @@ function Login(props) {
                         }
                         else {
                             try {
-                                const emp = await API.login(username, password);
+                                const emp = await api.login(username, password);
+                                //console.log("emp is",emp);
+                                props.setUser(emp);
                                 props.setLogged(true);
-                                navigate('/' + emp.type + '/' + emp.username);
+                                navigate('/');
                             } catch (error) {
                                 setError("Error during login");
                             }
