@@ -9,9 +9,10 @@ const register=async(username,password, name, surname, phone)=>{
         body: JSON.stringify({username:username, password:password, first_name: name, last_name: surname, phone: phone}),
         credentials:"include"
     });
-    const emp=await res.json();
-    if(res.ok) return emp;
-    else throw emp;
+    const usr=await res.json();
+    console.log(usr);
+    if(res.ok) return usr;
+    else throw usr;
 }
 
 const login=async(username,password)=>{
@@ -69,5 +70,21 @@ async function addParking(pk) {
   else throw pk;
 };
 
-const api={login, logout, register, getParkings, addParking};
+const insertNewHut = async (name, country, numberOfGuests, numberOfBedrooms, coordinates) => {
+    JSON.stringify(name, country, numberOfGuests, numberOfBedrooms, coordinates);
+    const res = await fetch(APIBASE + "huts", {
+		method: "POST",
+		headers: {
+			"Content-type": "application/json"
+		},
+        body: JSON.stringify({ name, country, numberOfGuests, numberOfBedrooms, coordinates }),
+		credentials: "include"
+	});
+    if (res.ok) return await res.json();
+    else { 
+        console.log(await res.json());
+    }
+}
+
+const api={login, logout, register, getParkings, addParking,insertNewHut};
 export default api;
