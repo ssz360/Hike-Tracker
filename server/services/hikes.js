@@ -12,10 +12,11 @@ const newHike=async (name,user,desc,difficulty,file)=>{
         const coors=[];
         gpx.tracks[0].points.forEach(p =>coors.push([p["lat"],p["lon"]]));
         const lats=coors.map(p=>p[0]);const lons=coors.map(p=>p[1]);
-        const center=JSON.stringify([(Math.max(...lats)+Math.min(...lats))/2,(Math.max(...lons)+Math.min(...lons))/2]);
+        const centerlat=(Math.max(...lats)+Math.min(...lats))/2;
+        const centerlon=(Math.max(...lons)+Math.min(...lons))/2;
         const len=gpx.tracks[0].distance["total"];
         const ascent=gpx.tracks[0].elevation["max"]-gpx.tracks[0].elevation["min"];
-        await hikesdao.newHike(name,user.username,len,ascent,desc,difficulty.toUpperCase(),JSON.stringify(coors[0]),JSON.stringify(coors[coors.length-1]),"",JSON.stringify(coors),center,Math.max(...lats),Math.max(...lons),Math.min(...lats),Math.min(...lons));
+        await hikesdao.newHike(name,user.username,len,ascent,desc,difficulty.toUpperCase(),JSON.stringify(coors[0]),JSON.stringify(coors[coors.length-1]),"",JSON.stringify(coors),centerlat,centerlon,Math.max(...lats),Math.max(...lons),Math.min(...lats),Math.min(...lons));
     } catch (error) {
         //console.log("Error in services newhike",error);
         throw {status:error.status,message:error.message};

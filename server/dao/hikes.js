@@ -1,7 +1,7 @@
 const db=require('./dao');
 const MAXDOUBLE = 4294967295;
 
-getHikesWithMapList = async () => new Promise((resolve, reject) => {
+/*getHikesWithMapList = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT H.IDHike AS IDHike,Name,Length,ExpectedTime,Ascent,Difficulty,StartPoint,EndPoint,ReferencePoints,Description,Coordinates,Center FROM HIKES H,HIKESMAPDATA M WHERE H.IDHike=M.IDHike'              
     db.all(sql, [], async (err, rows) => {
         if(err) {
@@ -15,17 +15,17 @@ getHikesWithMapList = async () => new Promise((resolve, reject) => {
             description:h.Description,coordinates:JSON.parse(h.Coordinates),
             center:JSON.parse(h.Center)})));
     });
-});
+});*/
 
-newHike=async (name,author,len,ascent,desc,difficulty,startPoint,endPoint,referencePoints,coordinates,center,maxLen,maxLon,minLen,minLon)=>new Promise((resolve, reject) => {
+newHike=async (name,author,len,ascent,desc,difficulty,startPoint,endPoint,referencePoints,coordinates,centerlat,centerlon,maxLen,maxLon,minLen,minLon)=>new Promise((resolve, reject) => {
     const sqlhike="INSERT INTO HIKES (Name , Author, Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, ReferencePoints, Description) VALUES(?,?,?,?,?,?,?,?,?,?)";
-    const sqlmap="INSERT INTO HIKESMAPDATA(Coordinates,Center,MaxLen,MaxLon,MinLen,MinLon) VALUES(?,?,?,?,?,?)";
+    const sqlmap="INSERT INTO HIKESMAPDATA(Coordinates,CenterLat,CenterLon,MaxLen,MaxLon,MinLen,MinLon) VALUES(?,?,?,?,?,?,?)";
     db.run(sqlhike,[name,author,len,0,ascent,difficulty,startPoint,endPoint,referencePoints,desc],err=>{
         if (err){
             //console.log("Err hike query",err);
             reject({status:503,message:{err}});
         }
-        else db.run(sqlmap,[coordinates,center,maxLen,maxLon,minLen,minLon],errmap=>{
+        else db.run(sqlmap,[coordinates,centerlat,centerlon,maxLen,maxLon,minLen,minLon],errmap=>{
             if (errmap){
                 //console.log("Err hikemapdata",err);
                 reject({status:503,message:{err}});
@@ -35,7 +35,7 @@ newHike=async (name,author,len,ascent,desc,difficulty,startPoint,endPoint,refere
     });
 });
 
-getHikesList = async () => new Promise((resolve, reject) => {
+/*getHikesList = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKES'              
     db.all(sql, [], (err, row) => {
         if(err) {
@@ -64,7 +64,7 @@ isHikeInArea= async (hike,maxlen,minlen,maxlon,minlon)=> new Promise((resolve, r
         //console.log(b,"for id",hike.IDHike);
         resolve(b?hike:undefined);
     });
-});
+});*/
 
 /*getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty,maxlen,minlen,maxlon,minlon) => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKES WHERE Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ?';
@@ -138,6 +138,7 @@ isHikeInArea= async (hike,maxlen,minlen,maxlon,minlon)=> new Promise((resolve, r
 
 
 getHikesListWithFilters = async (getMap,lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty,centerlat,centerlon,latdeg,londegr) => new Promise((resolve, reject) => {
+    //console.log("Pars",getMap,lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty,centerlat,centerlon,latdeg,londegr)
     const sql = 'SELECT * FROM HIKES H,HIKESMAPDATA M WHERE H.IDHike=M.IDHike AND Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ? AND abs(CenterLat-?)<=? AND abs(CenterLon-?)<=?';
     
     const lenMin = lengthMin == null ? 0 : lengthMin;
@@ -153,7 +154,9 @@ getHikesListWithFilters = async (getMap,lengthMin, lengthMax, expectedTimeMin, e
     let sql2 = sql;
     
     if (difficulty != null) {
+        //console.log("Difficulty is PRESENT, DIFFICULTY");
         sql2 = sql + " AND Difficulty = ?";
+        //console.log("SQL IS ",sql2,"with pars");
         db.all(sql2, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat,latdeg,centerlon,londegr,difficulty], (err, row) => {
             if(err) {
                 //console.log("Error YES difficulty",err);
@@ -165,6 +168,7 @@ getHikesListWithFilters = async (getMap,lengthMin, lengthMax, expectedTimeMin, e
             else resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author,length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description})));
         });
     } else {   
+        //console.log("NO DIFFICULTY SO SQL IS",sql);
         db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat,latdeg,centerlon,londegr], (err, row) => {
             if(err) {
                 //console.log("Error no difficulty",err);
@@ -178,5 +182,5 @@ getHikesListWithFilters = async (getMap,lengthMin, lengthMax, expectedTimeMin, e
     }
 });
 
-const hikes = {getHikesList,getHikesWithMapList, getHikesListWithFilters,newHike};
+const hikes = { getHikesListWithFilters,newHike};
 module.exports = hikes;
