@@ -145,7 +145,6 @@ function App() {
               <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
               <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
               <Route path='/checkemail' element={<CheckEmail/>}/>
-              <Route path='/hikes' element={<HikesForHikers/>} />
             </Routes>
           </Col>
         </Row>
