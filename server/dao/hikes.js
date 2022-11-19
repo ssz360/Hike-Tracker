@@ -137,8 +137,8 @@ isHikeInArea= async (hike,maxlen,minlen,maxlon,minlon)=> new Promise((resolve, r
 });*/
 
 
-getHikesListWithFilters = async (getMap,lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty,maxLen,minLen,maxLon,minLon) => new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM HIKES H,HIKESMAPDATA M WHERE H.IDHike=M.IDHike AND Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ? AND MaxLen<=? AND MaxLon<=? AND MinLen>=? AND MinLon>=?';
+getHikesListWithFilters = async (getMap,lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty,centerlat,centerlon,latdeg,londegr) => new Promise((resolve, reject) => {
+    const sql = 'SELECT * FROM HIKES H,HIKESMAPDATA M WHERE H.IDHike=M.IDHike AND Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ? AND abs(CenterLat-?)<=? AND abs(CenterLon-?)<=?';
     
     const lenMin = lengthMin == null ? 0 : lengthMin;
     const lenMax = lengthMax == null ? MAXDOUBLE : lengthMax;
@@ -149,34 +149,30 @@ getHikesListWithFilters = async (getMap,lengthMin, lengthMax, expectedTimeMin, e
     const ascMin = ascentMin == null ? 0 : ascentMin;
     const ascMax = ascentMax == null ? MAXDOUBLE : ascentMax;
     
-    if(maxLen===undefined) maxLen=90;
-    if(maxLon===undefined) maxLon=180;
-    if(minLen===undefined) minLen=(-90);
-    if(minLon===undefined) minLon=(-180);
     //console.log("lenMin",lenMin,"lenMax",lenMax,"expmin",expMin,"expmax",expMax,"ascmin",ascMin,"ascmax",ascMax,"maxlen",maxLen,"maxLon",maxLon,"minlen",minLen,"minlon",minLon);
     let sql2 = sql;
     
     if (difficulty != null) {
         sql2 = sql + " AND Difficulty = ?";
-        db.all(sql2, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, maxLen, maxLon, minLen, minLon,difficulty], (err, row) => {
+        db.all(sql2, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat,latdeg,centerlon,londegr,difficulty], (err, row) => {
             if(err) {
                 //console.log("Error YES difficulty",err);
                 reject(err);
                 return;
             }
             //console.log("Rows YES difficulty",row);
-            if(getMap) resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, Difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description, coordinates: JSON.parse(h.Coordinates), center: JSON.parse(h.Center), bounds: [[h.MaxLen,h.MaxLon],[h.MinLen,h.MinLon]]})));
+            if(getMap) resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, Difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description, coordinates: JSON.parse(h.Coordinates), center: [h.CenterLat,h.CenterLon], bounds: [[h.MaxLen,h.MaxLon],[h.MinLen,h.MinLon]]})));
             else resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author,length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description})));
         });
     } else {   
-        db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, maxLen, maxLon, minLen, minLon], (err, row) => {
+        db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat,latdeg,centerlon,londegr], (err, row) => {
             if(err) {
                 //console.log("Error no difficulty",err);
                 reject(err);
                 return;
             }
             //console.log("Rows no difficulty",row);
-            if(getMap) resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author,length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description, coordinates: JSON.parse(h.Coordinates), center: JSON.parse(h.Center), bounds: [[h.MaxLen,h.MaxLon],[h.MinLen,h.MinLon]]})));
+            if(getMap) resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author,length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description, coordinates: JSON.parse(h.Coordinates), center: [h.CenterLat,h.CenterLon], bounds: [[h.MaxLen,h.MaxLon],[h.MinLen,h.MinLon]]})));
             else resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description})));
         });
     }

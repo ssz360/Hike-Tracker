@@ -6,7 +6,8 @@ import HikeMap from '../components/hikeMap';
 function HikesList(props){
 
     let displayedHikes = [];
-    const [area, setArea] = useState();
+    const [center,setCenter]=useState();
+    const [radius,setRadius]=useState(0);
     const [len, setLen] = useState("");
     const [dif, setDif] = useState("");
     const [asc, setAsc] = useState("");
@@ -19,19 +20,19 @@ function HikesList(props){
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        props.filtering(area, len, dif, asc, time);
+        props.filtering(center!==undefined?{center:center,radius:radius}:undefined, len, dif, asc, time);
     
     }
 
     return (
-        <>{openArea ? (<AreaMap area={area} setArea={setArea} openArea={openArea} setOpenArea={setOpenArea}/>) : <></>}
+        <>{openArea ? (<AreaMap center={center} setCenter={setCenter} radius={radius} setRadius={setRadius} drag={false} openArea={openArea} setOpenArea={setOpenArea}/>) : <></>}
         <Row className="mt-2">
         <div className="text-center"><h4>Search your favorite hike with the filters!</h4></div>
         </Row>
         <div className="mt-2">
         <Row className="justify-content-md-center">
             <Col xs lg="3"><div className="d-grid gap-2"> 
-            <Button variant={area!==undefined?"success":"outline-dark"} onClick={() => setOpenArea(true)}>{area!==undefined?"Area selected!":"Select Area..."}</Button>
+            <Button variant={center!==undefined?"success":"outline-dark"} onClick={() => setOpenArea(true)}>{center!==undefined?"Area selected!":"Select Area..."}</Button>
             </div>
             </Col>
             
