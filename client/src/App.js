@@ -35,7 +35,7 @@ function App() {
       } catch (error) {
         if(error.status===401){
           try {
-            let hikesnotauth=await API.getHikesList();
+            let hikesnotauth=await API.getHikesListWithFilters();
             setHikes(hikesnotauth);
             setLogged(false);
             if(path!=="/login" && path!=="/signup") navigate('/');

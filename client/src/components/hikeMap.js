@@ -11,7 +11,7 @@ function HikeMap(props){
         <>
             {show?
                 <Modal show={show} onHide={e=>setShow(false)}>
-                <Modal.Header closeButton>Select the desired area</Modal.Header>
+                <Modal.Header closeButton>This is the map for hike {props.hike.name}</Modal.Header>
                 <Modal.Body>
                 <MapContainer bounds={props.hike.bounds} style={{ height: "50vh", minHeight: "100%" }} scrollWheelZoom={true}>
                             <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>

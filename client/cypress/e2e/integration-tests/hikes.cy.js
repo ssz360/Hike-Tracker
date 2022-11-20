@@ -4,7 +4,7 @@
 
 describe('new insertion test.', () => {
     beforeEach(() => {
-        cy.visit('/hikes');
+        cy.visit('/');
     });
     Cypress.on('uncaught:exception', (err, runnable) => {
         return false
@@ -18,6 +18,39 @@ describe('new insertion test.', () => {
         cy.get(".info-card.card").first().contains("More").click();
         cy.get(".more-key").should("be.visible");
     });
+
+    it.only('filter map',()=>{
+        cy.get('.justify-content-md-center > :nth-child(1) > .d-grid > .btn').click();
+        cy.get('.leaflet-control > .btn').click();
+        cy.get('.leaflet-container').trigger('mousedown',{position:"center"}).trigger('mouseup',{position:"top"}).trigger('mousemove',{position:"top"}).trigger("mouseout");
+        cy.get('.modal-footer > .btn').click();
+        cy.get('form > .d-grid > .btn').click();
+        cy.wait(100);
+        cy.contains("Rocciamelone").should('not.exist');
+        cy.get('.justify-content-md-center > :nth-child(1) > .d-grid > .btn').click();
+        cy.wait(100);
+        for(let i=0;i<20;i++) cy.get('.leaflet-control-zoom-out').click();
+        cy.get(':nth-child(3) > .leaflet-control > :nth-child(1)').click();
+        cy.get('.leaflet-container').trigger('mousedown',{position:"center"}).trigger('mouseup',{position:"top"}).trigger('mousemove',{position:"top"}).trigger("mouseout");
+        cy.get('.modal-footer > .btn').click();
+        cy.get('form > .d-grid > .btn').click();
+        cy.wait(100);
+        cy.contains("Rocciamelone");
+    })
+
+    it.only('Rocciamelone hike',()=>{
+        cy.contains('Rocciamelone');
+    })
+
+    it.only('Rocciamelone map shown on double click',()=>{
+        cy.visit('/login');
+        cy.get('#floatingInput').type("s292671@studenti.polito.it");
+        cy.get('#floatingPassword').type("123abcABC!");
+        cy.get('.btn').click();
+        cy.wait(100);
+        cy.get(':nth-child(6) > .card > .card-body > [style="height: 175px;"] > .leaflet-container').trigger('dblclick');
+        cy.contains("This is the map for hike")
+    })
 
     // this is just for prof of work of how can move the map
     // it("*move the map", () => {

@@ -70,11 +70,11 @@ app.post("/api/register", user.register);
 app.post("/api/resendVerification", isLoggedIn, tokens.resendVerification);
 app.get("/api/verify/:token", tokens.verify);
 
-app.get('/api/hikes', async (req, res) => {
+/*app.get('/api/hikes', async (req, res) => {
     hikesdao.getHikesList()
         .then(hikes => { res.json(hikes) })
         .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
-});
+});*/
 
 const KMPERLAT=110574;
 const KMPERLON=lat=>{
