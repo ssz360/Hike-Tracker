@@ -70,22 +70,22 @@ app.post("/api/register", user.register);
 app.post("/api/resendVerification", isLoggedIn, tokens.resendVerification);
 app.get("/api/verify/:token", tokens.verify);
 
-/*app.get('/api/hikes', async (req, res) => {
+app.get('/api/hikes', async (req, res) => {
     hikesdao.getHikesList()
         .then(hikes => { res.json(hikes) })
         .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
-});*/
+});
 
 const KMPERLAT=110574;
 const KMPERLON=lat=>{
-    console.log("returning kmperlon",111320*Math.cos(lat* (Math.PI / 180)));
-    console.log("in radiants",lat* (Math.PI / 180))
+    //console.log("returning kmperlon",111320*Math.cos(lat* (Math.PI / 180)));
+    //console.log("in radiants",lat* (Math.PI / 180))
     return 111320*Math.cos(lat* (Math.PI / 180));
 }
 
 // every field can contain a value or be null -> everything null == getHikesList()
 app.post('/api/hikes', async (req, res) => {
-    console.log("In hikes with",req.body);
+    //console.log("In hikes with",req.body);
     let centerlat,centerlon,latdegr,londegr;
     if (req.body.area===undefined){
         centerlat=0;
@@ -98,7 +98,7 @@ app.post('/api/hikes', async (req, res) => {
         centerlon=req.body.area.center.lng;
         latdegr=req.body.area.radius/KMPERLAT;
         londegr=req.body.area.radius/KMPERLON(centerlon);
-        console.log("Latdeggr",latdegr,"Londegr",londegr);
+        //console.log("Latdeggr",latdegr,"Londegr",londegr);
     }
     hikesdao.getHikesListWithFilters(false,req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,centerlat,centerlon,latdegr,londegr)
         .then(hikes => res.json(hikes) )
@@ -107,7 +107,7 @@ app.post('/api/hikes', async (req, res) => {
 
 app.post('/api/user/hikes',isLoggedIn,async (req,res)=>{
     try {
-        console.log("In user/hikes with",req.body);
+        //console.log("In user/hikes with",req.body);
         let centerlat,centerlon,latdegr,londegr;
         if (req.body.area===undefined){
             centerlat=0;
@@ -120,7 +120,7 @@ app.post('/api/user/hikes',isLoggedIn,async (req,res)=>{
             centerlon=req.body.area.center.lng;
             latdegr=req.body.area.radius/KMPERLAT;
             londegr=Math.abs(req.body.area.radius/KMPERLON(centerlon));
-            console.log("Latdeggr",latdegr,"Londegr",londegr);
+            //console.log("Latdeggr",latdegr,"Londegr",londegr);
         }
         const ret=await hikesdao.getHikesListWithFilters(true,req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,centerlat,centerlon,latdegr,londegr);
         //console.log("\n\n\n\tReturning\n",ret);
@@ -181,3 +181,5 @@ app.post('/api/parking', async (req,res) => {
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
 );
+
+module.exports=app;

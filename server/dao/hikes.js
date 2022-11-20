@@ -35,7 +35,7 @@ newHike=async (name,author,len,ascent,desc,difficulty,startPoint,endPoint,refere
     });
 });
 
-/*getHikesList = async () => new Promise((resolve, reject) => {
+getHikesList = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKES'              
     db.all(sql, [], (err, row) => {
         if(err) {
@@ -47,7 +47,7 @@ newHike=async (name,author,len,ascent,desc,difficulty,startPoint,endPoint,refere
     });
 });
 
-isHikeInArea= async (hike,maxlen,minlen,maxlon,minlon)=> new Promise((resolve, reject) => {
+/*isHikeInArea= async (hike,maxlen,minlen,maxlon,minlon)=> new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKESMAPDATA WHERE IDHike=?';    
     //console.log("In ishikeinarea" ,hike.IDHike,"and ",maxlen,minlen,maxlon,minlon);          
     db.get(sql, [hike.IDHike], (err, row) => {
@@ -182,5 +182,5 @@ getHikesListWithFilters = async (getMap,lengthMin, lengthMax, expectedTimeMin, e
     }
 });
 
-const hikes = { getHikesListWithFilters,newHike};
+const hikes = { getHikesList,getHikesListWithFilters,newHike};
 module.exports = hikes;
