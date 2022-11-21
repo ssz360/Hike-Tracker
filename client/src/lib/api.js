@@ -10,7 +10,7 @@ const register=async(username,password, name, surname, phone)=>{
         credentials:"include"
     });
     const usr=await res.json();
-    console.log(usr);
+    //console.log(usr);
     if(res.ok) return usr;
     else throw usr;
 }
