@@ -114,11 +114,16 @@ function HikeRow(props){
       <strong>Ascent: </strong>{props.hike.ascent} m<br></br>
       <strong>Expected Time: </strong>{props.hike.expectedTime} h
       </Card.Text>
-      <Card.Text>
+      <Card.Text>{!open ? (
       <a href="#" className="text-decoration-none" style={{fontSize:"14px"}}
       onClick={() => setOpen(!open)}
       aria-controls="example-collapse-text"
-      aria-expanded={open}>• show more</a>
+      aria-expanded={open}>• show more</a>) 
+    :
+    (<a href="#" className="text-decoration-none" style={{fontSize:"14px"}}
+    onClick={() => setOpen(!open)}
+    aria-controls="example-collapse-text"
+    aria-expanded={open}>• show less</a>)}
     <Collapse in={open}>
         <div id="example-collapse-text">
           <Card className="bg-light text-dark">
