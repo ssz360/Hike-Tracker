@@ -1,4 +1,4 @@
-import { Col, Row, Form, Button, Card } from 'react-bootstrap';
+import { Col, Row, Form, Button, Card, Collapse, Navbar, Nav, Container } from 'react-bootstrap';
 import { useState } from 'react';
 import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
@@ -96,14 +96,37 @@ function Display(props){
 
 
 function HikeRow(props){
+    const auth = props.hike.author.substring(0, props.hike.author.indexOf('@'));
+    const [open, setOpen] = useState(false);
     return (
     <><Col xs={4} className="mt-2"><Card>
-    <Card.Header as="h4">
-      {props.hike.name}
+    <Card.Header>
+    <Container><Row>
+      <Col xs={8}><h4>{props.hike.name}</h4></Col>
+      <Col className='text-secondary fst-italic'>{auth}</Col>
+      </Row>
+    </Container>
     </Card.Header>
     <Card.Body>
       {props.logged?<HikeMap hike={props.hike}/>:<></>}
-      <Card.Text>{props.hike.description}</Card.Text>
+      <Card.Text><strong>Length: </strong>{props.hike.len} km<br></br>
+      <strong>Difficulty: </strong>{props.hike.difficulty} <br></br>
+      <strong>Ascent: </strong>{props.hike.ascent} m<br></br>
+      <strong>Expected Time: </strong>{props.hike.expectedTime} h
+      </Card.Text>
+      <Card.Text>
+      <a href="#" className="text-decoration-none" style={{fontSize:"14px"}}
+      onClick={() => setOpen(!open)}
+      aria-controls="example-collapse-text"
+      aria-expanded={open}>• show more</a>
+    <Collapse in={open}>
+        <div id="example-collapse-text">
+          <Card className="bg-light text-dark">
+            <Card.Body><strong>Description: </strong>{props.hike.description}</Card.Body>
+          </Card>
+        </div>
+      </Collapse>
+      </Card.Text>
     </Card.Body>
   </Card>
   </Col></>);
