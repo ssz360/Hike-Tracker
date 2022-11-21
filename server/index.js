@@ -158,6 +158,14 @@ app.post('/api/huts', async (req, res) => {
         .then(lastId => res.json(lastId))
         .catch(err => res.status(500).json('Error on inserting hut: \r\n' + err));
 });
+
+app.post('/api/huts/list', async (req, res) => {
+    const { name, country, numberOfGuests, numberOfBedrooms, coordinate } = req.body;
+    huts.getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, coordinate)
+        .then(huts => res.json(huts))
+        .catch(err => res.status(500).json('Error looking for hut: \r\n' + err));
+});
+
 app.get('/api/parkings', async (req,res) => {
     parkings.getParkingsList()
     .then(pks => {res.json(pks)})

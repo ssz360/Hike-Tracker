@@ -1,4 +1,4 @@
-const db=require('./dao');
+ const db=require('./dao');
 
 getType = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint'              
