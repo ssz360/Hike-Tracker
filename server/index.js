@@ -2,6 +2,7 @@
 const express = require('express');
 const hikesdao = require('./dao/hikes');
 const hikes= require('./services/hikes');
+const parkings = require('./dao/parkings');
 const multer=require('multer');
 const huts = require('./dao/huts');
 const app = express();
