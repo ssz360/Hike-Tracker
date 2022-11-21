@@ -21,7 +21,7 @@ function LinkPointStartEnd(props){
     const [selectedPoint,setSelectedPoint]=useState(-1);
     const [submit,setSubmit]=useState(false);
     const [bounds,setBounds]=useState(hike.bounds);
-    const [pointsInBounds,setPointsInBounds]=useState([
+    const [points,setPoints]=useState([
         {
             id:1,
             type:"parking",
@@ -30,12 +30,20 @@ function LinkPointStartEnd(props){
         {
             id:2,
             type:"parking",
-            coordinates:[45.1906571, 7.07908]
+            coordinates:[45.197786, 7.083372]
         },
         {
             id:3,
             type:"hut",
-            coordinates:[45.1906564, 7.079085]
+            coordinates:[45.1806564, 7.0792]
+        },{
+            id:4,
+            type:"hikePoint",
+            coordinates: [45.177786,7.083372]
+        },{
+            id:5,
+            type:"hikePoint",
+            coordinates: [45.203531,7.07734]
         }
     ]);
     /*useEffect(()=>{
@@ -51,21 +59,21 @@ function LinkPointStartEnd(props){
     },[bounds]);*/
     if(submit || selectedPoint===(-1)){
         return(
-            <div className="justify-content-center">
-                <HikeMapLink hike={hike} selectedPoint={selectedPoint} setSelectedPoint={setSelectedPoint} setBounds={setBounds} pointsInBounds={pointsInBounds}/>
+            <div className="justify-content-center my-4">
+                <HikeMapLink hike={hike} height={"70vh"} selectedPoint={selectedPoint} setSelectedPoint={setSelectedPoint} setBounds={setBounds} points={points}/>
             </div>
         )
     }
     else{
         return(
-            <div className="justify-content-center">
+            <div className="justify-content-center my-4">
                 <Container fluid>
                     <Row>
-                        <Col xs={8}>
-                            <HikeMapLink hike={hike} selectedPoint={selectedPoint} setSelectedPoint={setSelectedPoint} setBounds={setBounds} pointsInBounds={pointsInBounds}/>
+                        <Col xs={12} md={8}>
+                            <HikeMapLink hike={hike} height={"70vh"} selectedPoint={selectedPoint} setSelectedPoint={setSelectedPoint} setBounds={setBounds} points={points}/>
                         </Col>
-                        <Col xs={4}>
-                            <SelectPointStartEnd startPoint={hike.startPoint} endPoint={hike.endPoint} point={selectedPoint} setSubmit={setSubmit}/>
+                        <Col xs={12} md={4}>
+                            <SelectPointStartEnd startPoint={hike.startPoint} endPoint={hike.endPoint} point={points.find(p=>p.id===selectedPoint)} setSubmit={setSubmit}/>
                         </Col>
                     </Row>
                 </Container>
