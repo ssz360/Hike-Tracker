@@ -16,6 +16,7 @@ const cors = require('cors');
 const user = require("./user");
 const userdao= require('./dao/user-dao');
 const tokens = require("./tokens");
+const ref = require("./referencePoints");
 
 app.use(express.json());
 passport.use(new LocalStrategy((username, password, callback)=>{
@@ -69,6 +70,7 @@ app.post('/api/login', passport.authenticate('local'), (req, res) => {
 app.post("/api/register", user.register);
 app.post("/api/resendVerification", isLoggedIn, tokens.resendVerification);
 app.get("/api/verify/:token", tokens.verify);
+app.post("/api/referencePoint/", isLoggedIn, ref.addReferencePoint);
 
 app.get('/api/hikes', async (req, res) => {
     hikesdao.getHikesList()

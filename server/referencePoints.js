@@ -8,7 +8,7 @@ const DAORefs = require("./dao/referencePoints");
 //     coordinates,
 // }
 
-export async function addReferencePoint(req, res) {
+exports.addReferencePoint = async (req, res) => {
 	// const reqPoint = await DAOPoints.insertPoint(
 	//  IDHike,
 	// 	"ref-" + req.body.IDHike + String.from(Math.random() * 100),
@@ -24,17 +24,15 @@ export async function addReferencePoint(req, res) {
 		).catch(err => {
 			throw err;
 		});
-		return new Promise(async (resolve, reject) => {
-			return await DAORefs.createReferencePoint(reqPoint, IDHike).then(
-				id => {
-					return res.status(200).json(id);
-				},
-				err => {
-					throw err;
-				}
-			);
-		});
+		return await DAORefs.createReferencePoint(reqPoint, IDHike).then(
+			id => {
+				return res.status(200).json(id);
+			},
+			err => {
+				throw err;
+			}
+		);
 	} catch (err) {
 		return res.status(500).send(err);
 	}
-}
+};
