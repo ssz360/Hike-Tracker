@@ -55,62 +55,14 @@ function App() {
     getHikesUseEff();
 }, [logged])
 
-  async function filtering(area, len, dif, asc, time){
+  async function filtering(area, lengthMin, lengthMax, dif, ascentMin, ascentMax, expectedTimeMin, expectedTimeMax){
     //lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty
     try {
-      let lengthMin = null;
-      let lengthMax = null;
-      let expectedTimeMin = null;
-      let expectedTimeMax = null;
-      let ascentMin = null;
-      let ascentMax = null;
 
-      if(dif == ""){
-        dif = null;
-      }
+      console.log(dif);
 
-      if(len==1){
-        lengthMin="0";
-        lengthMax="5";  
-      }
-      else if(len==2){
-        lengthMin=6;
-        lengthMax=10; 
-      }
-      else if(len==3){
-        lengthMin=11;
-      }
+      console.log("Len min:", lengthMin);
 
-      if(time==1){
-        expectedTimeMin=0;
-        expectedTimeMax=1;
-      }
-      else if(time==2){
-        expectedTimeMin=1.5;
-        expectedTimeMax=3;
-      }
-      else if(time==3){
-        expectedTimeMin=3.5;
-      }
-
-      if(asc==1){
-        ascentMin=0;
-        ascentMax=300;
-      }
-
-      else if(asc==2){
-        ascentMin=301;
-        ascentMax=600;
-      }
-
-      else if(asc==3){
-        ascentMin=601;
-        ascentMax=1000;
-      }
-
-      else if(asc==4){
-        ascentMin=1001;
-      }
 
       const newList=logged?await API.getHikersHikesList(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif,area): await API.getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif,area);
       //console.log(newList);
