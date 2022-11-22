@@ -150,7 +150,7 @@ function AreaMap(props){
             <Modal show={props.openArea} onHide={e=>props.setOpenArea(false)}>
                 <Modal.Header closeButton>Select the desired area</Modal.Header>
                 <Modal.Body>
-                    <MapContainer whenReady={m=>props.center===undefined?m.target.locate({setView:true}):m} center={props.center!==undefined?props.center:[0,0]} zoom={13} style={{ height: "50vh", minHeight: "100%" }} scrollWheelZoom={true}>
+                    <MapContainer whenReady={m=>props.center===undefined?m.target.locate({setView:true}):m} center={props.center!==undefined?props.center:[0,0]} zoom={13} style={{ height: "50vh", width:"auto" }} scrollWheelZoom={true}>
                         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                         {props.drag?
                             <CenterMapDrag center={props.center} radius={props.radius} setCenter={props.setCenter} setRadius={props.setRadius} />
@@ -165,6 +165,7 @@ function AreaMap(props){
                     </MapContainer>
                 </Modal.Body>
                 <Modal.Footer>
+                    <div className='text-left'>To select an area click a point and move around until you are out of the map or you click again!</div>
                     <Button variant="outline-success" onClick={e=>{
                         e.preventDefault();
                         e.stopPropagation();
