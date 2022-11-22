@@ -59,11 +59,17 @@ describe('hikes services',()=>{
 })
 
 describe('hikes dao',()=>{
-
     test('get hikes with filters',async ()=>{
         const hikeslist=await hikesdao.getHikesListWithFilters(false,undefined,undefined,undefined,undefined,undefined,undefined,undefined,0,0,90,180);
         expect(hikeslist.length).equal(6);
     })
+    
+
+    test('get hikes with filters + difficulty',async ()=>{
+        const hikeslist=await hikesdao.getHikesListWithFilters(false,undefined,undefined,undefined,undefined,undefined,undefined,"HIKER",0,0,90,180);
+        expect(hikeslist.length).equal(3);
+    })
+
 
     test('get hikes with map',async ()=>{
         const hikeslist=await hikesdao.getHikesListWithFilters(true,undefined,undefined,undefined,undefined,undefined,undefined,undefined,0,0,90,180);

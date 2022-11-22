@@ -42,7 +42,7 @@ getHikesList = async () => new Promise((resolve, reject) => {
             reject(err);
             return;
         }
-        const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+        const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Author:h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
         resolve(hikes);
     });
 });
@@ -139,7 +139,7 @@ getHikesList = async () => new Promise((resolve, reject) => {
 
 getHikesListWithFilters = async (getMap,lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty,centerlat,centerlon,latdeg,londegr) => new Promise((resolve, reject) => {
     //console.log("Pars",getMap,lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty,centerlat,centerlon,latdeg,londegr)
-    const sql = 'SELECT * FROM HIKES H,HIKESMAPDATA M WHERE H.IDHike=M.IDHike AND Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ? AND abs(CenterLat-?)<=? AND abs(CenterLon-?)<=?';
+    const sql = 'SELECT * FROM HIKES H, HIKESMAPDATA M WHERE H.IDHike=M.IDHike AND Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ? AND abs(CenterLat-?)<=? AND abs(CenterLon-?)<=? AND UPPER(Difficulty) LIKE UPPER(?)';
     
     const lenMin = lengthMin == null ? 0 : lengthMin;
     const lenMax = lengthMax == null ? MAXDOUBLE : lengthMax;
@@ -150,36 +150,19 @@ getHikesListWithFilters = async (getMap,lengthMin, lengthMax, expectedTimeMin, e
     const ascMin = ascentMin == null ? 0 : ascentMin;
     const ascMax = ascentMax == null ? MAXDOUBLE : ascentMax;
     
+    const diff = difficulty == null ? '%' : difficulty;
     //console.log("lenMin",lenMin,"lenMax",lenMax,"expmin",expMin,"expmax",expMax,"ascmin",ascMin,"ascmax",ascMax,"maxlen",maxLen,"maxLon",maxLon,"minlen",minLen,"minlon",minLon);
-    let sql2 = sql;
-    
-    if (difficulty != null) {
-        //console.log("Difficulty is PRESENT, DIFFICULTY");
-        sql2 = sql + " AND Difficulty = ?";
-        //console.log("SQL IS ",sql2,"with pars");
-        db.all(sql2, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat,latdeg,centerlon,londegr,difficulty], (err, row) => {
-            if(err) {
-                //console.log("Error YES difficulty",err);
-                reject(err);
-                return;
-            }
-            //console.log("Rows YES difficulty",row);
-            if(getMap) resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, Difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description, coordinates: JSON.parse(h.Coordinates), center: [h.CenterLat,h.CenterLon], bounds: [[h.MaxLen,h.MaxLon],[h.MinLen,h.MinLon]]})));
-            else resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author,length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description})));
-        });
-    } else {   
-        //console.log("NO DIFFICULTY SO SQL IS",sql);
-        db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat,latdeg,centerlon,londegr], (err, row) => {
-            if(err) {
-                //console.log("Error no difficulty",err);
-                reject(err);
-                return;
-            }
-            //console.log("Rows no difficulty",row);
-            if(getMap) resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author,length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description, coordinates: JSON.parse(h.Coordinates), center: [h.CenterLat,h.CenterLon], bounds: [[h.MaxLen,h.MaxLon],[h.MinLen,h.MinLon]]})));
-            else resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description})));
-        });
-    }
+   
+    //console.log("SQL IS ",sql2,"with pars");
+    db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat, latdeg, centerlon, londegr, diff], (err, row) => {
+        if(err) {
+            reject(err);
+            return;
+        }
+        if(getMap) resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, Difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description, coordinates: JSON.parse(h.Coordinates), center: [h.CenterLat,h.CenterLon], bounds: [[h.MaxLen,h.MaxLon],[h.MinLen,h.MinLon]]})));
+        else resolve(row.map((h) => ({id: h.IDHike, name: h.Name, author:h.Author,length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.StartPoint, endPoint: h.EndPoint, referencePoints: h.ReferencePoints, description: h.Description})));
+    });
+
 });
 
 const hikes = { getHikesList,getHikesListWithFilters,newHike};

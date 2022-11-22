@@ -1,20 +1,5 @@
 const db = require('./dao');
 
-
-
-
-getHutsList = async () => new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint'
-    db.all(sql, [], (err, row) => {
-        if (err) {
-            reject(err);
-            return;
-        }
-        const huts = row.map((h) => ({ IDPoint: h.IDPoint, Name: h.Name, Coordinates: h.Coordinates, GeographicalArea: h.GeographicalArea }))
-        resolve(huts);
-    });
-});
-
 getParkingsList = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKES'
     db.all(sql, [], (err, row) => {
@@ -48,7 +33,7 @@ function insertPoint(name, coordinates, GeographicalArea, TypeOfPoint) {
 }
 
 
-const points = { getHutsList, getParkingsList, insertPoint }
+const points = { getParkingsList, insertPoint }
 module.exports = points;
 
 
