@@ -61,3 +61,14 @@ describe('new insertion test.', () => {
     //         .trigger("mouseup", { which: 1 })
     // })
 });
+
+describe("hikes list with filters", () => {
+    beforeEach(() => {
+        cy.visit('/');
+    });
+    Cypress.on('uncaught:exception', (err, runnable) => {
+        return false
+    })
+
+
+})

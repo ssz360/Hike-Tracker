@@ -15,19 +15,20 @@ getHutsList = async () => new Promise((resolve, reject) => {
     });
 });
 
-getHutsListWithFilters = async (name, country, numberOfGuests, numberOfBedrooms, coordinate) => new Promise((resolve, reject) => {
+getHutsListWithFilters = async (name, country, numberOfGuests, numberOfBedrooms, coordinate, geographicalArea) => new Promise((resolve, reject) => {
     console.log(name);
-    let thisName = name=="null"? '%' : "%" + name + "%";
-    let thisCoordinate = coordinate==null? '%' : coordinate + "%" ;
-    let thisCountry = country==null? '%' : country + "%";
-    let thisNumberOfGuests = numberOfGuests==null? '%' : numberOfGuests + "%";
-    let thisNumberOfBedrooms = numberOfBedrooms==null? '%' : numberOfBedrooms + "%";
+    let thisName = name==null? '%' : "%" + name + "%";
+    let thisCoordinate = coordinate==null? '%' : coordinate;
+    let thisCountry = country==null? '%' : country;
+    let thisNumberOfGuests = numberOfGuests==null? '%' : numberOfGuests;
+    let thisNumberOfBedrooms = numberOfBedrooms==null? '%' : numberOfBedrooms;
+    let thisGeographicalArea = geographicalArea==null? '%' : geographicalArea;
     
     //console.log(thisName + " " + thisCoordinate + " " + thisCountry + " " + thisNumberOfGuests + " " + thisNumberOfBedrooms + " ")
     
-    const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint AND UPPER(P.Name) LIKE UPPER(?) AND Coordinates LIKE ? AND UPPER(Country) LIKE UPPER(?) AND UPPER(TypeOfPoint) = UPPER(?) AND NumberOfGuests LIKE ? AND NumberOfBedrooms LIKE ?'
+    const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint AND UPPER(P.Name) LIKE UPPER(?) AND Coordinates LIKE ? AND UPPER(Country) LIKE UPPER(?) AND UPPER(TypeOfPoint) = UPPER(?) AND NumberOfGuests LIKE ? AND NumberOfBedrooms LIKE ? AND UPPER(GeographicalArea) LIKE UPPER(?)'
 
-    db.all(sql, [thisName, thisCoordinate, thisCountry, "Hut", thisNumberOfGuests, thisNumberOfBedrooms], (err, row) => {
+    db.all(sql, [thisName, thisCoordinate, thisCountry, "Hut", thisNumberOfGuests, thisNumberOfBedrooms, thisGeographicalArea], (err, row) => {
         if (err) {
             reject(err);
             return;
@@ -45,7 +46,7 @@ function insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate) 
             return;
         }
 
-        insertPoint(name, coordinate, country, "HUT").then(pointId => {
+        insertPoint(name, coordinate, country, "Hut").then(pointId => {
 
             let query = `INSERT INTO HUTS (Name,Country ,NumberOfGuests,NumberOfBedrooms,IDPoint) VALUES(?,?,?,?,?);`;
             
