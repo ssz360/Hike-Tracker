@@ -129,7 +129,7 @@ app.post('/api/user/hikes',isLoggedIn,async (req,res)=>{
         //console.log("\n\n\n\tReturning\n",ret);
         res.status(200).json(ret);
     } catch (error) {
-        res.status(error.status).json(error.message);
+        res.status(500).json(error.message);
     }
 })
 
