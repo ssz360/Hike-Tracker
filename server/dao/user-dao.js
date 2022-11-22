@@ -19,7 +19,7 @@ exports.register = async reqBody => {
 	const phone = reqBody.phone ?? "";
 	return new Promise((resolve, reject) => {
 		const query =
-			"INSERT INTO USERS (Username, Type, Password, Salt, First_Name, Last_Name, Phone_Number) VALUES (?, ?, ?, ?, ?, ?, ?);";
+			"INSERT INTO USERS (Username, Type, Password, Salt, Name, Surname, PhoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?);";
 		// Generating a hashed password
 		const salt = crypto.randomBytes(16);
 		const hashedPassword = crypto.scryptSync(password, salt, 32);
