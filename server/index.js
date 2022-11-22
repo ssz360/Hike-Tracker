@@ -144,35 +144,80 @@ app.post('/api/newHike',isLoggedIn,upload.single('file'),async (req,res)=>{
     }
 })
 
+// DESCRIPTION ===========================================================================================================
+// Returns the list of huts according to a series of filters: name, country, numberOfGuests, numberOfBedrooms, coordinates
+// It can be used for searchbar too: name should be the only field passed on req.body
+// Searchbar is case insensitive
+
+// ***** example ****
+// {
+//     "name":"first hut",
+//     "country":"italy",
+//     "numberOfGuests":5,
+//     "numberOfBedrooms":4,
+//     "coordinates":"41.000144, 14.534893"
+//  }
+
 app.post('/api/huts', async (req, res) => {
-
-    // ***** example ****
-    // {
-    //     "name":"first hut",
-    //     "country":"italy",
-    //     "numberOfGuests":5,
-    //     "numberOfBedrooms":4,
-    //     "coordinates":"41.000144, 14.534893"
-    //  }
-
     const { name, country, numberOfGuests, numberOfBedrooms, coordinate } = req.body;
     huts.insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate)
         .then(lastId => res.json(lastId))
         .catch(err => res.status(500).json('Error on inserting hut: \r\n' + err));
 });
 
+// DESCRIPTION ===========================================================================================================
+// Returns the list of huts according to a series of filters: name, country, numberOfGuests, numberOfBedrooms, coordinates
+// It can be used for searchbar too: name should be the only field passed on req.body
+// Searchbar is case insensitive
+
+// ***** example - request ****
+// {
+//     "name":"first hut",
+//     "country":"italy",
+//     "numberOfGuests": null, //all fields can be null -> if everything is null the list has no filters
+//     "numberOfBedrooms":4,
+//     "coordinates":"41.000144, 14.534893"
+//     "geographicalArea" : null
+//  }
+
+// ***** example - response ****
+// [
+//  {
+//     "IDPoint":"First hut",
+//     "Name":"Hut name",
+//     "Coordinates":"41.000144, 14.534893"
+//     "GeographicalArea" : "Piedmont"
+//     "Country" : "Italy"
+//     "NumberOfGuests" : 5
+//     "numberOfBedrooms": 4,
+//  }
+// ]
 app.post('/api/huts/list', async (req, res) => {
-    const { name, country, numberOfGuests, numberOfBedrooms, coordinate } = req.body;
-    huts.getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, coordinate)
+    const { name, country, numberOfGuests, numberOfBedrooms, coordinate, geographicalArea } = req.body;
+    huts.getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, coordinate, geographicalArea)
         .then(huts => res.json(huts))
         .catch(err => res.status(500).json('Error looking for hut: \r\n' + err));
 });
+
+// DESCRIPTION ===========================================================================================================
+// Returns the list of parkings
 
 app.get('/api/parkings', async (req,res) => {
     parkings.getParkingsList()
     .then(pks => {res.json(pks)})
     .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
 });
+
+// DESCRIPTION ===========================================================================================================
+// Insert in the db a parking
+// The following fields in req.body are required: name, description, #slots
+
+// ***** example ****
+// {
+//     "name":"parking name",
+//     "desc":"this is a parking",
+//     "slots": 43
+//  }
 
 app.post('/api/parking', async (req,res) => {
   const pk = {

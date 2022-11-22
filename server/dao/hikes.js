@@ -42,7 +42,7 @@ getHikesList = async () => new Promise((resolve, reject) => {
             reject(err);
             return;
         }
-        const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+        const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Author:h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
         resolve(hikes);
     });
 });
