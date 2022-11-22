@@ -70,7 +70,7 @@ app.post('/api/login', passport.authenticate('local'), (req, res) => {
 app.post("/api/register", user.register);
 app.post("/api/resendVerification", isLoggedIn, tokens.resendVerification);
 app.get("/api/verify/:token", tokens.verify);
-app.post("/api/referencePoint/", isLoggedIn, ref.addReferencePoint);
+app.post("/api/referencePoint", ref.addReferencePoint);
 
 app.get('/api/hikes', async (req, res) => {
     hikesdao.getHikesList()
