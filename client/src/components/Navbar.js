@@ -12,7 +12,6 @@ function Header(props) {
         <Navbar bg="dark" variant="dark">
             <Navbar.Brand as={Link} to="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
             <Nav>
-                <Nav.Link as={Link} to="/parking">Parkings</Nav.Link>
                 {props.logged ? (
                     <>
                         {
