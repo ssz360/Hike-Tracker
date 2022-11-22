@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . .
 # ==== BUILD =====
 # Install dependencies (npm ci makes sure the exact versions in the lockfile gets installed)
-RUN npm ci 
+RUN npm i 
 RUN npm install -g nodemon
 # ==== RUN =======
 # Set the env to "production"
