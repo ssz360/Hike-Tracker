@@ -31,7 +31,7 @@ async function getHikesList() {
             .then((response) => {
                 if (response.ok) {
                     response.json().then(ret=>{
-                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,"",h.Length,h.Ascent,h.Difficulty,"",h.StartPoint,h.EndPoint,h.ReferencePoints,h.Description,[[0,0]],[0,0])));
+                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,h.Author,h.Length,h.Ascent,h.Difficulty,h.ExpectedTime,h.StartPoint,h.EndPoint,h.ReferencePoints,h.Description,[[0,0]],[0,0])));
                         resolve(arr);
                     });
                 } else {
