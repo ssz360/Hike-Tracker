@@ -17,6 +17,8 @@ const user = require("./user");
 const userdao= require('./dao/user-dao');
 const tokens = require("./tokens");
 const ref = require("./referencePoints");
+const parkings=require('./dao/parkings');
+
 
 app.use(express.json());
 passport.use(new LocalStrategy((username, password, callback)=>{
