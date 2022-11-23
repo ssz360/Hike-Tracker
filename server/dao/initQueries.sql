@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS HIKES (
   Difficulty VARCHAR NOT NULL,
   StartPoint VARCHAR NOT NULL,
   EndPoint VARCHAR NOT NULL,
-  ReferencePoints VARCHAR,
   Description VARCHAR
   );
 
@@ -28,7 +27,13 @@ CREATE TABLE IF NOT EXISTS POINTS (
   Name VARCHAR NOT NULL,
   Coordinates VARCHAR NOT NULL,
   GeographicalArea VARCHAR NOT NULL,
-  TypeOfPoint VARCHAR NOT NULL
+  TypeOfPoint VARCHAR NOT NULL,
+  IDHike INTEGER,
+  IDHut INTEGER,
+  IDParking INTEGER,
+  FOREIGN KEY(IDHike) REFERENCES HIKES(IDHike),
+	FOREIGN KEY(IDHut) REFERENCES POINTS(IDPoint)
+	FOREIGN KEY(IDParking) REFERENCES POINTS(IDPoint)
 );
 
 CREATE TABLE IF NOT EXISTS HUTS (
@@ -97,15 +102,14 @@ VALUES
   ( 11, 'Casa Viù', '', 'Piedmont', 'Hut');
 
 
-INSERT INTO HIKES (Name , Author, Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, ReferencePoints, Description)
+INSERT INTO HIKES (Name , Author, Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, Description)
 VALUES  (
   'Lago di Afframont', 
   'jonhutworker@gmail.com', 
   3, 7.5, 400, 
   'TOURIST', 
   'Parcheggio Balme',
-  'Rifugio del Gufo', 
-  NULL, 
+  'Rifugio del Gufo',  
   'Here the reflections of the snow-capped mountains and the larch trees in autumnal garments create a truly unique setting. The excursion takes place on a path, initially inside a dense forest while, in the last part, wide plateaus and old pastures follow one another. The lake is set in a basin with a particular and suggestive setting'),
 
   ('Rifugio Gastaldi', 
@@ -114,7 +118,6 @@ VALUES  (
   'HIKER', 
   'Parcheggio Graie', 
   'Rifugio Ciamarella',
-  NULL,
   'Ciamarella (3767 m), the highest of the Lanzo Valleys. There is also a beautiful view towards the Crot del Ciaussinè basin , with its lakes, and the surrounding peaks.'),
 
 ('Rifugio Gastaldi', 
@@ -123,7 +126,6 @@ VALUES  (
   'HIKER', 
   'Parcheggio Graie', 
   'Rifugio Gastaldi',
-  NULL,
   'Ciamarella (3767 m), the highest of the Lanzo Valleys. There is also a beautiful view towards the Crot del Ciaussinè basin , with its lakes, and the surrounding peaks.'), 
 
   ('Bivacco Gias Nuovo', 
@@ -131,8 +133,7 @@ VALUES  (
   8.5, 2.45, 450, 
   'PROFESSIONAL HIKER', 
   'Parcheggio Forno Alpi', 
-  'Bivacco Gias Nuovo', 
-  NULL, 
+  'Bivacco Gias Nuovo',  
   'The Gias Nuovo Bivouac is located in the Vallone Di Sea, in the Val Grande , in Forno Alpi Graie at an altitude of 1893 m. The excursion develops entirely on a path  that climbs quite steep at times. The bivouac is located at the end of the vast and wide plateau of Gias Nuovo. It is a bivouac built in 2019 entirely of wood and with a very particular shape.'),
 
   ('Santa Cristina', 
@@ -140,8 +141,7 @@ VALUES  (
   13.5, 1.30, 7500, 
   'PROFESSIONAL HIKER', 
   'Parcheggio Cantoira', 
-  'Bivacco di Santa Cristina', 
-  NULL, 
+  'Bivacco di Santa Cristina',  
   'The Sanctuary of Santa Cristina  is located on a rocky spur overlooking the entrance to two valleys: Val Grande and Val d Ala. It is located at an altitude of 1340 m. The Sanctuary stands out above a staircase and its position allows you to admire the main peaks of the Lanzo Valleys.'),
 
   ('Rocciamelone', 
@@ -149,8 +149,7 @@ VALUES  (
   3, 2.30, 1650, 
   'HIKER', 
   'Rifugio La Riposa', 
-  'Casa Viù', 
-  NULL, 
+  'Casa Viù',  
   'The climb to Rocciamelone is a great classic of excursions in Piedmont and in the Val di Susa in particular. It is in fact a very coveted peak frequented by Piedmontese hikers and beyond. It is located at an altitude of 3538 m and on its top there is the highest sanctuary in Europe , a bronze statue of the Madonna and the Bivouac Rifugio Santa Maria. Rocciamelone is a mountain that divides the Val di Susa from the Val di Viù . In fact, the territories of Mompantero, Novalesa and Usseglio converge on the summit. From the top the view sweeps over  Monviso , Mont Blanc , Gran Paradiso , Monte Rosa and the Turin hills. A view to take your breath away.');
 
 INSERT INTO HIKESMAPDATA(Coordinates,CenterLat,CenterLon,MaxLen,MaxLon,MinLen,MinLon)
