@@ -2,6 +2,7 @@
 const express = require('express');
 const hikesdao = require('./dao/hikes');
 const hikes= require('./services/hikes');
+const parkings = require('./dao/parkings');
 const multer=require('multer');
 const huts = require('./dao/huts');
 const app = express();
@@ -16,6 +17,7 @@ const cors = require('cors');
 const user = require("./user");
 const userdao= require('./dao/user-dao');
 const tokens = require("./tokens");
+const ref = require("./referencePoints");
 
 app.use(express.json());
 passport.use(new LocalStrategy((username, password, callback)=>{
@@ -69,6 +71,7 @@ app.post('/api/login', passport.authenticate('local'), (req, res) => {
 app.post("/api/register", user.register);
 app.post("/api/resendVerification", isLoggedIn, tokens.resendVerification);
 app.get("/api/verify/:token", tokens.verify);
+app.post("/api/referencePoint", ref.addReferencePoint);
 
 app.get('/api/hikes', async (req, res) => {
     hikesdao.getHikesList()
@@ -126,7 +129,7 @@ app.post('/api/user/hikes',isLoggedIn,async (req,res)=>{
         //console.log("\n\n\n\tReturning\n",ret);
         res.status(200).json(ret);
     } catch (error) {
-        res.status(error.status).json(error.message);
+        res.status(500).json(error.message);
     }
 })
 

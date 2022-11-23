@@ -78,10 +78,9 @@ VALUES
 
 INSERT INTO PARKINGS (IDPoint, Name, Description, SlotsTot, SlotsFull) 
 VALUES 
-  ( 1, 'Parcheggio Balme', '', 200, 67),
-  ( 3, 'Parcheggio Graie', '', 200, 67),
-  ( 6, 'PArcheggio Forno Alpi', '', 200, 67),
-  ( 8, 'Parcheggio Cantoira', '', 200, 67);
+  ( 1, 'Bardonecchia Park', 'Lorem ipsum', 60, 23),
+  ( 3, 'Posteggio Montuoso', 'Dolor sit amet', 20, 11),
+  ( 6, 'NewCarPark', 'Cras justo odio', 80, 59);
 
 INSERT INTO POINTS(IDPoint, Name, Coordinates, GeographicalArea, TypeOfPoint) 
 VALUES 
