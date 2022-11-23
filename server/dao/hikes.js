@@ -2,7 +2,7 @@ const db=require('./dao');
 const MAXDOUBLE = 4294967295;
 
 /*getHikesWithMapList = async () => new Promise((resolve, reject) => {
-    const sql = 'SELECT H.IDHike AS IDHike,Name,Length,ExpectedTime,Ascent,Difficulty,StartPoint,EndPoint,ReferencePoints,Description,Coordinates,Center FROM HIKES H,HIKESMAPDATA M WHERE H.IDHike=M.IDHike'              
+    const sql = 'SELECT H.IDHike AS IDHike,Name,Length,ExpectedTime,Ascent,Difficulty,StartPoint,EndPoint,Description,Coordinates,Center FROM HIKES H,HIKESMAPDATA M WHERE H.IDHike=M.IDHike'              
     db.all(sql, [], async (err, rows) => {
         if(err) {
             reject(err);
@@ -11,16 +11,16 @@ const MAXDOUBLE = 4294967295;
         resolve(rows.map(h=>({id:h.IDHike,name:h.Name,length:h.Length,
             expectedTime:h.ExpectedTime,ascent:h.Ascent,
             difficulty:h.Difficulty,startPoint:h.StartPoint,
-            endPoint:h.EndPoint,referencePoints:h.ReferencePoints,
+            endPoint:h.EndPoint,
             description:h.Description,coordinates:JSON.parse(h.Coordinates),
             center:JSON.parse(h.Center)})));
     });
 });*/
 
-newHike=async (name,author,len,ascent,desc,difficulty,startPoint,endPoint,referencePoints,coordinates,centerlat,centerlon,maxLen,maxLon,minLen,minLon)=>new Promise((resolve, reject) => {
-    const sqlhike="INSERT INTO HIKES (Name , Author, Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, ReferencePoints, Description) VALUES(?,?,?,?,?,?,?,?,?,?)";
+newHike=async (name,author,len,ascent,desc,difficulty,startPoint,endPoint,coordinates,centerlat,centerlon,maxLen,maxLon,minLen,minLon)=>new Promise((resolve, reject) => {
+    const sqlhike="INSERT INTO HIKES (Name , Author, Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, Description) VALUES(?,?,?,?,?,?,?,?,?)";
     const sqlmap="INSERT INTO HIKESMAPDATA(Coordinates,CenterLat,CenterLon,MaxLen,MaxLon,MinLen,MinLon) VALUES(?,?,?,?,?,?,?)";
-    db.run(sqlhike,[name,author,len,0,ascent,difficulty,startPoint,endPoint,referencePoints,desc],err=>{
+    db.run(sqlhike,[name,author,len,0,ascent,difficulty,startPoint,endPoint,desc],err=>{
         if (err){
             //console.log("Err hike query",err);
             reject({status:503,message:{err}});
@@ -42,7 +42,7 @@ getHikesList = async () => new Promise((resolve, reject) => {
             reject(err);
             return;
         }
-        const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Author:h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+        const hikes = row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Author:h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, Description: h.Description}))
         resolve(hikes);
     });
 });
@@ -93,12 +93,12 @@ getHikesList = async () => new Promise((resolve, reject) => {
             console.log("Rows are",row);
             if(maxlen===undefined){
                 resolve(hikes);
-                hikes=row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}))
+                hikes=row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, Description: h.Description}))
             }
             else{
                 const proms=[];
                 let hikes=[];
-                row.forEach(r=>proms.push(isHikeInArea({IDHike: r.IDHike, Name: r.Name, Length: r.Length, ExpectedTime: r.ExpectedTime, Ascent: r.Ascent, Difficulty: r.Difficulty, StartPoint: r.StartPoint, EndPoint: r.EndPoint, ReferencePoints: r.ReferencePoints, Description: r.Description},maxle,minlen,maxlon,minlon)));
+                row.forEach(r=>proms.push(isHikeInArea({IDHike: r.IDHike, Name: r.Name, Length: r.Length, ExpectedTime: r.ExpectedTime, Ascent: r.Ascent, Difficulty: r.Difficulty, StartPoint: r.StartPoint, EndPoint: r.EndPoint, Description: r.Description},maxle,minlen,maxlon,minlon)));
                 Promise.all(proms).then(res=>{
                     res.forEach(h=>{
                         if(h!==undefined) hikes.push(h);
@@ -118,12 +118,12 @@ getHikesList = async () => new Promise((resolve, reject) => {
             let hikes=[];
             console.log("Rows are",row);
             if (maxlen===undefined){
-                hikes=row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, ReferencePoints: h.ReferencePoints, Description: h.Description}));
+                hikes=row.map((h) => ({IDHike: h.IDHike, Name: h.Name, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, StartPoint: h.StartPoint, EndPoint: h.EndPoint, Description: h.Description}));
                 resolve(hikes);
             }
             else{
                 const proms=[];
-                row.forEach(r=>proms.push(isHikeInArea({IDHike: r.IDHike, Name: r.Name, Length: r.Length, ExpectedTime: r.ExpectedTime, Ascent: r.Ascent, Difficulty: r.Difficulty, StartPoint: r.StartPoint, EndPoint: r.EndPoint, ReferencePoints: r.ReferencePoints, Description: r.Description},maxlen,minlen,maxlon,minlon)));
+                row.forEach(r=>proms.push(isHikeInArea({IDHike: r.IDHike, Name: r.Name, Length: r.Length, ExpectedTime: r.ExpectedTime, Ascent: r.Ascent, Difficulty: r.Difficulty, StartPoint: r.StartPoint, EndPoint: r.EndPoint, Description: r.Description},maxlen,minlen,maxlon,minlon)));
                 Promise.all(proms).then(res=>{
                     res.forEach(h=>{
                         if(h!==undefined) hikes.push(h);
@@ -177,5 +177,48 @@ const getHikeMap=async id => new Promise((resolve, reject) => {
     });
 });
 
-const hikes = { getHikesList,getHikesListWithFilters,newHike,getHikeMap};
+linkHutParkingToHike = async (Type,Name,IDHike,IDParking,IDHut,GeographicalArea,Coordinates)=> new Promise((resolve, reject) => {
+    const getHikeSql = 'SELECT * FROM HIKES WHERE IDHike = ? ';
+    const getHut = 'SELECT * FROM HUTS WHERE IDPoint = ? ';
+    const getParking = 'SELECT * FROM PARKINGS WHERE IDPoint = ? ';
+
+    let pointSql = Type === 'Hut' ? getHut : getParking;
+    let pointId = Type === 'Hut' ? IDHut : IDParking;
+
+    db.all(getHikeSql, [IDHike], (err, row) => {
+        if(err) {
+            reject({code:500,message:err});
+            return;
+        }
+
+        if(!row || !row.length) {
+            reject({code:404,message:'hike not found'});
+            return;
+        }
+
+        db.all(pointSql, [pointId], (err, row) => {
+            if(err) {
+                reject({code:500,message:err});
+                return;
+            }
+    
+            if(!row || !row.length) {
+                reject({code:404,message:'hike not found'});
+                return;
+            }
+
+            const sqlPoint = "INSERT INTO POINTS (Name , Coordinates, GeographicalArea, TypeOfPoint, IDHike, IDHut, IDParking) VALUES(?,?,?,?,?,?,?)";
+
+
+            db.run(sqlPoint,[Name,Coordinates,GeographicalArea,Type,IDHike,IDHut,IDParking],err=>{
+                if (err){
+                    reject({code:500,message:err});
+                    return;
+                }
+                resolve();
+            })
+        });
+    });
+});
+const hikes = { getHikesList,getHikesListWithFilters,newHike,getHikeMap,linkHutParkingToHike};
 module.exports = hikes;

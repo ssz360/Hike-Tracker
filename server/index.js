@@ -224,6 +224,31 @@ app.get('/api/logged',isLoggedIn, async (req,res)=>{
 
     res.json({ username: req.user.username, type: req.user.type });
 })
+// DESCRIPTION ===========================================================================================================
+// Link hut/parking to hikes
+// task : B - Update the db structure to link points to hikes
+ 
+// ***** example ****
+// {
+//     "Type":"Hut" or "Parking",
+//     "Name":"test",
+//     "IDHike":1,
+//     "IDParking":1,
+//     "IDHut":2622,
+//     "GeographicalArea":"torino",
+//     "Coordinates":"55.25,66.35"
+// } 
+
+app.post('/api/linkToHike',async(req,res)=>{
+    const {Type,Name,IDHike,IDParking,IDHut,GeographicalArea,Coordinates} = req.body;
+
+    try {
+        await hikesdao.linkHutParkingToHike(Type,Name,IDHike,IDParking,IDHut,GeographicalArea,Coordinates);
+        res.status(201).end();
+    } catch (error) {
+        res.status(error.code).json(error.message);
+    }
+});
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
