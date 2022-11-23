@@ -17,6 +17,7 @@ function Header(props) {
                         {
                             props.user.type === "localGuide" ?
                                 <><Nav.Link as={Link} to="/localGuide">Local guide dashboard</Nav.Link>
+                                    <Nav.Link as={Link} to="/hut">Hut</Nav.Link>
                                     <Nav.Link as={Link} to="/" className="px-4" onClick={async e => {
                                         try {
                                             await api.logout();

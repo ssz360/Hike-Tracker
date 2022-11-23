@@ -16,9 +16,14 @@ import API from './API.js';
 import { Header, Login, SignUp,CheckEmail } from './components';
 import { useEffect, useState } from 'react';
 function App() {
+
+  let vett = [{name: "Hut1", country: "Italy", numOfGuests: 10, numOfBedrooms: 3}, 
+    {name: "Hut2", country: "Italy", numOfGuests: 30, numOfBedrooms: 7},
+    {name: "Hut3", country: "Italy", numOfGuests: 25, numOfBedrooms: 5}];
   
   const [logged,setLogged]=useState(false);
   const [hikes, setHikes] = useState([]);
+  const [huts, setHuts] = useState(vett);
   const [message, setMessage] = useState('');
   const [user,setUser]=useState('');
   const location=useLocation();
@@ -92,7 +97,7 @@ function App() {
               <Route path='/' element={<HikesList logged={logged} hikes={hikes} filtering={filtering}/>} />
               <Route path='/parking' element={<ParkingLot/>} />
               <Route path='/localGuide' element={<LocalGuide/>}></Route>
-              <Route path='/hut' element={<Hut newHut={newHut}/>} />
+              <Route path='/hut' element={<Hut newHut={newHut} huts={huts}/>} />
               <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
               <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
               <Route path='/checkemail' element={<CheckEmail/>}/>
