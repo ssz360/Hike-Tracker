@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import API from "../lib/api";
+import api from "../lib/api";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { Row, Col } from 'react-bootstrap';
 
@@ -82,7 +82,7 @@ function SignUp(props) {
 
                         else {
                             try {
-                                const usr = await API.register(email, password, name, surname, phoneNumber);
+                                const usr = await api.register(email, password, name, surname, phoneNumber);
                                 //props.setLogged(true);
                                 //navigate('/' + usr.type + '/' + usr.username);
                                 navigate('/CheckEmail');

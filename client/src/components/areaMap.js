@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, useMap,useMapEvents,Circle } from 'react-leafl
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
 
-const KMFROLAT=111111;
+const KMFROLAT=110574;
 
 const POSITION_CLASSES = {
     bottomleft: 'leaflet-bottom leaflet-left',

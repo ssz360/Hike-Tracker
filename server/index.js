@@ -103,33 +103,19 @@ app.post('/api/hikes', async (req, res) => {
         londegr=req.body.area.radius/KMPERLON(centerlon);
         //console.log("Latdeggr",latdegr,"Londegr",londegr);
     }
-    hikesdao.getHikesListWithFilters(false,req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,centerlat,centerlon,latdegr,londegr)
-        .then(hikes => res.json(hikes) )
+    hikesdao.getHikesListWithFilters(req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,centerlat,centerlon,latdegr,londegr)
+        .then(hikes => {res.json(hikes)} )
         .catch(error => res.status(error.status).json(error.message).end());
 });
 
-app.post('/api/user/hikes',isLoggedIn,async (req,res)=>{
+app.get('/api/hikes/:id/map',isLoggedIn,async (req,res)=>{
     try {
-        //console.log("In user/hikes with",req.body);
-        let centerlat,centerlon,latdegr,londegr;
-        if (req.body.area===undefined){
-            centerlat=0;
-            centerlon=0;
-            latdegr=90;
-            londegr=180;
-        }
-        else{
-            centerlat=req.body.area.center.lat;
-            centerlon=req.body.area.center.lng;
-            latdegr=req.body.area.radius/KMPERLAT;
-            londegr=Math.abs(req.body.area.radius/KMPERLON(centerlon));
-            //console.log("Latdeggr",latdegr,"Londegr",londegr);
-        }
-        const ret=await hikesdao.getHikesListWithFilters(true,req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,centerlat,centerlon,latdegr,londegr);
+        //console.log("IN GET MAP FOR ",req.params.id);
+        const ret=await hikesdao.getHikeMap(parseInt(req.params.id));
         //console.log("\n\n\n\tReturning\n",ret);
         res.status(200).json(ret);
     } catch (error) {
-        res.status(500).json(error.message);
+        res.status(error.status).json(error.message);
     }
 })
 
@@ -233,6 +219,11 @@ app.post('/api/parking', async (req,res) => {
     res.status(503).json({error:`Database error during the creation of the parking lot`});
   }
 });
+
+app.get('/api/logged',isLoggedIn, async (req,res)=>{
+
+    res.json({ username: req.user.username, type: req.user.type });
+})
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Alert, Button } from "react-bootstrap";
+import { Route, Routes, useParams } from "react-router-dom";
 import AddHikeForm from "../components/addHikeForm";
 import Hut from "./Hut";
+import LocalGuideHikes from "./localGuideHikes";
 import ParkingLot from "./ParkingLot";
+import LocalGuideHikeUpdate from './LocalGuideHikeUpdate';
 
-
-function LocalGuide(props){
+/*function LocalGuide(props){
     const [newHike,setNewHike]=useState(false);
     const [newHut,setNewHut]=useState(false);
     const [newParking,setNewParking]=useState(false);
@@ -103,6 +105,33 @@ function LocalGuide(props){
 
         </div>
     </>)
+}*/
+
+
+function LocalGuide(props){
+    /*const [newHike,setNewHike]=useState(false);
+    const [newHut,setNewHut]=useState(false);
+    const [newParking,setNewParking]=useState(false);
+    const [hutOpenArea,setHutOpenArea]=useState(false);
+    const [hutName,setHutName]=useState('');
+    const [hutCountry,setHutCountry]=useState('');
+    const [hutNumBeds,setHutNumBeds]=useState('');
+    const [hutNumGuests,setHutNumGuests]=useState('');
+    const [hutCoords,setHutCoords]=useState();
+    const [hikeName,setHikeName]=useState('');
+    const [hikeDifficulty,setHikeDifficulty]=useState();
+    const [hikeDesc,setHikeDesc]=useState('');
+    const [hikeFile,setHikeFile]=useState();
+    const [hikeFileName,setHikeFileName]=useState('');*/
+    return(
+        <Routes>
+            <Route path="/hikes" element={<LocalGuideHikes hikes={props.hikes}/>}/>
+            <Route path="/hikes/:hikeid/*" element={<LocalGuideHikeUpdate hikes={props.hikes}/>}/>
+            <Route path="/newHike" element={<AddHikeForm />}/>
+            <Route path="/newHut" element={<Hut/>}/>
+            <Route path="/newParking" element={<ParkingLot/>}/>
+        </Routes>
+    )
 }
 
 export default LocalGuide;

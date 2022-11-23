@@ -4,8 +4,6 @@ import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
 
 function HikesList(props){
-
-    let displayedHikes = [];
     const [center,setCenter]=useState();
     const [radius,setRadius]=useState(0);
     const [lenMin, setLenMin] = useState(null);
@@ -16,14 +14,10 @@ function HikesList(props){
     const [timeMin, setTimeMin] = useState(null);
     const [timeMax, setTimeMax] = useState(null);
     const [openArea, setOpenArea] = useState(false);
-    //console.log("Displaying with logged?",props.logged);
 
-    props.hikes.forEach(hike => displayedHikes.push(hike));
-
-
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        props.filtering(center!==undefined?{center:center,radius:radius}:undefined, 
+        await props.filtering(center!==undefined?{center:center,radius:radius}:undefined, 
           lenMin!==''? lenMin : null, 
           lenMax!==''? lenMax : null, 
           dif!==''? dif : null, 
@@ -124,7 +118,7 @@ function HikesList(props){
         </div>
         <Row className="mt-2">
               {
-                <Display logged={props.logged} displayedHikes={displayedHikes}/>
+                <Display logged={props.logged} displayedHikes={props.hikes}/>
               }
         </Row>
         <div className="mb-5"> </div>
@@ -143,7 +137,7 @@ function HikeRow(props){
     const auth = props.hike.author.substring(0, props.hike.author.indexOf('@'));
     const [open, setOpen] = useState(false);
     return (
-    <><Col xs={4} className="mt-2"><Card>
+    <><Col xs={12} sm={6} md={4} className="mt-2"><Card>
     <Card.Header>
     <Container><Row>
       <Col xs={8}><h4>{props.hike.name}</h4></Col>

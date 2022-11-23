@@ -16,10 +16,15 @@ function Header(props) {
                     <>
                         {
                             props.user.type === "localGuide" ?
-                                <><Nav.Link as={Link} to="/localGuide">Local guide dashboard</Nav.Link>
+                                <><Nav.Link as={Link} to="/localGuide/hikes">My hikes</Nav.Link>
+                                <Nav.Link as={Link} to="/localGuide/newHike">hike</Nav.Link>
+                                <Nav.Link as={Link} to="/localGuide/newHut">hut</Nav.Link>
+                                <Nav.Link as={Link} to="/localGuide/newParking">parking</Nav.Link>
                                     <Nav.Link as={Link} to="/" className="px-4" onClick={async e => {
                                         try {
                                             await api.logout();
+                                            props.setLogged(false);
+                                            props.setUser();
                                         } catch (error) {
                                             navigate('/');
                                         }
@@ -28,6 +33,8 @@ function Header(props) {
                                 <Nav.Link as={Link} to="/" className="px-4" onClick={async e => {
                                     try {
                                         await api.logout();
+                                        props.setLogged(false);
+                                        props.setUser();
                                     } catch (error) {
                                         navigate('/');
                                     }

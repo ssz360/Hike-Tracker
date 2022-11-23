@@ -3,10 +3,33 @@ import 'leaflet/dist/leaflet.css';
 import {divIcon} from 'leaflet';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MapContainer,TileLayer, Polyline, Marker } from "react-leaflet";
+import { useEffect, useState } from "react";
+import api from "../lib/api";
+import { Spinner } from "react-bootstrap";
 
 
 
 function HikeMapLink(props){
+
+    const [bounds,setBounds]=useState([[0,0],[0.1,0.1]]);
+    const [coordinates,setCoordinates]=useState([]);
+    const [center,setCenter]=useState([0.05,0.05]);
+    useEffect(()=>{
+        const getMapDetails=async()=>{
+            try {
+                console.log("GETTIN MAP DATA FOR",props.hike.id)
+                const mapdets=await api.getHikeMap(props.hike.id);
+                setBounds(mapdets.bounds);
+                setCoordinates(mapdets.coordinates);
+                setCenter(mapdets.center);
+            } catch (error) {
+                setBounds([[0,0],[0.1,0.1]]);
+                setCenter([0.05,0.05]);
+                setCoordinates([]);
+            }
+        }
+        getMapDetails();
+    },[]);
     const iconsvg={
         "selectedPoint":'<svg xmlns="http://www.w3.org/2000/svg" width="32" height="auto" fill="red" class="bi bi-geo-alt-fill" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>',
         "hut":'<svg xmlns="http://www.w3.org/2000/svg" width="32" height="auto" fill="red" class="bi bi-houses-fill" viewBox="0 0 16 16"><path d="M7.207 1a1 1 0 0 0-1.414 0L.146 6.646a.5.5 0 0 0 .708.708L1 7.207V12.5A1.5 1.5 0 0 0 2.5 14h.55a2.51 2.51 0 0 1-.05-.5V9.415a1.5 1.5 0 0 1-.56-2.475l5.353-5.354L7.207 1Z"/><path d="M8.793 2a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708L8.793 2Z"/></svg>',
@@ -62,11 +85,15 @@ function HikeMapLink(props){
     //{props.hike.referencePoints.filter(p=>p.id!==props.hike.startPoint.id && p.id!==props.hike.endPoint.id).map(p=>getMarkerForPoint(p,false,false,props.selectedPoint===p.id))}
     return(
         <>
-            <MapContainer bounds={props.hike.bounds} style={{width:"auto",height:props.height}} scrollWheelZoom={true}>
+            {bounds[0][0]===0?
+                    <Spinner animation="grow" />
+                :
+            <MapContainer bounds={bounds} style={{width:"auto",height:"70vh"}} scrollWheelZoom={true}>
                 <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                <Polyline pathOptions={pathopts} positions={props.hike.coordinates} />
+                <Polyline pathOptions={pathopts} positions={coordinates} />
                 {props.points.map(p=>getMarkerForPoint(p,p.id===props.hike.startPoint.id,p.id===props.hike.endPoint.id,props.selectedPoint===p.id))}
             </MapContainer>
+            }
         </>
     )
 
