@@ -13,55 +13,68 @@ function Hut(props) {
 
     let displayedHuts = [];
     props.huts.forEach(hut => displayedHuts.push(hut));
+
+    const filterHutSubmit = (event) => {
+      event.preventDefault();
+      props.filteringHut(filterName!==''? filterName : null, 
+        filterCountry!==''? filterCountry : null, 
+        filterGuests!==''? filterGuests : null, 
+        filterBeds!==''? filterBeds : null);
+  
+  }
     
     return(<>{!add? (<>
-    <Row className="justify-content-md-center mt-4 mb-2">
-    <Col xs={4}>
-    <Form className="d-flex">
-            <Form.Control
-              type="search"
-              placeholder="Search Name"
-              className="me-2"
-              aria-label="Search"
-            />
-            <Button variant="outline-success">Search</Button>
-    </Form>
-    </Col>
+    <Row className="mt-2">
+      <div className="text-center"><h4>Search an hut with the filters!</h4></div>
     </Row>
 
-    <Row className="justify-content-md-center"><h3>Filters</h3></Row>
+    <Row className="justify-content-md-center mt-4 mb-2">
+    <Col xs={4}>
+    <Form>
+      <Form.Group className="mb-3" controlId="InputName">
+        <Form.Label>Name</Form.Label>
+        <Form.Control type="text" placeholder="Name" onChange={(event) => setFilterName(event.target.value)}/>
+      </Form.Group>
+    </Form>
+    </Col>
+
+    
+    <Col xs={4}>
+    <Form>
+      <Form.Group className="mb-3" controlId="InputCountry">
+        <Form.Label>Country</Form.Label>
+        <Form.Control type="text" placeholder="Country" onChange={(event) => setFilterCountry(event.target.value)}/>
+      </Form.Group>
+    </Form>
+    </Col>
+
+    </Row>
+
     <Row className="justify-content-md-center">
     <Col xs={4}>
     <Form>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>Country</Form.Label>
-        <Form.Control type="text" placeholder="Country" />
+      <Form.Group className="mb-3" controlId="InputGuests">
+        <Form.Label>N° of guest</Form.Label>
+        <Form.Control type="number" min={0} step={1} onChange={(event) => setFilterGuests(event.target.value)}/>
       </Form.Group>
     </Form>
     </Col>
 
     <Col xs={4}>
     <Form>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>Minimum n° of guest</Form.Label>
-        <Form.Control type="number" min={0} step={1} />
-      </Form.Group>
-    </Form>
-    </Col>
-
-    <Col xs={4}>
-    <Form>
-      <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-        <Form.Label>Minimum n° of bedrooms</Form.Label>
-        <Form.Control type="number" min={0} step={1} />
+      <Form.Group className="mb-3" controlId="InputBeds">
+        <Form.Label>N° of bedrooms</Form.Label>
+        <Form.Control type="number" min={0} step={1} onChange={(event) => setFilterBeds(event.target.value)}/>
       </Form.Group>
     </Form>
     </Col>
     </Row>
 
-    <Row>
-        <Col xs={4}>
-            <Button variant="success" type='submit'>Apply filters</Button>
+    <Row className="justify-content-md-center">
+        <Col xs={8}>
+        <Form onSubmit={(filterHutSubmit)}>
+            <Button variant="success" type='submit'>Search</Button>
+        </Form>
         </Col>
     </Row>
 

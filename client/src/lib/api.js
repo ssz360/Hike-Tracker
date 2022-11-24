@@ -224,7 +224,6 @@ async function getHutsListWithFilters(name, country, numberOfGuests, numberOfBed
                     response.json().then(ret=>{
                         const arr=[];ret.forEach(h=>arr.push(new Hut(h.IDPoint, h.Name, h.Coordinates, h.GeographicalArea,
                             h.Country, h.NumberOfGuests, h.NumberOfBedrooms )));
-                        console.log("RETURNING NEW ARR",arr);
                         resolve(arr);
                     });
                 } else {

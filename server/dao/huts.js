@@ -16,7 +16,6 @@ getHutsList = async () => new Promise((resolve, reject) => {
 });
 
 getHutsListWithFilters = async (name, country, numberOfGuests, numberOfBedrooms, coordinate, geographicalArea) => new Promise((resolve, reject) => {
-    console.log(name);
     let thisName = name==null? '%' : "%" + name + "%";
     let thisCoordinate = coordinate==null? '%' : coordinate;
     let thisCountry = country==null? '%' : country;

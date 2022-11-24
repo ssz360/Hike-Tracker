@@ -30,6 +30,7 @@ function App() {
   const location=useLocation();
   const path=location.pathname;
   const navigate=useNavigate();
+  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
     const getHikesUseEff=async ()=>{
@@ -62,14 +63,14 @@ function App() {
 }, [logged])
 
 useEffect(() => {
-  if (logged) {
+  if (logged && dirty) {
   api.getHutsListWithFilters(null, null, null, null, null, null)
     .then((hut) => {
       setHuts(hut); 
-      console.log(hut);})
+      setDirty(false);})
     .catch(err => setMessage(err.error))
   }
-}, [logged])
+}, [logged, dirty])
 
   async function filtering(area, lengthMin, lengthMax, dif, ascentMin, ascentMax, expectedTimeMin, expectedTimeMax){
     //lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty
@@ -84,10 +85,10 @@ useEffect(() => {
     }
   }
 
-  async function filteringHut(name, country, numberOfGuests, numberOfBedrooms, coordinate){
+  async function filteringHut(name, country, numberOfGuests, numberOfBedrooms){
     try {
-      const newList=logged?await API.getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, coordinate, null): console.log("Error! Not authorized");
-      //console.log(newList);
+      const newList=logged?await api.getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, null, null): 
+        console.log("Error! User not authorized");
       setHuts(newList);
     } catch (error) {
       setHuts(-1);
@@ -106,7 +107,7 @@ useEffect(() => {
 
   return (
     <>
-      <Header logged={logged} user={user}/>
+      <Header logged={logged} user={user} setDirty={setDirty}/>
       <Container>
         <Row>
           <Col>
@@ -114,7 +115,7 @@ useEffect(() => {
               <Route path='/' element={<HikesList logged={logged} hikes={hikes} filtering={filtering}/>} />
               <Route path='/parking' element={<ParkingLot/>} />
               <Route path='/localGuide' element={<LocalGuide/>}></Route>
-              <Route path='/hut' element={<Hut newHut={newHut} huts={huts}/>} />
+              <Route path='/hut' element={<Hut newHut={newHut} huts={huts} filteringHut={filteringHut}/>} />
               <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
               <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
               <Route path='/checkemail' element={<CheckEmail/>}/>

@@ -68,13 +68,13 @@ CREATE TABLE IF NOT EXISTS "REFERENCE_POINTS" (
 
 INSERT INTO HUTS (IDPoint, Name, Country, NumberOfGuests, NumberOfBedRooms)
 VALUES 
-  ( 2, 'Rifugio del Gufo', 'Italy', 30, 17),
+  ( 2, 'Rifugio del Gufo', 'Italy', 20, 5),
   ( 4, 'Rifugio Ciamarella', 'Italy', 30, 17),
-  ( 5, 'Rifugio Castaldi', 'Italy', 30, 17),
-  ( 7, 'Bivacco Gias Nuovo', 'Italy', 30, 17),
+  ( 5, 'Rifugio Castaldi', 'Italy', 35, 7),
+  ( 7, 'Bivacco Gias Nuovo', 'Italy', 20, 10),
   ( 9, 'Bivacco di Santa Cristina', 'Italy', 30, 17),
   ( 10, 'Rifugio La Riposa', 'Italy', 30, 17),
-  ( 11, 'Casa Viù', 'Italy', 30, 17);
+  ( 11, 'Casa Viù', 'Italy', 2, 5);
 
 INSERT INTO PARKINGS (IDPoint, Name, Description, SlotsTot, SlotsFull) 
 VALUES 
