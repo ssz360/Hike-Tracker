@@ -5,6 +5,12 @@ import { useState } from 'react';
 
 function Hut(props) {
     const [add, setAdd] = useState(false);
+
+    const [filterName, setFilterName] = useState(null);
+    const [filterCountry, setFilterCountry] = useState(null);
+    const [filterGuests, setFilterGuests] = useState(null);
+    const [filterBeds, setFilterBeds] = useState(null);
+
     let displayedHuts = [];
     props.huts.forEach(hut => displayedHuts.push(hut));
     
@@ -82,8 +88,9 @@ function HutRow(props){
         </Card.Header>
         <Card.Body>
           <Card.Text><strong>Country: </strong>{props.hut.country}<br></br>
-          <strong>Number of Guests: </strong>{props.hut.numOfGuests} <br></br>
-          <strong>Number of Bedrooms: </strong>{props.hut.numOfBedrooms}<br></br>
+          <strong>Geographical Area: </strong>{props.hut.geographicalArea}<br></br>
+          <strong>Number of Guests: </strong>{props.hut.numberOfGuests} <br></br>
+          <strong>Number of Bedrooms: </strong>{props.hut.numberOfBedrooms}
           </Card.Text>
         </Card.Body>
       </Card>

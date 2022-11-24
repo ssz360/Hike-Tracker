@@ -11,19 +11,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { ParkingLot,HikesList,Hut} from './pages';
 import HikesForHikers from './pages/HikesForHikers';
 import API from './API.js';
+import api from './lib/api';
 
 
 import { Header, Login, SignUp,CheckEmail } from './components';
 import { useEffect, useState } from 'react';
 function App() {
 
-  let vett = [{name: "Hut1", country: "Italy", numOfGuests: 10, numOfBedrooms: 3}, 
+  /*let vett = [{name: "Hut1", country: "Italy", numOfGuests: 10, numOfBedrooms: 3}, 
     {name: "Hut2", country: "Italy", numOfGuests: 30, numOfBedrooms: 7},
-    {name: "Hut3", country: "Italy", numOfGuests: 25, numOfBedrooms: 5}];
+    {name: "Hut3", country: "Italy", numOfGuests: 25, numOfBedrooms: 5}];*/
   
   const [logged,setLogged]=useState(false);
   const [hikes, setHikes] = useState([]);
-  const [huts, setHuts] = useState(vett);
+  const [huts, setHuts] = useState([]);
   const [message, setMessage] = useState('');
   const [user,setUser]=useState('');
   const location=useLocation();
@@ -60,20 +61,36 @@ function App() {
     getHikesUseEff();
 }, [logged])
 
+useEffect(() => {
+  if (logged) {
+  api.getHutsListWithFilters(null, null, null, null, null, null)
+    .then((hut) => {
+      setHuts(hut); 
+      console.log(hut);})
+    .catch(err => setMessage(err.error))
+  }
+}, [logged])
+
   async function filtering(area, lengthMin, lengthMax, dif, ascentMin, ascentMax, expectedTimeMin, expectedTimeMax){
     //lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty
     try {
-
-      console.log(dif);
-
-      console.log("Len min:", lengthMin);
-
 
       const newList=logged?await API.getHikersHikesList(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif,area): await API.getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, dif,area);
       //console.log(newList);
       setHikes(newList);
     } catch (error) {
       setHikes(-1);
+      throw error;
+    }
+  }
+
+  async function filteringHut(name, country, numberOfGuests, numberOfBedrooms, coordinate){
+    try {
+      const newList=logged?await API.getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, coordinate, null): console.log("Error! Not authorized");
+      //console.log(newList);
+      setHuts(newList);
+    } catch (error) {
+      setHuts(-1);
       throw error;
     }
   }
