@@ -5,7 +5,7 @@ import AddHikeForm from "../components/addHikeForm";
 import Hut from "./Hut";
 import LocalGuideHikes from "./localGuideHikes";
 import ParkingLot from "./ParkingLot";
-import LocalGuideHikeUpdate from './LocalGuideHikeUpdate';
+import LocalGuideHikeUpdate from './localGuideHikeUpdate';
 
 /*function LocalGuide(props){
     const [newHike,setNewHike]=useState(false);

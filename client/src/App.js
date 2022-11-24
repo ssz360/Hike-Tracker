@@ -1,21 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import HikesTable from './components/hikesTable';
 import LocalGuide from './pages/localGuide';
-import GlobalMap from './components/globalMap';
-// import { useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { ParkingLot,HikesList,Hut} from './pages';
-import HikesForHikers from './pages/HikesForHikers';
 import api from './lib/api';
-
-
 import { Header, Login, SignUp,CheckEmail } from './components';
 import { useEffect, useState } from 'react';
-import LocalGuideHikes from './pages/localGuideHikes';
 function App() {
   //let filteredList=[];
   const [logged,setLogged]=useState(false);
@@ -108,7 +99,7 @@ function App() {
   }
   return (
     <>
-      <Header logged={logged} setLogged={setLogged} user={user}/>
+      <Header logged={logged} setLogged={setLogged} user={user} setUser={setUser}/>
       <Container>
         <Row>
           <Col>
