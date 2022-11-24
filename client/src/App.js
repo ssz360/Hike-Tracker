@@ -29,6 +29,7 @@ function App() {
   useEffect(() => {
     const getHikesUseEff=async ()=>{
       try {
+        //console.log("IN APP")
         const h=await api.getHikesList();
         setHikes([...h]);
         //filteredList=[...h];
@@ -39,10 +40,14 @@ function App() {
       } catch (error) {
         if(error.status===401){
           setLogged(false);
+          setUser();
           if(path!=="/login" && path!=="/signup") navigate('/');
         }
         else{
           setMessage(error);
+          setLogged(false);
+          setUser();
+          if(path!=="/login" && path!=="/signup") navigate('/');
         }
         /*if(error.status===401){
           try {
@@ -61,7 +66,7 @@ function App() {
       }
     }
     getHikesUseEff();
-}, [logged,user])
+}, [logged])
 
   async function filtering(area, lengthMin, lengthMax, dif, ascentMin, ascentMax, expectedTimeMin, expectedTimeMax){
     //lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty
@@ -78,6 +83,7 @@ function App() {
         if(newList.map(n=>n.id).includes(h.id)) h.show=true;
         else h.show=false;
       });
+      console.log("Now sumarr",sumArr);
       setHikes([...sumArr]);
     } catch (error) {
       setHikes(-1);
@@ -93,7 +99,13 @@ function App() {
     throw error;
   }
 }
-
+  const setAllHikesShow=async()=>{
+    const newHikes=[...hikes];
+    newHikes.forEach(h=>{
+      h.show=true
+    });
+    setHikes([...newHikes]);
+  }
   return (
     <>
       <Header logged={logged} setLogged={setLogged} user={user}/>
@@ -101,7 +113,7 @@ function App() {
         <Row>
           <Col>
             <Routes>
-              <Route path='/' element={<HikesList logged={logged} hikes={hikes.length>0?hikes.filter(h=>h.show):hikes} filtering={filtering}/>} />
+              <Route path='/' element={<HikesList logged={logged} hikes={hikes.filter(h=>h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering}/>} />
               <Route path='/parking' element={<ParkingLot/>} />
               <Route path='/localGuide/*' element={<LocalGuide hikes={user!==undefined?hikes.filter(h=>h.author===user.username):[]} user={user}/>}></Route>
               <Route path='/hut' element={<Hut newHut={newHut}/>} />

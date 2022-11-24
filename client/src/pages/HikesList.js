@@ -1,9 +1,10 @@
 import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container } from 'react-bootstrap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
 
 function HikesList(props){
+    //console.log("Rerendering hikeslist with",props.hikes);
     const [center,setCenter]=useState();
     const [radius,setRadius]=useState(0);
     const [lenMin, setLenMin] = useState(null);
@@ -27,6 +28,13 @@ function HikesList(props){
           timeMax!==''? timeMax : null);
     
     }
+
+    //if we get again in this page no filter should be on and we should see again all hikes
+    useEffect(()=>{
+      if(center===undefined && radius===0 && lenMin===null && lenMax===null
+        && dif===null && ascMin===null && ascMax===null && timeMin===null && timeMax===null) props.setAllHikesShow();
+    },[])
+
 
     return (
         <>
