@@ -17,9 +17,10 @@ function Header(props) {
                         {
                             props.user.type === "localGuide" ?
                                 <><Nav.Link as={Link} to="/localGuide/hikes">My hikes</Nav.Link>
-                                <Nav.Link as={Link} to="/localGuide/newHike">hike</Nav.Link>
-                                <Nav.Link as={Link} to="/localGuide/newHut">hut</Nav.Link>
-                                <Nav.Link as={Link} to="/localGuide/newParking">parking</Nav.Link>
+                                <Nav.Link as={Link} to="/localGuide/newHike">New Hike</Nav.Link>
+                                <Nav.Link as={Link} to="/localGuide/newHut">New hut</Nav.Link>
+                                <Nav.Link as={Link} to="/localGuide/newParking">Parking</Nav.Link>
+                                <Nav.Link as={Link} to="/hut" onClick={() => props.setDirty(true)}>Huts</Nav.Link>
                                     <Nav.Link as={Link} to="/" className="px-4" onClick={async e => {
                                         try {
                                             await api.logout();
@@ -30,6 +31,7 @@ function Header(props) {
                                         }
                                     }}>Log out</Nav.Link></>
                                 :
+                                <><Nav.Link as={Link} to="/hut" onClick={() => props.setDirty(true)}>Huts</Nav.Link>
                                 <Nav.Link as={Link} to="/" className="px-4" onClick={async e => {
                                     try {
                                         await api.logout();
@@ -38,7 +40,7 @@ function Header(props) {
                                     } catch (error) {
                                         navigate('/');
                                     }
-                                }}>Log out</Nav.Link>
+                                }}>Log out</Nav.Link></>
                         }
                     </>
                 ) :

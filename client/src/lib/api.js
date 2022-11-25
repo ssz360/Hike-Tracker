@@ -1,4 +1,5 @@
 import Hike from "./hike";
+import Hut from "./hut";
 
 const APIURL = new URL('http://localhost:3001/api/');
 
@@ -206,5 +207,33 @@ const isLogged=async ()=>{
     else throw res.status;
 }
 
-const api={login, logout, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged};
+async function getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, coordinate, geographicalArea) {
+    return new Promise((resolve, reject) => {
+        const thisURL = "huts/list";
+        fetch(new URL(thisURL, APIURL), {
+            method: 'POST',
+            headers:{
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({name: name, country: country, numberOfGuests: numberOfGuests, 
+                numberOfBedrooms: numberOfBedrooms, coordinate: coordinate, geographicalArea: geographicalArea}),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    response.json().then(ret=>{
+                        const arr=[];ret.forEach(h=>arr.push(new Hut(h.IDPoint, h.Name, h.Coordinates, h.GeographicalArea,
+                            h.Country, h.NumberOfGuests, h.NumberOfBedrooms )));
+                        resolve(arr);
+                    });
+                } else {
+                    response.json()
+                        .then((msg) => { reject({status:response.status,message:msg}) })
+                        .catch(() => { reject({ error: "Cannot parse server response. " }) });
+                }
+            })
+            .catch(() => reject({ status:503, error: "Cannot communicate with the server. " }));
+    });
+}
+
+const api={login, logout, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters};
 export default api;

@@ -23,7 +23,7 @@ describe('select listboxes and click search', () => {
 
         cy.contains("Select Area...").click();
 
-        cy.get(".modal-body").contains("Select").click();
+        cy.get(".modal-body").contains("Submit").click();
         cy.contains("Move").should("be.visible");
 
 
@@ -36,5 +36,7 @@ describe('select listboxes and click search', () => {
         cy.contains("Clear").should("be.visible");
 
         cy.get(".modal-footer").contains("Submit").click();
-    })
+    });
+
+    it("")
 })

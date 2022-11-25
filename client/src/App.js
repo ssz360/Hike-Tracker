@@ -8,14 +8,18 @@ import api from './lib/api';
 import { Header, Login, SignUp,CheckEmail } from './components';
 import { useEffect, useState } from 'react';
 function App() {
-  //let filteredList=[];
+  /*let vett = [{name: "Hut1", country: "Italy", numOfGuests: 10, numOfBedrooms: 3}, 
+    {name: "Hut2", country: "Italy", numOfGuests: 30, numOfBedrooms: 7},
+    {name: "Hut3", country: "Italy", numOfGuests: 25, numOfBedrooms: 5}];*/
   const [logged,setLogged]=useState(false);
   const [hikes, setHikes] = useState([]);
+  const [huts, setHuts] = useState([]);
   const [message, setMessage] = useState('');
   const [user,setUser]=useState();
   const location=useLocation();
   const path=location.pathname;
   const navigate=useNavigate();
+  const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
     const getHikesUseEff=async ()=>{
@@ -59,6 +63,16 @@ function App() {
     getHikesUseEff();
 }, [logged])
 
+useEffect(() => {
+  if (logged && dirty) {
+  api.getHutsListWithFilters(null, null, null, null, null, null)
+    .then((hut) => {
+      setHuts(hut); 
+      setDirty(false);})
+    .catch(err => setMessage(err.error))
+  }
+}, [logged, dirty])
+
   async function filtering(area, lengthMin, lengthMax, dif, ascentMin, ascentMax, expectedTimeMin, expectedTimeMax){
     //lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty
     try {
@@ -74,10 +88,21 @@ function App() {
         if(newList.map(n=>n.id).includes(h.id)) h.show=true;
         else h.show=false;
       });
-      console.log("Now sumarr",sumArr);
+      //console.log("Now sumarr",sumArr);
       setHikes([...sumArr]);
     } catch (error) {
       setHikes(-1);
+      throw error;
+    }
+  }
+
+  async function filteringHut(name, country, numberOfGuests, numberOfBedrooms){
+    try {
+      const newList=logged?await api.getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, null, null): 
+        console.log("Error! User not authorized");
+      setHuts(newList);
+    } catch (error) {
+      setHuts(-1);
       throw error;
     }
   }
@@ -99,15 +124,15 @@ function App() {
   }
   return (
     <>
-      <Header logged={logged} setLogged={setLogged} user={user} setUser={setUser}/>
+      <Header logged={logged} setLogged={setLogged} user={user} setUser={setUser} setDirty={setDirty}/>
       <Container>
         <Row>
           <Col>
             <Routes>
               <Route path='/' element={<HikesList logged={logged} hikes={hikes.filter(h=>h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering}/>} />
               <Route path='/parking' element={<ParkingLot/>} />
-              <Route path='/localGuide/*' element={<LocalGuide hikes={user!==undefined?hikes.filter(h=>h.author===user.username):[]} user={user}/>}></Route>
-              <Route path='/hut' element={<Hut newHut={newHut}/>} />
+              <Route path='/localGuide/*' element={<LocalGuide hikes={user!==undefined?hikes.filter(h=>h.author===user.username):[]} user={user} newHut={newHut}/>}></Route>
+              <Route path='/hut' element={<Hut huts={huts} filteringHut={filteringHut}/>} />
               <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
               <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
               <Route path='/checkemail' element={<CheckEmail/>}/>
