@@ -11,9 +11,6 @@ const app = require("../index");
 const agent = chai.request.agent(app);
 
 const refAPI = "/api/referencePoint";
-const reqFactory = (IDHike, coordinates) => {
-	return { IDHike, coordinates };
-};
 
 const testFactory = (name, IDHike, coordinates, status, returnValue) => {
 	return it(name, done => {

@@ -203,7 +203,7 @@ linkHutParkingToHike = async (Type,Name,IDHike,IDParking,IDHut,GeographicalArea,
             }
     
             if(!row || !row.length) {
-                reject({code:404,message:'hike not found'});
+                reject({code:404,message:'point not found'});
                 return;
             }
 
