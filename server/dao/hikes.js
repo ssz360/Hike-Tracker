@@ -231,9 +231,9 @@ const addReferenceToHike = async (IDHike, IDPoint) => new Promise((resolve, reje
                 reject({ code: 500, message: err });
                 return;
             }
-
-            if (!row || !row.length) {
-                reject({ code: 404, message: 'hike not found' });
+    
+            if(!row || !row.length) {
+                reject({code:404,message:'point not found'});
                 return;
             }
 
