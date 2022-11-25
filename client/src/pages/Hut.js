@@ -96,7 +96,6 @@ function HutRow(props){
         </Card.Header>
         <Card.Body>
           <Card.Text><strong>Country: </strong>{props.hut.country}<br></br>
-          <strong>Geographical Area: </strong>{props.hut.geographicalArea}<br></br>
           <strong>Number of Guests: </strong>{props.hut.numberOfGuests} <br></br>
           <strong>Number of Bedrooms: </strong>{props.hut.numberOfBedrooms}
           </Card.Text>

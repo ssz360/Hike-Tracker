@@ -1,4 +1,4 @@
-import { Row, Col, Form, FloatingLabel, Button } from 'react-bootstrap';
+import { Row, Col, Form, FloatingLabel, Button, Alert } from 'react-bootstrap';
 import { PointMap } from '../components';
 
 import { useState } from 'react';
@@ -10,14 +10,33 @@ function AddHutForm(props) {
     const [numGuests, setNumGuests] = useState("");
     const [numBeds, setNumBeds] = useState("");
     const [coord, setCoord] = useState();
+    const [message, setMessage] = useState("");
+    const [err, setErr] = useState(false);
+    const [done, setDone] = useState(false);
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        props.newHut(name, country, numGuests, numBeds, coord);
+        if(validateInfo(name, country, numGuests, numBeds, coord, setMessage)){
+            props.newHut(name, country, numGuests, numBeds, coord);
+            setDone(true);
+        }
+        else {
+            setErr(true);
+        }
     
     }
 
     return(<>{openArea ? (<PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoord} coord={coord}/>) : <></>}
+        {err ? (
+        <Row className="mt-4">
+            <Alert variant="danger" onClose={() => setErr(false)} dismissible>{message}</Alert>
+        </Row>
+        ) : <></>}
+        {done ? (
+        <Row className="mt-4">
+            <Alert variant="success" onClose={() => setDone(false)} dismissible>Hut successfully added!</Alert>
+        </Row>
+        ) : <></>}
         <Row className="mt-4">
             <h1>Add a new hut</h1>
         </Row>
@@ -65,10 +84,12 @@ const validateInfo = (name, country, numberOfGuests, numberOfBedrooms, coordinat
 		setMessage("Invalid country name.");
 		return false;
 	}
+    /*
 	if (!(coordinate.split(",").length === 2 && coordinate.split(",").every(t => t.match(/^([0-9]*[.])?[0-9]+$/)))) {
 		setMessage("The coordinates should be two numbers separated by comma");
 		return false;
-	}
+	}*/ 
+    
 	return true;
 };
 
