@@ -47,9 +47,9 @@ function insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate) 
 
         insertPoint(name, coordinate, country, "Hut").then(pointId => {
 
-            let query = `INSERT INTO HUTS (Name,Country ,NumberOfGuests,NumberOfBedrooms,IDPoint) VALUES(?,?,?,?,?);`;
+            let query = `INSERT INTO HUTS (Country ,NumberOfGuests,NumberOfBedrooms,IDPoint) VALUES(?,?,?,?);`;
             
-            db.run(query, [name, country, numberOfGuests, numberOfBedrooms, pointId], function (err) {
+            db.run(query, [country, numberOfGuests, numberOfBedrooms, pointId], function (err) {
                 if (err) {
                     rej(err);
                     return;

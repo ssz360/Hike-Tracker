@@ -32,8 +32,18 @@ function insertPoint(name, coordinates, GeographicalArea, TypeOfPoint) {
     });
 }
 
+const getPointById = (id) => new Promise((resolve, reject) => {
+    let sql = "SELECT * FROM POINTS WHERE IDPoint = ?";
+    db.get(sql, [id], (err, row) => {
+        if (err) {
+            reject(err);
+            return;
+        }
+        resolve(row);
+    })
+});
 
-const points = { getParkingsList, insertPoint }
+const points = { getParkingsList, insertPoint, getPointById }
 module.exports = points;
 
 
