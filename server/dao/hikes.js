@@ -266,6 +266,7 @@ const updateStartingArrivalPoint = async (hikeId, startPointId, endPointId) => n
                 }
                 if (row.length === 0) {
                     reject({ code: 404, message: "Start point didn't found" });
+                    return;
                 }
                 const sql = "UPDATE HIKES SET StartPoint = ? WHERE IDHike = ?";
                 db.run(sql, [startPointId, hikeId], err => {
@@ -288,7 +289,8 @@ const updateStartingArrivalPoint = async (hikeId, startPointId, endPointId) => n
                     return;
                 }
                 if (row.length === 0) {
-                    reject({ code: 404, message: "Start point didn't found" });
+                    reject({ code: 404, message: "End point didn't found" });
+                    return;
                 }
                 const sql = "UPDATE HIKES SET EndPoint = ? WHERE IDHike = ?";
                 db.run(sql, [endPointId, hikeId], err => {

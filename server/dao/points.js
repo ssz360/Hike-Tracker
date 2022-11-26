@@ -12,29 +12,6 @@ getParkingsList = async () => new Promise((resolve, reject) => {
     });
 });
 
-function getAllPoints() {
-	const sql = "SELECT * FROM Points;";
-	return new Promise((resolve, reject) => {
-		db.all(sql, [], (err, rows) => {
-			if (err) {
-				reject(err);
-				return;
-			}
-			const points = rows.map(p => ({
-				IDPoint: p.IDPoint,
-				Name: p.Name,
-				Coordinates: p.Coordinates,
-				GeographicalArea: p.GeographicalArea,
-				TypeOfPoint: p.TypeOfPoint,
-				IDHike: p.IDHike,
-				IDHut: p.IDHut,
-				IDParking: p.IDParking
-			}));
-			resolve(points);
-		});
-	});
-}
-
 function insertPoint(name, coordinates, GeographicalArea, TypeOfPoint) {
     return new Promise((res, rej) => {
 
@@ -66,7 +43,7 @@ const getPointById = (id) => new Promise((resolve, reject) => {
     })
 });
 
-const points = { getParkingsList, insertPoint, getAllPoints, getPointById }
+const points = { getParkingsList, insertPoint, getPointById }
 module.exports = points;
 
 

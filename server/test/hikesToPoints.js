@@ -21,7 +21,7 @@ const testFactoryAddRef = (name, IDHike, IDPoint, status, message) => {
 			.post(APIAddRef)
 			.send({ IDHike, IDPoint })
 			.then(res => {
-				console.log(res.body)
+				// console.log(res.body);
 				res.should.have.status(status);
 				res.text.should.include(message);
 				done();
@@ -45,16 +45,16 @@ const testFactoryUpdStrEnd = (name, IDHike, StartPoint, EndPoint, status, messag
 };
 
 describe("API Test: Link Points To Hikes", () => {
-	describe("Link huts to hikes", () => {
-		beforeEach(() => {
-			db.serialize(() => {
-				db.exec("PRAGMA foreign_keys = 'ON'");
-				db.exec(initQueries);
-			});
-		});
-		after(() => {
+	beforeEach(() => {
+		db.serialize(() => {
+			db.exec("PRAGMA foreign_keys = 'ON'");
 			db.exec(initQueries);
 		});
+	});
+	after(() => {
+		db.exec(initQueries);
+	});
+	describe("Link huts to hikes", () => {
 		testFactoryAddRef("Normal Call", 1, 2, "201", "");
 		testFactoryAddRef("Non-existent Hikes", Number.MAX_VALUE, 2, "404", "hike not found");
 		testFactoryAddRef("Non-existent Point", 2, Number.MAX_VALUE, "404", "point not found");
@@ -63,19 +63,35 @@ describe("API Test: Link Points To Hikes", () => {
 	});
 
 	describe("Link parkings to hikes", () => {
-		beforeEach(() => {
-			db.serialize(() => {
-				db.exec("PRAGMA foreign_keys = 'ON'");
-				db.exec(initQueries);
-			});
-		});
-		after(() => {
-			db.exec(initQueries);
-		});
 		testFactoryAddRef("Normal Call", 1, 3, "201", "");
 		testFactoryAddRef("Non-existent Hikes", Number.MAX_VALUE, 3, "404", "hike not found");
 		testFactoryAddRef("Non-existent Point", 1, Number.MAX_VALUE, "404", "point not found");
 		testFactoryAddRef("Non-numerical Hikes", "Number.MAX_VALUE", 3, "404", "hike not found");
 		testFactoryAddRef("Non-numerical Point", 1, "Number.MAX_VALUE", "404", "point not found");
+	});
+});
+
+describe("API Test: Update Start/End Points", () => {
+	describe("Update Start Points", () => {
+		testFactoryUpdStrEnd("Normal Call", 1, 1, undefined, "201", "");
+		// testFactoryUpdStrEnd("Non-existent Hikes", Number.MAX_VALUE, 1, undefined, "404", "Hike");
+		testFactoryUpdStrEnd("Non-existent Start Point", 1, Number.MAX_VALUE, undefined, "404", "Start point");
+		// testFactoryUpdStrEnd("Non-numerical Hikes", "Number.MAX_VALUE", 1, undefined, "404", "Hike");
+		testFactoryUpdStrEnd("Non-numerical Start Point", 2, "Number.MAX_VALUE", undefined, "404", "Start point");
+	});
+	describe("Update End Points", () => {
+		testFactoryUpdStrEnd("Normal Call", 1, undefined, 1, "201", "");
+		// testFactoryUpdStrEnd("Non-existent Hikes", Number.MAX_VALUE, undefined, 1, "404", "Hike");
+		testFactoryUpdStrEnd("Non-existent End Point", 1, undefined, Number.MAX_VALUE, "404", "End point");
+		// testFactoryUpdStrEnd("Non-numerical Hikes", "Number.MAX_VALUE", undefined, 1, "404", "Hike");
+		testFactoryUpdStrEnd("Non-numerical End Point", 2, undefined, "Number.MAX_VALUE", "404", "End point");
+	});
+	describe("Update Start & End Points", () => {
+		testFactoryUpdStrEnd("Normal Call", 1, 1, 2, "201", "");
+		// testFactoryUpdStrEnd("Non-existent Hikes", Number.MAX_VALUE, 1, 2, "404", "Hike");
+		testFactoryUpdStrEnd("Undefined Points", 1, undefined, undefined, "500", "startPoint or endPoint");
+		testFactoryUpdStrEnd("Non-existent Points", 1, Number.MAX_VALUE, Number.MAX_VALUE, "404", "Start point");
+		// testFactoryUpdStrEnd("Non-numerical Hikes", "Number.MAX_VALUE", undefined, 1, 2, "404", "Hike");
+		testFactoryUpdStrEnd("Non-numerical Points", 2, "Number.MAX_VALUE", "Number.MAX_VALUE", "404", "Start point");
 	});
 });
