@@ -155,10 +155,10 @@ function HikeRow(props){
     </Card.Header>
     <Card.Body>
       {props.logged?<HikeMap hike={props.hike}/>:<></>}
-      <Card.Text><strong>Length: </strong>{props.hike.len} km<br></br>
-      <strong>Difficulty: </strong>{props.hike.difficulty} <br></br>
-      <strong>Ascent: </strong>{props.hike.ascent} m<br></br>
-      <strong>Expected Time: </strong>{props.hike.expectedTime} h
+      <Card.Text><strong>Length: </strong><span className='test-length'>{props.hike.len}</span> km<br></br>
+      <strong>Difficulty: </strong><span className='test-difficulty'>{props.hike.difficulty}</span> <br></br>
+      <strong>Ascent: </strong><span className='test-ascent'>{props.hike.ascent}</span> m<br></br>
+      <strong>Expected Time: </strong><span className='test-time'>{props.hike.expectedTime}</span> h
       </Card.Text>
       <Card.Text>{!open ? (
       <a className="text-decoration-none" style={{fontSize:"14px"}}
