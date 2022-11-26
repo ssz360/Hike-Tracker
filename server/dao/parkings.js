@@ -27,6 +27,6 @@ exports.addParking = (pk) => {
                 }
                 resolve(this.lastID);
             });
-        });
+        }).catch(reject);
     });
 };

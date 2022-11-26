@@ -51,10 +51,10 @@ function AddParkingLot({ setParkings }) {
         </FloatingLabel>
         <Row className="mb-3">
             <Col>
-                Total slots: <input type="number" value={totalSlots} onChange={ev => setTotalSlots(ev.target.value)} />
+                Total slots: <input type="number" data-test="total-cost" value={totalSlots} onChange={ev => setTotalSlots(ev.target.value)} />
             </Col>
             <Col>
-                Geographical Area: <input type="text" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} />
+                Geographical Area: <input type="text"  data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} />
             </Col>
             <Col>
                 <Button variant="outline-dark" style={{ height: "58px" }} onClick={() => setOpenArea(true)}>Select point</Button>
