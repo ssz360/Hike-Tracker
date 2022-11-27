@@ -79,7 +79,7 @@ const getHikesMoreData = async (row) => {
                 reject(err);
                 return;
             }
-            resolve(rows);
+            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:r.GeographicalArea,coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
         })
     })
 
@@ -88,7 +88,7 @@ const getHikesMoreData = async (row) => {
         await points.getPointById(item.StartPoint).then(startPoint => {
             item.startPoint = {id:startPoint.IDPoint,name:startPoint.Name,geographicalArea:startPoint.GeographicalArea,coordinates:[startPoint.Latitude,startPoint.Longitude],typeOfPoint:startPoint.TypeOfPoint};
             points.getPointById(item.EndPoint).then(endPoint => {
-                item.endPoint = {id:endPoint.IDPoint,name:endPoint.Name,geographicalArea:endPoint.GeographicalArea,coordinates:[endPoint.Latitude,endPoint.Longitude],typeOfPoint:endPoint.TypeOfPoint};;
+                item.endPoint = {id:endPoint.IDPoint,name:endPoint.Name,geographicalArea:endPoint.GeographicalArea,coordinates:[endPoint.Latitude,endPoint.Longitude],typeOfPoint:endPoint.TypeOfPoint};
             })
         });
         item.referencePoints = await getReferencePoints(item.IDHike);

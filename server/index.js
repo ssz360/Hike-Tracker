@@ -274,6 +274,20 @@ app.post('/api/pointsInBounds',isLoggedIn, async(req,res)=>{
     }
 })
 
+app.post('/api/hutsInBounds',isLoggedIn, async(req,res)=>{
+    try {
+        console.log("In get points in bounds with ",req.body);
+        const ret=await points.hutsInBounds(req.body.bounds[1][0],req.body.bounds[0][0],
+            req.body.bounds[1][1],req.body.bounds[0][1],
+            req.body.startPointCoordinates[0],req.body.startPointCoordinates[1],
+            req.body.endPointCoordinates[0],req.body.endPointCoordinates[1]);
+        console.log("Returning",ret);
+        res.status(201).json(ret);
+    } catch (error) {
+        res.status(error.status).json(error.message)
+    }
+})
+
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
 );

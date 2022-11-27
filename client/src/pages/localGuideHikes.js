@@ -69,6 +69,7 @@ function LocalGuideHikeRow(props){
                     <Button variant="outline-dark" className="mx-2" size="sm" onClick={e=>{
                             e.preventDefault();
                             e.stopPropagation();
+                            navigate("/localGuide/hikes/"+props.hike.id+"/linkhut");
                         }}><strong>Link new hut!</strong></Button>
           </Col>
           </Row>

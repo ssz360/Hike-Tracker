@@ -51,8 +51,16 @@ const getPointsInBounds= async (minLat,maxLat,minLon,maxLon,startLat,startLon,en
     })
 });
 
+const hutsInBounds= async (minLat,maxLat,minLon,maxLon,startLat,startLon,endLat,endLon) =>new Promise((resolve, reject) => {
+    let sql = "SELECT * FROM POINTS WHERE TypeOfPoint='Hut' AND Latitude>=? AND Latitude<=? AND Longitude>=? AND Longitude<=? AND NOT((Latitude=? AND Longitude=?) OR (Latitude=? AND Longitude=?))";
+    db.all(sql, [minLat,maxLat,minLon,maxLon,startLat,startLon,endLat,endLon], (err, rows) => {
+        if (err)    reject({status:503,message:"Internal error"});
+        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: p.GeographicalArea, typeOfPoint: p.TypeOfPoint})));
+    })
+});
 
-const points = { getParkingsList, insertPoint, getPointById, getPointsInBounds }
+
+const points = { getParkingsList, insertPoint, getPointById, getPointsInBounds, hutsInBounds }
 module.exports = points;
 
 
