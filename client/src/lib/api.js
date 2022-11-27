@@ -105,7 +105,7 @@ async function getHikesList() {
             .then((response) => {
                 if (response.ok) {
                     response.json().then(ret=>{
-                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,h.Author,h.Length,h.Ascent,h.Difficulty,h.ExpectedTime,h.startPoint,h.endPoint,h.ReferencePoints,h.Description)));
+                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,h.Author,h.Length,h.Ascent,h.Difficulty,h.ExpectedTime,h.startPoint,h.endPoint,h.referencePoints,h.Description)));
                         console.log("HIKES NO FILTERING",arr);
                         resolve(arr);
                     });
