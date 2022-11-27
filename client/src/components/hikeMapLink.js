@@ -71,7 +71,7 @@ function HikeMapLink(props){
         const customMarkerIcon = divIcon({
             html: iconsvg[imgtype],
             iconSize: [30,30],
-            className:""
+            className:"map-point"
         });
         return <Marker key={point.id} eventHandlers={{
             click: () => {
