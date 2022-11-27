@@ -13,7 +13,7 @@ const getMarkerForPoint= (point,start,end,selected,selectable,selectedPoint,setS
     const customMarkerIcon = divIcon({
         html: icons.iconsvg[imgtype],
         iconSize: [30,30],
-        className:""
+        className:"map-point"
     });
     return <Marker key={point.id} eventHandlers={{
         click: () => {
