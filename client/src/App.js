@@ -72,7 +72,29 @@ useEffect(() => {
     .catch(err => setMessage(err.error))
   }
 }, [logged, dirty])
-
+  const updateStartEndPoint=(initialHike,point,type)=>{
+    console.log("IN UPDATE START END POINT WITH INITIAL HIKE",initialHike);
+    let hike=initialHike;
+    if(type==="start"){
+      hike.startPoint=point;
+    }
+    else if(type==="end"){
+      hike.endPoint=point;
+    }
+    console.log("NEW HIKE",hike);
+    console.log("TRYING TO SET UP HIKES AS ",[...hikes.filter(h=>h.id!==hike.id),hike])
+    setHikes([...hikes.filter(h=>h.id!==hike.id),hike]);
+  }
+  const refreshHikes=async ()=>{
+    try {
+      console.log("IN REFRESH HIKES");
+      const h=await api.getHikesList();
+      console.log("HIKES",h);
+      setHikes([...h]);
+    } catch (error) {
+      setHikes([]);
+    }
+  }
   async function filtering(area, lengthMin, lengthMax, dif, ascentMin, ascentMax, expectedTimeMin, expectedTimeMax){
     //lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty
     try {
@@ -131,7 +153,7 @@ useEffect(() => {
             <Routes>
               <Route path='/' element={<HikesList logged={logged} hikes={hikes.filter(h=>h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering}/>} />
               <Route path='/parking' element={<ParkingLot/>} />
-              <Route path='/localGuide/*' element={<LocalGuide hikes={user!==undefined?hikes.filter(h=>h.author===user.username):[]} user={user} newHut={newHut}/>}></Route>
+              <Route path='/localGuide/*' element={<LocalGuide refreshHikes={refreshHikes} updateStartEndPoint={updateStartEndPoint} hikes={user!==undefined?hikes.filter(h=>h.author===user.username):[]} user={user} newHut={newHut}/>}></Route>
               <Route path='/hut' element={<Hut huts={huts} filteringHut={filteringHut}/>} />
               <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
               <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>

@@ -1,6 +1,7 @@
 const hikesdao=require('../dao/hikes');
 const usersdao=require('../dao/users');
 const gpxParser = require('gpxparser');
+const pointsdao=require('../dao/points')
 const newHike=async (name,user,desc,difficulty,file)=>{
     try {
         //const typeUser=await usersdao.getUserType(user);
@@ -16,7 +17,9 @@ const newHike=async (name,user,desc,difficulty,file)=>{
         const centerlon=(Math.max(...lons)+Math.min(...lons))/2;
         const len=gpx.tracks[0].distance["total"];
         const ascent=gpx.tracks[0].elevation["max"]-gpx.tracks[0].elevation["min"];
-        await hikesdao.newHike(name,user.username,len,ascent,desc,difficulty.toUpperCase(),JSON.stringify(coors[0]),JSON.stringify(coors[coors.length-1]),"",JSON.stringify(coors),centerlat,centerlon,Math.max(...lats),Math.max(...lons),Math.min(...lats),Math.min(...lons));
+        const startPoint=await pointsdao.insertPoint("Default start point of hike "+name,coors[0][0],coors[0][1],"","hikePoint");
+        const endPoint=await pointsdao.insertPoint("Default arrival point of hike "+name,coors[coors.length-1][0],coors[coors.length-1][1],"","hikePoint");
+        await hikesdao.newHike(name,user.username,len/1000,(len/1000)/2,ascent,desc,difficulty.toUpperCase(),startPoint,endPoint,JSON.stringify(coors),centerlat,centerlon,JSON.stringify([Math.max(...lats),Math.max(...lons),Math.min(...lats),Math.min(...lons)]));
     } catch (error) {
         //console.log("Error in services newhike",error);
         throw {status:error.status,message:error.message};

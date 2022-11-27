@@ -1,5 +1,6 @@
 import Hike from "./hike";
 import Hut from "./hut";
+import Point from "./point";
 
 const APIURL = new URL('http://localhost:3001/api/');
 
@@ -104,7 +105,8 @@ async function getHikesList() {
             .then((response) => {
                 if (response.ok) {
                     response.json().then(ret=>{
-                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,h.Author,h.Length,h.Ascent,h.Difficulty,h.ExpectedTime,h.StartPoint,h.EndPoint,h.ReferencePoints,h.Description,[[0,0]],[0,0])));
+                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,h.Author,h.Length,h.Ascent,h.Difficulty,h.ExpectedTime,h.startPoint,h.endPoint,h.ReferencePoints,h.Description)));
+                        console.log("HIKES NO FILTERING",arr);
                         resolve(arr);
                     });
                 } else {
@@ -235,5 +237,37 @@ async function getHutsListWithFilters(name, country, numberOfGuests, numberOfBed
     });
 }
 
-const api={login, logout, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters};
+const getPointsInBounds=async (bounds,startPoint,endPoint)=>{
+    const res=await fetch(APIBASE+'pointsInBounds',{
+        credentials:"include",
+        method:'POST',
+        headers:{
+            "Content-type": "application/json"
+        },
+        body:JSON.stringify({bounds:bounds,startPointCoordinates:startPoint.coordinates,endPointCoordinates:endPoint.coordinates})
+    });
+    const points=await res.json();
+    console.log("Received points",points);
+    if(res.ok) return points.map(p=>new Point(p.id,p.name,p.coordinates,p.geographicalArea,p.typeOfPoint));
+    else throw res.status;
+}
+
+
+const linkStartArrival=async (hikeId,startPointId,endPointId)=>{
+    const res=await fetch(APIBASE+'updateStartEndPoint',{
+        credentials:"include",
+        method:'POST',
+        headers:{
+            "Content-type": "application/json"
+        },
+        body:JSON.stringify({IDHike:hikeId, StartPoint:startPointId, EndPoint:endPointId})
+    });
+    if(res.ok) return;
+    else{
+        const err=await res.json();
+        throw err;
+    }
+}
+
+const api={login, logout, getPointsInBounds,linkStartArrival, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters};
 export default api;

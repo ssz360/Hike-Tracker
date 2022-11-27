@@ -9,7 +9,7 @@ function LocalGuideHikeUpdate(props){
 
     return(
         <Routes>
-            <Route path="linkstartend" element={<LinkPointStartEnd hike={hike}/>}/>
+            <Route path="linkstartend" element={<LinkPointStartEnd hike={hike} refreshHikes={props.refreshHikes} updateStartEndPoint={props.updateStartEndPoint}/>}/>
             <Route path="linkhut" element={<></>}/>
         </Routes>
     )

@@ -127,7 +127,7 @@ function LocalGuide(props){
     return(
         <Routes>
             <Route path="/hikes" element={<LocalGuideHikes hikes={props.hikes}/>}/>
-            <Route path="/hikes/:hikeid/*" element={<LocalGuideHikeUpdate hikes={props.hikes}/>}/>
+            <Route path="/hikes/:hikeid/*" element={<LocalGuideHikeUpdate hikes={props.hikes} refreshHikes={props.refreshHikes} updateStartEndPoint={props.updateStartEndPoint}/>}/>
             <Route path="/newHike" element={<AddHikeForm />}/>
             <Route path="/newHut" element={<AddHutForm newHut={props.newHut}/>}/>
             <Route path="/newParking" element={<ParkingLot/>}/>

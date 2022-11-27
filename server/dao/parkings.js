@@ -8,7 +8,7 @@ exports.getParkingsList = async () => new Promise((resolve, reject) => {
             reject(err);
             return;
         }
-        const pks = row.map((p) => ({ IDPoint: p.IDPoint, Name: p.Name, Description: p.Description, SlotsTot: p.SlotsTot, SlotsFull: p.SlotsFull, TypeOfPoint: p.TypeOfPoint, Coordinates: p.Coordinates, GeographicalArea: p.GeographicalArea }))
+        const pks = row.map((p) => ({ IDPoint: p.IDPoint, Name: p.Name, Description: p.Description, SlotsTot: p.SlotsTot, SlotsFull: p.SlotsFull, TypeOfPoint: p.TypeOfPoint, Coordinates: [p.Latitude,p.Longitude], GeographicalArea: p.GeographicalArea }))
         resolve(pks);
     });
 });
@@ -19,7 +19,7 @@ exports.addParking = (pk) => {
 
         const sql = 'INSERT INTO PARKINGS(IDPoint,Description,SlotsTot,SlotsFull) VALUES(?,?,?,?)';
 
-        insertPoint(pk.name, pk.coordinates, pk.geographicalArea, 'parking').then(pointId => {
+        insertPoint(pk.name, pk.coordinates[0],pk.coordinates[1], pk.geographicalArea, 'parking').then(pointId => {
             db.run(sql, [pointId,pk.desc, pk.slots, 0], function (err) {
                 if (err) {
                     reject(err);
