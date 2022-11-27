@@ -8,7 +8,7 @@ const { expect } = require('chai');
 describe('parkings dao', () => {
     test('get all parking lots', async () => {
         const pks=await parkings.getParkingsList();
-        expect(pks.length).equal(3);
+        expect(pks.length).equal(4);
     })
 })
 

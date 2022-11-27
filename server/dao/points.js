@@ -14,7 +14,7 @@ getParkingsList = async () => new Promise((resolve, reject) => {
 
 function insertPoint(name, latitude, longitude, GeographicalArea, TypeOfPoint) {
     return new Promise((res, rej) => {
-        console.log("In insert point with",name,latitude,longitude,GeographicalArea,TypeOfPoint)
+        console.log("In insert point with name",name,"lat",latitude,"long",longitude,"geoarea",GeographicalArea,"type",TypeOfPoint)
         if (!name || !latitude || !longitude || !GeographicalArea || !TypeOfPoint) {
             rej("All of the 'name, coordinates, GeographicalArea, TypeOfPoint' are required.");
             return;
