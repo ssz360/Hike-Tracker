@@ -7,7 +7,7 @@ const DAORefs = require("../dao/referencePoints");
 const DAOPoints = require("../dao/points");
 
 const initQueries =
-	"DELETE FROM REFERENCE_POINTS; DELETE FROM HUTS; DELETE FROM PARKINGS; DELETE FROM POINTS; DELETE FROM HIKES; DELETE FROM sqlite_sequence; INSERT INTO HUTS (IDPoint, Name, Country, NumberOfGuests, NumberOfBedRooms) VALUES ( 2, 'Rifugio del Gufo', 'Italy', 20, 5), ( 4, 'Rifugio Ciamarella', 'Italy', 30, 17), ( 5, 'Rifugio Castaldi', 'Italy', 35, 7), ( 7, 'Bivacco Gias Nuovo', 'Italy', 20, 10), ( 9, 'Bivacco di Santa Cristina', 'Italy', 30, 17), ( 10, 'Rifugio La Riposa', 'Italy', 30, 17), ( 11, 'Casa Viù', 'Italy', 2, 5); INSERT INTO PARKINGS (IDPoint, Name, Description, SlotsTot, SlotsFull) VALUES ( 1, 'Bardonecchia Park', 'Lorem ipsum', 60, 23), ( 3, 'Posteggio Montuoso', 'Dolor sit amet', 20, 11), ( 6, 'NewCarPark', 'Cras justo odio', 80, 59); INSERT INTO POINTS(IDPoint, Name, Coordinates, GeographicalArea, TypeOfPoint) VALUES ( 1, 'Parcheggio Balme', '', 'Piedmont', 'Parking'), ( 2, 'Rifugio del Gufo', '', 'Piedmont', 'Hut'), ( 3, 'Parcheggio Graie', '', 'Piedmont', 'Parking'), ( 4, 'Rifugio Ciamarella', '', 'Piedmont', 'Hut'), ( 5, 'Rifugio Castaldi', '', 'Piedmont', 'Hut'), ( 6, 'PArcheggio Forno Alpi', '', 'Piedmont', 'Parking'), ( 7, 'Bivacco Gias Nuovo', '', 'Piedmont', 'Hut'), ( 8, 'Parcheggio Cantoira', '', 'Piedmont', 'Parking'), ( 9, 'Bivacco di Santa Cristina', '', 'Piedmont', 'Hut'), ( 10, 'Rifugio La Riposa', '', 'Piedmont', 'Hut'), ( 11, 'Casa Viù', '', 'Piedmont', 'Hut');INSERT INTO HIKES (Name , Author, Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, CenterLat, CenterLon, ReferencePoints, Description) VALUES ( 'Lago di Afframont', 's292671@studenti.polito.it', 3, 7.5, 400, 'TOURIST', 'Parcheggio Balme', 'Rifugio del Gufo', 44.601004142314196, 7.139863958582282, NULL, 'Here the reflections of the snow-capped mountains and the larch trees in autumnal garments create a truly unique setting. The excursion takes place on a path, initially inside a dense forest while, in the last part, wide plateaus and old pastures follow one another. The lake is set in a basin with a particular and suggestive setting'), ('Rifugio Gastaldi', 'jonhutworker@gmail.com', 4, 13, 550, 'HIKER', 'Parcheggio Graie', 'Rifugio Ciamarella', 45.1906585, 7.079086, NULL, 'Ciamarella (3767 m), the highest of the Lanzo Valleys. There is also a beautiful view towards the Crot del Ciaussinè basin , with its lakes, and the surrounding peaks.'), ('Rifugio Gastaldi', 'jonhutworker@gmail.com', 4, 7, 550, 'HIKER', 'Parcheggio Graie', 'Rifugio Gastaldi', 44.601004142314196, 7.139863958582282, NULL, 'Ciamarella (3767 m), the highest of the Lanzo Valleys. There is also a beautiful view towards the Crot del Ciaussinè basin , with its lakes, and the surrounding peaks.'), ('Bivacco Gias Nuovo', 's292671@studenti.polito.it', 8.5, 2.45, 450, 'PROFESSIONAL HIKER', 'Parcheggio Forno Alpi', 'Bivacco Gias Nuovo', 45.1906585, 7.079086, NULL, 'The Gias Nuovo Bivouac is located in the Vallone Di Sea, in the Val Grande , in Forno Alpi Graie at an altitude of 1893 m. The excursion develops entirely on a path that climbs quite steep at times. The bivouac is located at the end of the vast and wide plateau of Gias Nuovo. It is a bivouac built in 2019 entirely of wood and with a very particular shape.'), ('Santa Cristina', 'jonhutworker@gmail.com', 13.5, 1.30, 7500, 'PROFESSIONAL HIKER', 'Parcheggio Cantoira', 'Bivacco di Santa Cristina', 44.601004142314196, 7.139863958582282, NULL, 'The Sanctuary of Santa Cristina is located on a rocky spur overlooking the entrance to two valleys: Val Grande and Val d Ala. It is located at an altitude of 1340 m. The Sanctuary stands out above a staircase and its position allows you to admire the main peaks of the Lanzo Valleys.'), ('Rocciamelone', 's292671@studenti.polito.it', 3, 2.30, 1650, 'HIKER', 'Rifugio La Riposa', 'Casa Viù', 45.1906585, 7.079086, NULL, 'The climb to Rocciamelone is a great classic of excursions in Piedmont and in the Val di Susa in particular. It is in fact a very coveted peak frequented by Piedmontese hikers and beyond. It is located at an altitude of 3538 m and on its top there is the highest sanctuary in Europe , a bronze statue of the Madonna and the Bivouac Rifugio Santa Maria. Rocciamelone is a mountain that divides the Val di Susa from the Val di Viù . In fact, the territories of Mompantero, Novalesa and Usseglio converge on the summit. From the top the view sweeps over Monviso , Mont Blanc , Gran Paradiso , Monte Rosa and the Turin hills. A view to take your breath away.');";
+	"DELETE FROM REFERENCE_POINTS; DELETE FROM HUTS; DELETE FROM PARKINGS; DELETE FROM POINTS; DELETE FROM HIKES; DELETE FROM sqlite_sequence; INSERT INTO HUTS (IDPoint, Country, NumberOfGuests, NumberOfBedRooms) VALUES ( 14, 'Italy', 20, 5), ( 16, 'Italy', 30, 17), ( 17, 'Italy', 35, 7), ( 19, 'Italy', 20, 10), ( 21, 'Italy', 30, 17), ( 22, 'Italy', 30, 17), ( 23, 'Italy', 2, 5); INSERT INTO PARKINGS (IDPoint, Description, SlotsTot, SlotsFull) VALUES ( 13, 'Lorem ipsum', 60, 23), ( 15, 'Dolor sit amet', 20, 11), ( 18, 'Cras justo odio', 80, 59), ( 20, 'Full',80,80); INSERT INTO POINTS(IDPoint, Name, Latitude, Longitude, GeographicalArea, TypeOfPoint) VALUES ( 1, 'Default starting point for hike Lago di Afframont',44.589284565299749,7.203381098806858,'','hikePoint'), ( 2, 'Default arrival point for hike Lago di Afframont',44.613320929929614,7.07638755440712,'','hikePoint'), ( 3, 'Default starting point for hike Rifugio Gastaldi',45.177786,7.083372,'','hikePoint'), ( 4, 'Default arrival point for hike Rifugio Gastaldi',45.203531,7.077340,'','hikePoint'), ( 5, 'Default starting point for hike Rifugio Gastaldi',44.589284565299749,7.203381098806858,'','hikePoint'), ( 6, 'Default arrival point for hike Rifugio Gastaldi',44.613320929929614,7.07638755440712,'','hikePoint'), ( 7, 'Default starting point for hike Bivacco Gias Nuovo',45.177786,7.083372,'','hikePoint'), ( 8, 'Default arrival point for hike Bivacco Gias Nuovo',45.203531,7.077340,'','hikePoint'), ( 9, 'Default starting point for hike Santa Cristina',44.589284565299749,7.203381098806858,'','hikePoint'), ( 10, 'Default arrival point for hike Santa Cristina',44.613320929929614,7.07638755440712,'','hikePoint'), ( 11, 'Default starting point for hike Rocciamelone',45.177786,7.083372,'','hikePoint'), ( 12, 'Default arrival point for hike Rocciamelone',45.203531,7.077340,'','hikePoint'), ( 13, 'Parcheggio Balme',44.701004142314196, 7.139863958582282 , 'Piedmont', 'Parking'), ( 14, 'Rifugio del Gufo', 44.601004142314196, 7.339863958582282, 'Piedmont', 'Hut'), ( 15, 'Parcheggio Graie', 45.3906585, 7.079086, 'Piedmont', 'Parking'), ( 16, 'Rifugio Ciamarella', 45.1906585, 7.279086, 'Piedmont', 'Hut'), ( 17, 'Rifugio Castaldi', 44.1906585, 7.079086, 'Piedmont', 'Hut'), ( 18, 'Parcheggio Forno Alpi', 45.1906585, 6.8979086, 'Piedmont', 'Parking'), ( 19, 'Bivacco Gias Nuovo', 45.3906585, 7.279086, 'Piedmont', 'Hut'), ( 20, 'Parcheggio Cantoira', 45.1906585, 8.079086, 'Piedmont', 'Parking'), ( 21, 'Bivacco di Santa Cristina', 44.901004142314196, 7.339863958582282 , 'Piedmont', 'Hut'), ( 22, 'Rifugio La Riposa', 45.701004142314196, 7.139863958582282, 'Piedmont', 'Hut'), ( 23, 'Casa Viù', 44.701004142314196, 8.139863958582282, 'Piedmont', 'Hut'); INSERT INTO HIKES (Name , Author, Length, ExpectedTime, Ascent, Difficulty, StartPoint, EndPoint, CenterLat, CenterLon, Description) VALUES ( 'Lago di Afframont', 's292671@studenti.polito.it', 3, 7.5, 400, 'TOURIST', 1, 2, 44.601004142314196, 7.139863958582282, 'Here the reflections of the snow-capped mountains and the larch trees in autumnal garments create a truly unique setting. The excursion takes place on a path, initially inside a dense forest while, in the last part, wide plateaus and old pastures follow one another. The lake is set in a basin with a particular and suggestive setting'), ('Rifugio Gastaldi', 'jonhutworker@gmail.com', 4, 13, 550, 'HIKER', 3, 4, 45.1906585, 7.079086, 'Ciamarella (3767 m), the highest of the Lanzo Valleys. There is also a beautiful view towards the Crot del Ciaussinè basin , with its lakes, and the surrounding peaks.'), ('Rifugio Gastaldi', 'jonhutworker@gmail.com', 4, 7, 550, 'HIKER', 5, 6, 44.601004142314196, 7.139863958582282, 'Ciamarella (3767 m), the highest of the Lanzo Valleys. There is also a beautiful view towards the Crot del Ciaussinè basin , with its lakes, and the surrounding peaks.'), ('Bivacco Gias Nuovo', 's292671@studenti.polito.it', 8.5, 2.45, 450, 'PROFESSIONAL HIKER', 7, 8, 45.1906585, 7.079086, 'The Gias Nuovo Bivouac is located in the Vallone Di Sea, in the Val Grande , in Forno Alpi Graie at an altitude of 1893 m. The excursion develops entirely on a path that climbs quite steep at times. The bivouac is located at the end of the vast and wide plateau of Gias Nuovo. It is a bivouac built in 2019 entirely of wood and with a very particular shape.'), ('Santa Cristina', 'jonhutworker@gmail.com', 13.5, 1.30, 7500, 'PROFESSIONAL HIKER', 9, 10, 44.601004142314196, 7.139863958582282, 'The Sanctuary of Santa Cristina is located on a rocky spur overlooking the entrance to two valleys: Val Grande and Val d Ala. It is located at an altitude of 1340 m. The Sanctuary stands out above a staircase and its position allows you to admire the main peaks of the Lanzo Valleys.'), ('Rocciamelone', 's292671@studenti.polito.it', 3, 2.30, 1650, 'HIKER', 11, 12, 45.1906585, 7.079086, 'The climb to Rocciamelone is a great classic of excursions in Piedmont and in the Val di Susa in particular. It is in fact a very coveted peak frequented by Piedmontese hikers and beyond. It is located at an altitude of 3538 m and on its top there is the highest sanctuary in Europe , a bronze statue of the Madonna and the Bivouac Rifugio Santa Maria. Rocciamelone is a mountain that divides the Val di Susa from the Val di Viù . In fact, the territories of Mompantero, Novalesa and Usseglio converge on the summit. From the top the view sweeps over Monviso , Mont Blanc , Gran Paradiso , Monte Rosa and the Turin hills. A view to take your breath away.');";
 
 async function testCreateLink(IDHike, IDPoint, valid, message) {
 	return await DAOHikes.addReferenceToHike(IDHike, IDPoint).then(
@@ -57,9 +57,7 @@ async function testGetHikes(IDHike, IDPoint, isStartPoint, valid, message) {
 				rows
 					.filter(h => h.IDHike === IDHike)
 					.some(p => {
-						return isStartPoint
-							? Number.parseInt(p.StartPoint) === IDPoint
-							: Number.parseInt(p.EndPoint) === IDPoint;
+						return isStartPoint ? p.startPoint.id === IDPoint : p.endPoint.id === IDPoint;
 					})
 			);
 		},
@@ -148,8 +146,8 @@ describe("Unit Test: Start/End Points", () => {
 			db.exec(initQueries);
 		});
 		test("Normal Call", async () => {
-			expect(await testUpdateStartEnd(1, 1, undefined, true)).toBe(true);
-			expect(await testGetHikes(1, 1, true, true)).toBe(true);
+			expect(await testUpdateStartEnd(1, 9, undefined, true)).toBe(true);
+			expect(await testGetHikes(1, 9, true, true)).toBe(true);
 		});
 		// test("Non-existent Hike", async () => {
 		// expect(await testUpdateStartEnd(Number.MAX_VALUE, 1, undefined, false, "Start point")).toBe(true);
@@ -157,7 +155,7 @@ describe("Unit Test: Start/End Points", () => {
 		// });
 		test("Non-existent Point", async () => {
 			expect(await testUpdateStartEnd(1, Number.MAX_VALUE, undefined, false, "Start point")).toBe(true);
-			expect(await testGetHikes(1, 1, true, false)).toBe(true);
+			expect(await testGetHikes(1, 9, true, false)).toBe(true);
 		});
 		// test("Non-numerical Hike", async () => {
 		// expect(await testUpdateStartEnd("Number.MAX_VALUE", 1,undefined, false, "Start point")).toBe(true);
@@ -165,7 +163,7 @@ describe("Unit Test: Start/End Points", () => {
 		// });
 		test("Non-numerical Point", async () => {
 			expect(await testUpdateStartEnd(1, "Number.MAX_VALUE", undefined, false, "Start point")).toBe(true);
-			expect(await testGetHikes(1, 1, true, false)).toBe(true);
+			expect(await testGetHikes(1, 9, true, false)).toBe(true);
 		});
 	});
 
@@ -180,16 +178,16 @@ describe("Unit Test: Start/End Points", () => {
 		// 	db.exec(initQueries);
 		// });
 		test("Normal Call", async () => {
-			expect(await testUpdateStartEnd(1, undefined, 1, true)).toBe(true);
-			expect(await testGetHikes(1, 1, false, true)).toBe(true);
+			expect(await testUpdateStartEnd(1, undefined, 9, true)).toBe(true);
+			expect(await testGetHikes(1, 9, false, true)).toBe(true);
 		});
 		// test("Non-existent Hike", async () => {
 		// expect(await testUpdateStartEnd(Number.MAX_VALUE, 1, undefined, false, "Start point")).toBe(true);
 		// expect(await testGetHikes(1, 1, false, false)).toBe(true);
 		// });
 		test("Non-existent Point", async () => {
-			expect(await testUpdateStartEnd(1, undefined, Number.MAX_VALUE, false, "End point")).toBe(true);
-			expect(await testGetHikes(1, 1, false, false)).toBe(true);
+			expect(await testUpdateStartEnd(9, undefined, Number.MAX_VALUE, false, "End point")).toBe(true);
+			expect(await testGetHikes(1, 9, false, false)).toBe(true);
 		});
 		// test("Non-numerical Hike", async () => {
 		// expect(await testUpdateStartEnd("Number.MAX_VALUE", 1,undefined, false, "Start point")).toBe(true);
@@ -197,7 +195,7 @@ describe("Unit Test: Start/End Points", () => {
 		// });
 		test("Non-numerical Point", async () => {
 			expect(await testUpdateStartEnd(1, undefined, "Number.MAX_VALUE", false, "End point")).toBe(true);
-			expect(await testGetHikes(1, 1, false, false)).toBe(true);
+			expect(await testGetHikes(1, 9, false, false)).toBe(true);
 		});
 	});
 });
