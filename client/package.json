@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "cypress": "^11.2.0",
+    "cypress-file-upload": "^5.0.8",
     "mysql": "^2.18.1"
   }
 }
