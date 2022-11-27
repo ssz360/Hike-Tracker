@@ -6,7 +6,7 @@ describe('validate if all the required data are inserted', () => {
     beforeEach(() => {
         cy.visit('/login');
 
-        cy.get('[name="username"]').type('s292671@studenti.polito.it');
+        cy.get('[name="username"]').type('davidwallace@gmail.com');
         cy.get('[name="password"]').type('123abcABC!');
         cy.contains("Submit").click();
         cy.visit('/parking');
