@@ -25,8 +25,8 @@ describe('hikes services',()=>{
         usersdao.getUserType.mockReturnValue("Local Guide");
         const file=await readTestFile(false);
         await hikes.newHike("Roccia Del Malgioglio",{username:"jonlocalguide@gmail.com",type:"localGuide"},"Testing hike","Hiker",file);
-        expect(hikesdao.newHike.mock.calls[0][5]).equal("HIKER");
-        expect(Math.ceil(hikesdao.newHike.mock.calls[0][2])).equal(67);
+        expect(hikesdao.newHike.mock.calls[0][6]).equal("HIKER");
+        expect(Math.ceil(hikesdao.newHike.mock.calls[0][2])).equal(1);
         expect(JSON.parse(hikesdao.newHike.mock.calls[0][9]).length).equal(4);
     })
 
@@ -60,29 +60,29 @@ describe('hikes services',()=>{
 
 describe('hikes dao',()=>{
     test('get hikes with filters',async ()=>{
-        const hikeslist=await hikesdao.getHikesListWithFilters(false,undefined,undefined,undefined,undefined,undefined,undefined,undefined,0,0,90,180);
+        const hikeslist=await hikesdao.getHikesListWithFilters(undefined,undefined,undefined,undefined,undefined,undefined,undefined,0,0,90,180);
         expect(hikeslist.length).equal(6);
     })
     
 
     test('get hikes with filters + difficulty',async ()=>{
-        const hikeslist=await hikesdao.getHikesListWithFilters(false,undefined,undefined,undefined,undefined,undefined,undefined,"HIKER",0,0,90,180);
+        const hikeslist=await hikesdao.getHikesListWithFilters(undefined,undefined,undefined,undefined,undefined,undefined,"HIKER",0,0,90,180);
         expect(hikeslist.length).equal(3);
     })
 
 
-    test('get hikes with map',async ()=>{
-        const hikeslist=await hikesdao.getHikesListWithFilters(true,undefined,undefined,undefined,undefined,undefined,undefined,undefined,0,0,90,180);
-        expect(hikeslist[0].coordinates.length>0).equal(true);
+    test('get hikes map',async ()=>{
+        const hikeslist=await hikesdao.getHikeMap(1);
+        expect(hikeslist.coordinates.length>0).equal(true);
     })
 
     test('get hikes at rocciamelone',async ()=>{
-        const hikeslist=await hikesdao.getHikesListWithFilters(false,undefined,undefined,undefined,undefined,undefined,undefined,undefined,45.1906585, 7.079086,0.001,0.001);
+        const hikeslist=await hikesdao.getHikesListWithFilters(undefined,undefined,undefined,undefined,undefined,undefined,undefined,45.1906585, 7.079086,0.001,0.001);
         expect(hikeslist.length).equal(3);
     })
 
     test('get hikes at rocciamelone with more than 5kms',async ()=>{
-        const hikeslist=await hikesdao.getHikesListWithFilters(false,5,10,undefined,undefined,undefined,undefined,undefined,45.1906585, 7.079086,0.001,0.001);
+        const hikeslist=await hikesdao.getHikesListWithFilters(5,10,undefined,undefined,undefined,undefined,undefined,45.1906585, 7.079086,0.001,0.001);
         expect(hikeslist.length).equal(1);
     })
 

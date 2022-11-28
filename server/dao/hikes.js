@@ -6,7 +6,7 @@ const MAXDOUBLE = 4294967295;
 const newHike = async (name, author, len,expectedTime, ascent, desc, difficulty, startPoint, endPoint, coordinates, centerlat, centerlon, bounds) => new Promise((resolve, reject) => {
     const sqlhike = "INSERT INTO HIKES (Name , Author, Length, ExpectedTime,CenterLat, CenterLon, Ascent, Difficulty, StartPoint, EndPoint, Description) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
     const sqlmap = "INSERT INTO HIKESMAPDATA(Coordinates,Center,Bounds) VALUES(?,?,?)";
-    db.run(sqlhike, [name, author, len, expectedTime, ascent, difficulty, startPoint, endPoint, desc], err => {
+    db.run(sqlhike, [name, author, len, expectedTime, centerlat, centerlon, ascent, difficulty, startPoint, endPoint, desc], err => {
         if (err) {
             //console.log("Err hike query",err);
             reject({ status: 503, message: { err } });

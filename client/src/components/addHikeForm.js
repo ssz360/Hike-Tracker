@@ -24,6 +24,7 @@ function AddHikeForm(props){
             //console.log("Success in api call");
             setSuccess(true);
             setTimeout(()=>setSuccess(false),3000);
+            await props.refreshHikes();
         } catch (error) {
             //console.log("Error in try catch",error);
             setSuccess(false);

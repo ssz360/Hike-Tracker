@@ -9,21 +9,21 @@ describe('validate if all the required data are inserted', () => {
         cy.get('[name="username"]').type('davidwallace@gmail.com');
         cy.get('[name="password"]').type('123abcABC!');
         cy.contains("Submit").click();
-        cy.visit('/parking');
+        cy.visit('/localGuide/newParking');
     });
     Cypress.on('uncaught:exception', (err, runnable) => {
         return false
     })
 
     it("just click on the 'save' button", () => {
-        cy.contains("Save").click();
+        cy.get('.mx-2').click();
         // errors should appear to show that required fields must be filled
         cy.contains("error").should("be.visible");
     });
 
     it("Enter the title but not Description", () => {
-        cy.contains('Title').parent().children('input').type('test title');
-        cy.contains("Save").click();
+        cy.contains('Name').type('test title');
+        cy.get('.mx-2').click();
         // errors should appear to show that required fields must be filled
         cy.contains("error").should("be.visible");
     });
@@ -38,8 +38,7 @@ describe('validate if all the required data are inserted', () => {
         cy.contains("Select point").click();
         cy.get(".leaflet-container").click();
 
-        cy.contains("Submit").click();
-        cy.contains("Save").click();
+        cy.get('.mx-2').click();
 
         cy.wait(300);
 

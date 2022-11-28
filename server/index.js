@@ -122,7 +122,7 @@ app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
 
 app.post('/api/newHike', isLoggedIn, upload.single('file'), async (req, res) => {
     try {
-        //console.log("In new HIKE");
+        console.log("In new HIKE",req.body);
         await hikes.newHike(req.body["name"], req.user, req.body["description"], req.body["difficulty"], req.file.buffer.toString());
         //console.log("Finished new hike");
         return res.status(201).end();

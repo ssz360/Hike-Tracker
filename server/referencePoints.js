@@ -24,7 +24,8 @@ exports.addReferencePoint = async (req, res) => {
 				Math.trunc(req.body.coordinates.split(",")[0]) +
 				"-" +
 				Math.trunc(req.body.coordinates.split(",")[1]),
-			req.body.coordinates,
+				Math.trunc(req.body.coordinates.split(",")[0]),
+			Math.trunc(req.body.coordinates.split(",")[1]),
 			"Italy",
 			"Reference"
 		).catch(err => {
@@ -39,6 +40,7 @@ exports.addReferencePoint = async (req, res) => {
 			}
 		);
 	} catch (err) {
+		console.log("Err ",err);
 		return res.status(500).send(err);
 	}
 };
