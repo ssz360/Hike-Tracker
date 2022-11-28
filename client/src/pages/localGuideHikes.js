@@ -30,10 +30,10 @@ function LocalGuideHikeRow(props){
     </Card.Header>
     <Card.Body>
       <HikeMap hike={props.hike}/>
-      <Card.Text><strong>Length: </strong>{props.hike.len} km<br></br>
+      <Card.Text><strong>Length: </strong>{Math.ceil(props.hike.len)} km<br></br>
       <strong>Difficulty: </strong>{props.hike.difficulty} <br></br>
       <strong>Ascent: </strong>{props.hike.ascent} m<br></br>
-      <strong>Expected Time: </strong>{props.hike.expectedTime} h
+      <strong>Expected Time: </strong>{Math.ceil(props.hike.expectedTime)} h
       </Card.Text>
       <Card.Text>{!open ? (
       <a className="text-decoration-none" style={{fontSize:"14px"}}
