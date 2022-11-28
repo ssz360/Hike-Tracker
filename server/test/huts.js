@@ -8,37 +8,49 @@ chai.should();
 const app = require('../index');
 var agent = chai.request.agent(app);
 
-/*
+
 describe('filtering huts apis', () => {
 
     it('no filters',done=>{
         agent.post('/api/huts/list').then(res=>{
             res.should.have.status(200);
-            expect(res.body.length).equal(6);
+            expect(res.body.length).equal(7);
             done();
         })
     })
     
-    it('rocciamelone filters',done=>{
-        const filters={
-            lengthMin: null,
-            lengthMax: null,
-            expectedTimeMin: null,
-            expectedTimeMax: null,
-            ascentMin: null,
-            ascentMax: null,
-            difficulty: null,
-            area: {
-              center: { lat: 45.1906585, lng: 7.079086 },
-              radius: 100.00
-            }
-        }
-        agent.post('/api/hikes').send(filters).then(res=>{
+    it('Rifugio filters',done=>{
+        const filters={ name:"Rifugio", country:null,
+         numberOfGuests:null, numberOfBedrooms:null, 
+         coordinate:null, geographicalArea:null }
+        agent.post('/api/huts/list').send(filters).then(res=>{
             res.should.have.status(200);
-            expect(res.body.length).equal(3);
+            expect(res.body.length).equal(4);
             done();
         })
     })
 
+    it('Add new hut',done=>{
+        const hut={
+                 name:"first hut",
+                 country:"italy",
+                 numberOfGuests:5,
+                 numberOfBedrooms:4,
+                 coordinate:"41.000144, 14.534893"
+              }
+        agent.post('/api/huts').send(hut).then(res=>{
+            console.log("Res status",res.status);
+            const filters={ name:"first hut", country:null,
+         numberOfGuests:null, numberOfBedrooms:null, 
+         coordinate:null, geographicalArea:null }
+        agent.post('/api/huts/list').send(filters).then(res=>{
+            console.log("Res.status",res.status);
+            console.log("Res body len",res.body.length);
+            res.should.have.status(200);
+            expect(res.body.length).equal(1);
+            done();
+        })
+        })
+    })
+
 });
-*/

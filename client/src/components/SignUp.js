@@ -11,7 +11,7 @@ function SignUp(props) {
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
-    const [type, setType] = useState('');
+    //const [type, setType] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
