@@ -1,12 +1,5 @@
-RETROSPECTIVE (Team ***15***)
+***RETROSPECTIVE OF SPRINT #1(Team 15)***
 =====================================
-
-The retrospective should include _at least_ the following
-sections:
-
-- [process measures](#process-measures)
-- [quality measures](#quality-measures)
-- [general assessment](#assessment)
 
 ## PROCESS MEASURES 
 
@@ -42,9 +35,16 @@ sections:
 
 > place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
 
-- Hours per task average, standard deviation (estimate and actual) 
+- Hours per task average, standard deviation (estimate and actual)
+- - avg
+- - - estimate 2 hours and 30 minutes
+- - - actual 2 hours and 10 minutes
+- - standard deviation:
+- - - estimate 1 hour and 15 minutes
+- - - actual 1 hour and 24 minutes
 
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent - 1
+- - 0.2
 
   
 
