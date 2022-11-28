@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Row, Col, Table, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Row, Table } from 'react-bootstrap';
+import { } from 'react-router-dom';
 import api from '../lib/api';
+import { AddParkingLot } from '../components';
 
 function ParkingLotRow({p,i}) {
     return(
@@ -27,13 +28,9 @@ function ParkingLot() {
     },[]);
 
     return(<>
+        <AddParkingLot setParkings={setParkings}/>
         <Row className="mt-4">
             <h1>Parking lots</h1>
-            <Col className="mb-3">
-                <Link to="/parking/add">
-                    <Button>Add</Button>
-                </Link>
-            </Col>
         </Row>
         <Table striped bordered hover>
             <thead>

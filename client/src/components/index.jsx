@@ -2,5 +2,7 @@ import Header from "./Navbar";
 import Login from "./Login"
 import SignUp from "./SignUp"
 import PointMap from "./pointMap";
+import CheckEmail from "./CheckEmail"
+import AddParkingLot from "./AddParkingLot"
 
-export { Header, Login, SignUp, PointMap };
+export { Header, Login, SignUp, PointMap, CheckEmail, AddParkingLot };

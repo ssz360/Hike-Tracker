@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import API from "../lib/api";
+import api from "../lib/api";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { Row, Col } from 'react-bootstrap';
 
@@ -17,6 +17,7 @@ function SignUp(props) {
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     var emailValidator = require("node-email-validation");
 
@@ -81,11 +82,15 @@ function SignUp(props) {
 
                         else {
                             try {
-                                const usr = await API.register(email, password, name, surname, phoneNumber);
-                                props.setLogged(true);
-                                navigate('/' + usr.type + '/' + usr.username);
+                                const usr = await api.register(email, password, name, surname, phoneNumber);
+                                //props.setLogged(true);
+                                //navigate('/' + usr.type + '/' + usr.username);
+                                navigate('/CheckEmail');
                             } catch (error) {
-                                setError("Error during registration");
+                                if (error.toString().includes("SyntaxError"))
+                                    setError("This email is already registered");
+                                else 
+                                    setError("Internal server error. Please try again later")
                             }
                         }
                     }}>
@@ -96,19 +101,19 @@ function SignUp(props) {
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <FloatingLabel controlId="floatingInput" label="Surname" className="mb-3">
+                            <FloatingLabel controlId="floatingSurname" label="Surname" className="mb-3">
                                 <Form.Control type="text" placeholder="Insert surname" name="surname" required onClick={p => { setError(false) }} onChange={p => setSurname(p.target.value)} />
                             </FloatingLabel>
                         </Form.Group>
 
                         <Form.Group className="mb-3">
-                            <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
+                            <FloatingLabel controlId="floatingPhone" label="Phone number" className="mb-3">
                                 <Form.Control type="text" placeholder="Insert phone number" name="phonenumber" required onClick={p => { setError(false) }} onChange={p => setPhoneNumber(p.target.value)} />
                             </FloatingLabel>
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <FloatingLabel controlId="floatingInput" label="Email" className="mb-3">
+                            <FloatingLabel controlId="floatingEmail" label="Email" className="mb-3">
                                 <Form.Control type="text" placeholder="Insert email" name="email" required onClick={p => { setError(false) }} onChange={p => setEmail(p.target.value)} />
                             </FloatingLabel>
                         </Form.Group>
@@ -118,8 +123,8 @@ function SignUp(props) {
                                 <Form.Control type="password" placeholder="Insert password" name="password" required onClick={p => { setError(false) }} onChange={p => setPassword(p.target.value)} />
                             </FloatingLabel>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <FloatingLabel controlId="floatingPassword" label="Repeat password" className="mb-3">
+                        <Form.Group className="mb-3" controlId="formBasicPasswordConfirm">
+                            <FloatingLabel controlId="floatingPassword2" label="Repeat password" className="mb-3">
                                 <Form.Control type="password" placeholder="Repeat password" name="password2" required onClick={p => { setError(false) }} onChange={p => { setPassword2(p.target.value); }} />
                             </FloatingLabel>
                         </Form.Group>

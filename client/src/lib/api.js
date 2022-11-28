@@ -1,3 +1,9 @@
+import Hike from "./hike";
+import Hut from "./hut";
+import Point from "./point";
+
+const APIURL = new URL('http://localhost:3001/api/');
+
 const APIBASE='http://localhost:3001/api/';
 
 const register=async(username,password, name, surname, phone)=>{
@@ -9,9 +15,10 @@ const register=async(username,password, name, surname, phone)=>{
         body: JSON.stringify({username:username, password:password, first_name: name, last_name: surname, phone: phone}),
         credentials:"include"
     });
-    const emp=await res.json();
-    if(res.ok) return emp;
-    else throw emp;
+    const usr=await res.json();
+    //console.log(usr);
+    if(res.ok) return usr;
+    else throw usr;
 }
 
 const login=async(username,password)=>{
@@ -69,5 +76,231 @@ async function addParking(pk) {
   else throw pk;
 };
 
-const api={login, logout, register, getParkings, addParking};
+async function insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate) {
+    return new Promise((resolve, reject) => {
+        const thisURL = "huts";
+        fetch(new URL(thisURL, APIURL), {
+            method: 'POST',
+            headers:{
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({name, country, numberOfGuests, numberOfBedrooms, coordinate}),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    resolve(response.json())
+                } else {
+                    response.json()
+                        .then((message) => { reject(message); })
+                        .catch(() => { reject({ error: "Cannot parse server response. " }) });
+                }
+            })
+            .catch(() => reject({ error: "Cannot communicate with the server. " }));
+    });
+}
+
+async function getHikesList() {
+    return new Promise((resolve, reject) => {
+        fetch(new URL("hikes", APIURL))
+            .then((response) => {
+                if (response.ok) {
+                    response.json().then(ret=>{
+                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,h.Author,h.Length,h.Ascent,h.Difficulty,h.ExpectedTime,h.startPoint,h.endPoint,h.referencePoints,h.Description)));
+                        console.log("HIKES NO FILTERING",arr);
+                        resolve(arr);
+                    });
+                } else {
+                    //console.log("Error in gethikeslist");
+                    response.json()
+                        .then((message) => { reject(message); })
+                        .catch(() => { reject({ error: "Cannot parse server response. " }) });
+                }
+            })
+            .catch(() => reject({ error: "Cannot communicate with the server. " }));
+    });
+}
+
+async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty, area) {
+    return new Promise((resolve, reject) => {
+        const thisURL = "hikes";
+        fetch(new URL(thisURL, APIURL), {
+            method: 'POST',
+            headers:{
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({lengthMin : lengthMin, lengthMax : lengthMax, expectedTimeMin : expectedTimeMin, 
+                expectedTimeMax : expectedTimeMax, ascentMin : ascentMin, ascentMax : ascentMax, difficulty : difficulty,area: area}),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    response.json().then(ret=>{
+                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.id,h.name,h.author,h.length,h.ascent,h.difficulty,h.expectedTime,h.startPoint,h.endPoint,h.referencePoints,h.description)));
+                        console.log("RETURNING NEW ARR",arr);
+                        resolve(arr);
+                    });
+                } else {
+                    response.json()
+                        .then((msg) => { reject({status:response.status,message:msg}) })
+                        .catch(() => { reject({ error: "Cannot parse server response. " }) });
+                }
+            })
+            .catch(() => reject({ status:503, error: "Cannot communicate with the server. " }));
+    });
+}
+
+const getHikersHikesList= async (lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty, area)=>{
+    console.log("IN GET **HIKERS** HIKES LIST WITH,",lengthMin,lengthMax,expectedTimeMin,expectedTimeMax,ascentMin,ascentMax,difficulty,area)
+    const res=await fetch('http://localhost:3001/api/user/hikes',{
+        credentials:"include",
+        method:"POST",
+        headers:{
+                "Content-type": "application/json"
+        },
+        body: JSON.stringify({lengthMin : lengthMin, lengthMax : lengthMax, expectedTimeMin : expectedTimeMin, 
+                expectedTimeMax : expectedTimeMax, ascentMin : ascentMin, ascentMax : ascentMax, difficulty : difficulty,area: area})
+    });
+    const ret=await res.json();
+    if(res.ok){
+        console.log("RETURNED VALUE IS",ret);
+        const arr=[];ret.forEach(h=>arr.push(new Hike(h.id,h.name,h.author,h.length,h.ascent,h.difficulty,h.expectedTime,h.startPoint,h.endPoint,h.referencePoints,h.description,h.coordinates,h.center,h.bounds)));
+        console.log("Returning",arr);
+        return arr;
+    }
+    else throw {status:res.status,message:ret};
+}
+
+const addHike= async (file,name,desc,difficulty)=>{
+    const data=new FormData();
+    data.append('file',file);
+    data.append('name',name);
+    data.append('description',desc);
+    data.append('difficulty',difficulty);
+    //console.log("Adding a new hike with formdata",data);
+    const res=await fetch('http://localhost:3001/api/newHike',{
+        method:'POST',
+        credentials:"include",
+        body: data
+    });
+    //console.log("Finished the new hike query with res.status",res.status);
+    if(res.ok) return;
+    else{
+        const ret=await res.json();
+        throw ret;
+    }
+}
+
+const getHikeMap=async id=>{
+    console.log("IN GETHIKEMAP FOR ",id)
+    const res=await fetch(APIBASE+'hikes/'+id+'/map',{
+        credentials:"include"
+    });
+    const ret=await res.json();
+    console.log("RECEIVED",ret);
+    if(res.ok) return ret;
+    else throw ret;
+}
+
+const isLogged=async ()=>{
+    const res=await fetch(APIBASE+'logged',{
+        credentials:"include"
+    });
+    const usr=await res.json();
+    if(res.ok) return usr;
+    else throw res.status;
+}
+
+async function getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, coordinate, geographicalArea) {
+    return new Promise((resolve, reject) => {
+        const thisURL = "huts/list";
+        fetch(new URL(thisURL, APIURL), {
+            method: 'POST',
+            headers:{
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({name: name, country: country, numberOfGuests: numberOfGuests, 
+                numberOfBedrooms: numberOfBedrooms, coordinate: coordinate, geographicalArea: geographicalArea}),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    response.json().then(ret=>{
+                        const arr=[];ret.forEach(h=>arr.push(new Hut(h.IDPoint, h.Name, h.Coordinates, h.GeographicalArea,
+                            h.Country, h.NumberOfGuests, h.NumberOfBedrooms )));
+                        resolve(arr);
+                    });
+                } else {
+                    response.json()
+                        .then((msg) => { reject({status:response.status,message:msg}) })
+                        .catch(() => { reject({ error: "Cannot parse server response. " }) });
+                }
+            })
+            .catch(() => reject({ status:503, error: "Cannot communicate with the server. " }));
+    });
+}
+
+const getPointsInBounds=async (bounds,startPoint,endPoint)=>{
+    const res=await fetch(APIBASE+'pointsInBounds',{
+        credentials:"include",
+        method:'POST',
+        headers:{
+            "Content-type": "application/json"
+        },
+        body:JSON.stringify({bounds:bounds,startPointCoordinates:startPoint.coordinates,endPointCoordinates:endPoint.coordinates})
+    });
+    const points=await res.json();
+    console.log("Received points",points);
+    if(res.ok) return points.map(p=>new Point(p.id,p.name,p.coordinates,p.geographicalArea,p.typeOfPoint));
+    else throw res.status;
+}
+
+const getHutsInBounds=async (bounds,startPoint,endPoint)=>{
+    const res=await fetch(APIBASE+'hutsInBounds',{
+        credentials:"include",
+        method:'POST',
+        headers:{
+            "Content-type": "application/json"
+        },
+        body:JSON.stringify({bounds:bounds,startPointCoordinates:startPoint.coordinates,endPointCoordinates:endPoint.coordinates})
+    });
+    const points=await res.json();
+    console.log("Received points",points);
+    if(res.ok) return points.map(p=>new Point(p.id,p.name,p.coordinates,p.geographicalArea,p.typeOfPoint));
+    else throw res.status;
+}
+
+
+
+const linkStartArrival=async (hikeId,startPointId,endPointId)=>{
+    const res=await fetch(APIBASE+'updateStartEndPoint',{
+        credentials:"include",
+        method:'POST',
+        headers:{
+            "Content-type": "application/json"
+        },
+        body:JSON.stringify({IDHike:hikeId, StartPoint:startPointId, EndPoint:endPointId})
+    });
+    if(res.ok) return;
+    else{
+        const err=await res.json();
+        throw err;
+    }
+}
+
+
+const linkHut=async (hikeId,pointId)=>{
+    const res=await fetch(APIBASE+'addReferenceToHike',{
+        credentials:"include",
+        method:'POST',
+        headers:{
+            "Content-type": "application/json"
+        },
+        body:JSON.stringify({IDHike:hikeId, IDPoint:pointId})
+    });
+    if(res.ok) return;
+    else{
+        const err=await res.json();
+        throw err;
+    }
+}
+
+const api={login, logout, getPointsInBounds,linkStartArrival, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters, linkHut, getHutsInBounds};
 export default api;

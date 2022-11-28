@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
-import API from "../lib/api";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { Row, Col } from 'react-bootstrap';
 import api from "../lib/api";
@@ -37,7 +36,7 @@ function Login(props) {
                         e.stopPropagation();
 
                         if (!emailValidator.is_email_valid(username)) {
-                            setError('Email is incorrect')
+                            setError('Email has a wrong format')
                         }
                         else {
                             try {
