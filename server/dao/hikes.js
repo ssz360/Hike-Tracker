@@ -66,9 +66,9 @@ getHikesList = async () => new Promise((resolve, reject) => {
 });
 
 
-const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty, centerlat, centerlon, latdeg, londegr) => new Promise((resolve, reject) => {
+const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty, centerlat, centerlon, radius) => new Promise((resolve, reject) => {
     //console.log("Pars",getMap,lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty,centerlat,centerlon,latdeg,londegr)
-    const sql = 'SELECT * FROM HIKES H WHERE Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ? AND abs(CenterLat-?)<=? AND abs(CenterLon-?)<=? AND UPPER(Difficulty) LIKE UPPER(?)';
+    const sql = 'SELECT * FROM HIKES H WHERE Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ? AND (((CenterLat-?)*(CenterLat-?))+((CenterLon-?)*(CenterLon-?)))<=? AND UPPER(Difficulty) LIKE UPPER(?)';
 
     const lenMin = lengthMin == null ? 0 : lengthMin;
     const lenMax = lengthMax == null ? MAXDOUBLE : lengthMax;
@@ -83,8 +83,9 @@ const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, ex
     //console.log("lenMin",lenMin,"lenMax",lenMax,"expmin",expMin,"expmax",expMax,"ascmin",ascMin,"ascmax",ascMax,"maxlen",maxLen,"maxLon",maxLon,"minlen",minLen,"minlon",minLon);
 
     //console.log("SQL IS ",sql2,"with pars");
-    db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat, latdeg, centerlon, londegr, diff], async (err, row) => {
+    db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat, centerlat, centerlon, centerlon, radius, diff], async (err, row) => {
         if (err) {
+            console.log("Err in get hikes with filters",err);
             reject(err);
             return;
         }
@@ -92,7 +93,7 @@ const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, ex
         //console.log("Before adding points rows were ",row);
         row = await getHikesMoreData(row);
         const result = row.map((h) => ({ id: h.IDHike, name: h.Name, author: h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, description: h.Description }));
-        //console.log("Returning hikes",result);
+        console.log("Returning hikes",result);
         resolve(result);
     });
 

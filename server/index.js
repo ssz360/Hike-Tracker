@@ -90,7 +90,7 @@ const KMPERLON = lat => {
 // every field can contain a value or be null -> everything null == getHikesList()
 app.post('/api/hikes', async (req, res) => {
     //console.log("In hikes with",req.body);
-    let centerlat, centerlon, latdegr, londegr;
+    let centerlat, centerlon, radius;
     if (req.body.area === undefined) {
         centerlat = 0;
         centerlon = 0;
@@ -100,11 +100,12 @@ app.post('/api/hikes', async (req, res) => {
     else {
         centerlat = req.body.area.center.lat;
         centerlon = req.body.area.center.lng;
-        latdegr = req.body.area.radius / KMPERLAT;
-        londegr = req.body.area.radius / KMPERLON(centerlon);
+        radius=req.body.area.radius;
+        //latdegr = req.body.area.radius / KMPERLAT;
+        //londegr = req.body.area.radius / KMPERLON(centerlon);
         //console.log("Latdeggr",latdegr,"Londegr",londegr);
     }
-    hikesdao.getHikesListWithFilters(req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty, centerlat, centerlon, latdegr, londegr)
+    hikesdao.getHikesListWithFilters(req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty, centerlat, centerlon, radius)
         .then(hikes => { res.json(hikes) })
         .catch(error => res.status(error.status).json(error.message).end());
 });

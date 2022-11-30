@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Button, Form } from "react-bootstrap";
+import { Alert, Button, Form, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 
@@ -11,6 +11,7 @@ function AddHikeForm(props){
     const [desc,setDesc]=useState('');
     const [file,setFile]=useState();
     const [fileName,setFileName]=useState('');
+    const [waiting,setWaiting]=useState(false);
     const navigate=useNavigate();
     const submitHandler=async ()=>{
         try {
@@ -19,14 +20,17 @@ function AddHikeForm(props){
             if(!difficulty) err+="No difficulty was selected. "
             if(!file) err+="The track file was not provided. ";
             if(err!=="") throw err;
+            setWaiting(true);
             //console.log("Trying to send an api call")
             await api.addHike(file,name,desc,difficulty);
+            setWaiting(false);
             //console.log("Success in api call");
             setSuccess(true);
             setTimeout(()=>setSuccess(false),3000);
             await props.refreshHikes();
         } catch (error) {
             //console.log("Error in try catch",error);
+            setWaiting(false);
             setSuccess(false);
             setError(error);
             setTimeout(()=>setError(false),3000);
@@ -93,7 +97,11 @@ function AddHikeForm(props){
                 <Alert.Heading>New hike added correctly!</Alert.Heading>
             </Alert>
         </div>
-        :<></>
+        :
+        waiting?
+        <Spinner animation="grow"/>
+        :
+        <></>
         }
     </>
     )
