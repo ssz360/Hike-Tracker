@@ -1,13 +1,13 @@
 'use strict';
 const express = require('express');
 const hikesdao = require('./dao/hikes');
-const hikes= require('./services/hikes');
+const hikes = require('./services/hikes');
 const parkings = require('./dao/parkings');
-const multer=require('multer');
+const multer = require('multer');
 const huts = require('./dao/huts');
 const app = express();
 const port = 3001;
-const upload=multer();
+const upload = multer();
 
 // AUTHENTICATION CONTROL
 const passport = require('passport');
@@ -15,14 +15,15 @@ const LocalStrategy = require('passport-local');
 const session = require('express-session');
 const cors = require('cors');
 const user = require("./user");
-const userdao= require('./dao/user-dao');
+const userdao = require('./dao/user-dao');
 const tokens = require("./tokens");
 const ref = require("./referencePoints");
+const points = require('./dao/points');
 
 app.use(express.json());
-passport.use(new LocalStrategy((username, password, callback)=>{
-    userdao.login(username, password).then((user) => { 
-        if (!user)  return callback(null, false, { message: 'Incorrect username and/or password.' });
+passport.use(new LocalStrategy((username, password, callback) => {
+    userdao.login(username, password).then((user) => {
+        if (!user) return callback(null, false, { message: 'Incorrect username and/or password.' });
         return callback(null, user);
     });
 }));
@@ -79,39 +80,39 @@ app.get('/api/hikes', async (req, res) => {
         .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
 });
 
-const KMPERLAT=110574;
-const KMPERLON=lat=>{
+const KMPERLAT = 110574;
+const KMPERLON = lat => {
     //console.log("returning kmperlon",111320*Math.cos(lat* (Math.PI / 180)));
     //console.log("in radiants",lat* (Math.PI / 180))
-    return 111320*Math.cos(lat* (Math.PI / 180));
+    return 111320 * Math.cos(lat * (Math.PI / 180));
 }
 
 // every field can contain a value or be null -> everything null == getHikesList()
 app.post('/api/hikes', async (req, res) => {
     //console.log("In hikes with",req.body);
-    let centerlat,centerlon,latdegr,londegr;
-    if (req.body.area===undefined){
-        centerlat=0;
-        centerlon=0;
-        latdegr=90;
-        londegr=180;
+    let centerlat, centerlon, latdegr, londegr;
+    if (req.body.area === undefined) {
+        centerlat = 0;
+        centerlon = 0;
+        latdegr = 90;
+        londegr = 180;
     }
-    else{
-        centerlat=req.body.area.center.lat;
-        centerlon=req.body.area.center.lng;
-        latdegr=req.body.area.radius/KMPERLAT;
-        londegr=req.body.area.radius/KMPERLON(centerlon);
+    else {
+        centerlat = req.body.area.center.lat;
+        centerlon = req.body.area.center.lng;
+        latdegr = req.body.area.radius / KMPERLAT;
+        londegr = req.body.area.radius / KMPERLON(centerlon);
         //console.log("Latdeggr",latdegr,"Londegr",londegr);
     }
-    hikesdao.getHikesListWithFilters(req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty,centerlat,centerlon,latdegr,londegr)
-        .then(hikes => {res.json(hikes)} )
+    hikesdao.getHikesListWithFilters(req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty, centerlat, centerlon, latdegr, londegr)
+        .then(hikes => { res.json(hikes) })
         .catch(error => res.status(error.status).json(error.message).end());
 });
 
-app.get('/api/hikes/:id/map',isLoggedIn,async (req,res)=>{
+app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
     try {
         //console.log("IN GET MAP FOR ",req.params.id);
-        const ret=await hikesdao.getHikeMap(parseInt(req.params.id));
+        const ret = await hikesdao.getHikeMap(parseInt(req.params.id));
         //console.log("\n\n\n\tReturning\n",ret);
         res.status(200).json(ret);
     } catch (error) {
@@ -119,10 +120,10 @@ app.get('/api/hikes/:id/map',isLoggedIn,async (req,res)=>{
     }
 })
 
-app.post('/api/newHike',isLoggedIn,upload.single('file'),async (req,res)=>{
+app.post('/api/newHike', isLoggedIn, upload.single('file'), async (req, res) => {
     try {
-        //console.log("In new HIKE");
-        await hikes.newHike(req.body["name"],req.user,req.body["description"],req.body["difficulty"],req.file.buffer.toString());
+        console.log("In new HIKE",req.body);
+        await hikes.newHike(req.body["name"], req.user, req.body["description"], req.body["difficulty"], req.file.buffer.toString());
         //console.log("Finished new hike");
         return res.status(201).end();
     } catch (error) {
@@ -189,10 +190,10 @@ app.post('/api/huts/list', async (req, res) => {
 // DESCRIPTION ===========================================================================================================
 // Returns the list of parkings
 
-app.get('/api/parkings', async (req,res) => {
+app.get('/api/parkings', async (req, res) => {
     parkings.getParkingsList()
-    .then(pks => {res.json(pks)})
-    .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
+        .then(pks => { res.json(pks) })
+        .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
 });
 
 // DESCRIPTION ===========================================================================================================
@@ -206,52 +207,89 @@ app.get('/api/parkings', async (req,res) => {
 //     "slots": 43
 //  }
 
-app.post('/api/parking', async (req,res) => {
-  const pk = {
-    "name":req.body.name,
-    "desc":req.body.desc,
-    "slots":req.body.slots
-  };
-  try {
-    await parkings.addParking(pk);
-    res.status(201).end();
-  } catch(err) {
-    res.status(503).json({error:`Database error during the creation of the parking lot`});
-  }
+app.post('/api/parking', async (req, res) => {
+    //   const pk = {
+    //     "name":req.body.name,
+    //     "desc":req.body.desc,
+    //     "slots":req.body.slots
+    //   };
+    try {
+        //     await parkings.addParking(pk);
+        await parkings.addParking(req.body);
+        res.status(201).end();
+    } catch (err) {
+        res.status(503).json({ error: `Database error during the creation of the parking lot` });
+    }
 });
 
-app.get('/api/logged',isLoggedIn, async (req,res)=>{
+app.get('/api/logged', isLoggedIn, async (req, res) => {
 
     res.json({ username: req.user.username, type: req.user.type });
 })
 // DESCRIPTION ===========================================================================================================
-// Link hut/parking to hikes
+// Link point to hikes
 // task : B - Update the db structure to link points to hikes
- 
+
 // ***** example ****
 // {
-//     "Type":"Hut" or "Parking",
-//     "Name":"test",
 //     "IDHike":1,
-//     "IDParking":1,
-//     "IDHut":2622,
-//     "GeographicalArea":"torino",
-//     "Coordinates":"55.25,66.35"
+//     "IDPoint":1
 // } 
 
-app.post('/api/linkToHike',async(req,res)=>{
-    const {Type,Name,IDHike,IDParking,IDHut,GeographicalArea,Coordinates} = req.body;
+app.post('/api/addReferenceToHike', async (req, res) => {
+    const { IDHike, IDPoint } = req.body;
 
     try {
-        await hikesdao.linkHutParkingToHike(Type,Name,IDHike,IDParking,IDHut,GeographicalArea,Coordinates);
+        await hikesdao.addReferenceToHike(IDHike, IDPoint);
         res.status(201).end();
     } catch (error) {
         res.status(error.code).json(error.message);
     }
 });
 
+app.post('/api/updateStartEndPoint', isLoggedIn,async (req, res) => {
+    console.log("Updatestart end point with ",req.body);
+    const { IDHike, StartPoint, EndPoint } = req.body;
+    console.log("IDHIKE",IDHike,"StartPoint",StartPoint,"EndPoint",EndPoint);
+    try {
+        await hikesdao.updateStartingArrivalPoint(IDHike, StartPoint, EndPoint);
+        res.status(201).end();
+    } catch (error) {
+        res.status(error.code).json(error.message);
+    }
+});
+
+
+app.post('/api/pointsInBounds',isLoggedIn, async(req,res)=>{
+    try {
+        console.log("In get points in bounds with ",req.body);
+        const ret=await points.getPointsInBounds(req.body.bounds[1][0],req.body.bounds[0][0],
+            req.body.bounds[1][1],req.body.bounds[0][1],
+            req.body.startPointCoordinates[0],req.body.startPointCoordinates[1],
+            req.body.endPointCoordinates[0],req.body.endPointCoordinates[1]);
+        console.log("Returning",ret);
+        res.status(201).json(ret);
+    } catch (error) {
+        res.status(error.status).json(error.message)
+    }
+})
+
+app.post('/api/hutsInBounds',isLoggedIn, async(req,res)=>{
+    try {
+        console.log("In get points in bounds with ",req.body);
+        const ret=await points.hutsInBounds(req.body.bounds[1][0],req.body.bounds[0][0],
+            req.body.bounds[1][1],req.body.bounds[0][1],
+            req.body.startPointCoordinates[0],req.body.startPointCoordinates[1],
+            req.body.endPointCoordinates[0],req.body.endPointCoordinates[1]);
+        console.log("Returning",ret);
+        res.status(201).json(ret);
+    } catch (error) {
+        res.status(error.status).json(error.message)
+    }
+})
+
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
 );
 
-module.exports=app;
+module.exports = app;

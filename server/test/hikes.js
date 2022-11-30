@@ -11,7 +11,9 @@ var agent = chai.request.agent(app);
 describe('filtering hikes apis', () => {
 
     it('no filters',done=>{
+        console.log("Calling no filters");
         agent.get('/api/hikes').then(res=>{
+            console.log("returning in NO FILTERS statsu",res.status,"body",res.body);
             res.should.have.status(200);
             expect(res.body.length).equal(6);
             done();
@@ -32,7 +34,9 @@ describe('filtering hikes apis', () => {
               radius: 100.00
             }
         }
+        console.log("Calling rocciamelone filtes with",filters);
         agent.post('/api/hikes').send(filters).then(res=>{
+            console.log("returning in rocciamelone filters statsu",res.status,"body",res.body);
             res.should.have.status(200);
             expect(res.body.length).equal(3);
             done();

@@ -27,9 +27,10 @@ describe('validate if all the required data are inserted', () => {
     })
 
     it("insert correct username password",()=>{
-        cy.get('[name="username"]').type('username');
-        cy.get('[name="password"]').type('password');
+        cy.get('[name="username"]').type('davidwallace@gmail.com');
+        cy.get('[name="password"]').type('123abcABC!');
         cy.contains("Submit").click();
-        cy.contains("should be completed when the site works").should("be.visible");
+        cy.wait(100);
+        cy.contains("Log out");
     })
 })

@@ -39,9 +39,19 @@ describe("Unit Test: Reference Points", () => {
 				'PRAGMA foreign_keys = "1"; DROP TABLE IF EXISTS "REFERENCE_POINTS"; CREATE TABLE IF NOT EXISTS "REFERENCE_POINTS" ("IDPoint"	INTEGER NOT NULL,"IDHike"	INTEGER NOT NULL,FOREIGN KEY("IDHike") REFERENCES "HIKES"("IDHike"),FOREIGN KEY("IDPoint") REFERENCES "POINTS"("IDPoint"));'
 			);
 		});
+		afterAll(() => {
+			db.exec(
+				'DROP TABLE IF EXISTS "REFERENCE_POINTS"; CREATE TABLE IF NOT EXISTS "REFERENCE_POINTS" ("IDPoint"	INTEGER NOT NULL,"IDHike"	INTEGER NOT NULL,FOREIGN KEY("IDHike") REFERENCES "HIKES"("IDHike"),FOREIGN KEY("IDPoint") REFERENCES "POINTS"("IDPoint"));'
+			);
+		});
 		test("Normal Call", async () => {
 			expect(await testFactoryCreateRef(1, 1, true)).toBe(1);
-			expect(await testFactoryGetRefs(1, true)).toEqual([1]);
+			expect(await testFactoryGetRefs(1, true)).toEqual([
+				{
+					IDHike: 1,
+					IDPoint: 1
+				}
+			]);
 		});
 		test("Non-existent Point", async () => {
 			expect(await testFactoryCreateRef(Number.MAX_VALUE, 1, false, "FOREIGN")).toBe(true);

@@ -28,6 +28,7 @@ function ParkingLot() {
     },[]);
 
     return(<>
+        <AddParkingLot setParkings={setParkings}/>
         <Row className="mt-4">
             <h1>Parking lots</h1>
         </Row>
@@ -45,7 +46,6 @@ function ParkingLot() {
                 {parkings.map((p,i) => (<ParkingLotRow p={p} i={i} key={i}/>))}
             </tbody>
         </Table>
-        <AddParkingLot setParkings={setParkings}/>
     </>);
 }
 

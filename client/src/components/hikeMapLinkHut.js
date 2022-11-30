@@ -20,7 +20,7 @@ function BoundsMovement(props){
 }
 
 
-function HikeMapLink(props){
+function HikeMapLinkHut(props){
     console.log("RENDERING LINK FOR HIKE",props.hike);
     const [coordinates,setCoordinates]=useState([]);
     const [center,setCenter]=useState([0.05,0.05]);
@@ -51,8 +51,8 @@ function HikeMapLink(props){
                 <Polyline pathOptions={pathopts} positions={coordinates} />
                 <BoundsMovement setBounds={props.setBounds} bounds={props.bounds}/>
                 {props.points.map(p=>getMarkerForPoint(p,p.id===props.hike.startPoint.id,p.id===props.hike.endPoint.id,props.selectedPoint===p.id,true,props.selectedPoint,props.setSelectedPoint))}
-                {props.hike.startPoint!==undefined?getMarkerForPoint(props.hike.startPoint,true,false,props.selectedPoint===props.hike.startPoint.id,true,props.selectedPoint,props.setSelectedPoint):<></>}
-                {props.hike.endPoint!==undefined?getMarkerForPoint(props.hike.endPoint,false,true,props.selectedPoint===props.hike.endPoint.id,true,props.selectedPoint,props.setSelectedPoint):<></>}
+                {props.hike.startPoint!==undefined?getMarkerForPoint(props.hike.startPoint,true,false,props.selectedPoint===props.hike.startPoint.id,props.hike.startPoint.typeOfPoint==="Hut",props.selectedPoint,props.setSelectedPoint):<></>}
+                {props.hike.endPoint!==undefined?getMarkerForPoint(props.hike.endPoint,false,true,props.selectedPoint===props.hike.endPoint.id,props.hike.endPoint.typeOfPoint==="Hut",props.selectedPoint,props.setSelectedPoint):<></>}
             </MapContainer>
             }
         </>
@@ -62,4 +62,4 @@ function HikeMapLink(props){
 
 }
 
-export default HikeMapLink;
+export default HikeMapLinkHut;

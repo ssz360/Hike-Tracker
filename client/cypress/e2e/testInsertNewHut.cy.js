@@ -1,3 +1,6 @@
+/* eslint-disable no-undef */
+/// <reference types="cypress" />
+
 const testFactory = (testName, name, country, cord, expectedWarning) => {
 	it(testName, () => {
 		cy.reload();
@@ -104,8 +107,8 @@ describe("Login", () => {
 		cy.reload();
 		cy.visit("/");
 		cy.contains("Sign in").click();
-		cy.get("[id=floatingInput]").type("dragonzhao1992@gmail.com");
-		cy.get("[id=floatingPassword]").type("Zazaza1234!");
+		cy.get("[id=floatingInput]").type("davidwallace@gmail.com");
+		cy.get("[id=floatingPassword]").type("123abcABC!");
 		cy.contains("Submit").click();
 		//cy.url().should("include", "dragonzhao1992@gmail.com");
 		cy.contains("Add Hut").click();

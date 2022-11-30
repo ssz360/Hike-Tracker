@@ -10,14 +10,14 @@ getHutsList = async () => new Promise((resolve, reject) => {
             reject(err);
             return;
         }
-        const huts = row.map((h) => ({ IDPoint: h.IDPoint, Name: h.Name, Coordinates: h.Coordinates, GeographicalArea: h.GeographicalArea, Country: h.Country, NumberOfGuests: h.NumberOfGuests, NumberOfBedrooms: h.NumberOfBedrooms  }))
+        const huts = row.map((h) => ({ IDPoint: h.IDPoint, Name: h.Name, Coordinates: [h.Latitude,h.Longitude], GeographicalArea: h.GeographicalArea, Country: h.Country, NumberOfGuests: h.NumberOfGuests, NumberOfBedrooms: h.NumberOfBedrooms  }))
         resolve(huts);
     });
 });
 
 getHutsListWithFilters = async (name, country, numberOfGuests, numberOfBedrooms, coordinate, geographicalArea) => new Promise((resolve, reject) => {
     let thisName = name==null? '%' : "%" + name + "%";
-    let thisCoordinate = coordinate==null? '%' : coordinate;
+    //let thisCoordinate = coordinate==null? '%' : coordinate;
     let thisCountry = country==null? '%' : country;
     let thisNumberOfGuests = numberOfGuests==null? '%' : numberOfGuests;
     let thisNumberOfBedrooms = numberOfBedrooms==null? '%' : numberOfBedrooms;
@@ -25,14 +25,15 @@ getHutsListWithFilters = async (name, country, numberOfGuests, numberOfBedrooms,
     
     //console.log(thisName + " " + thisCoordinate + " " + thisCountry + " " + thisNumberOfGuests + " " + thisNumberOfBedrooms + " ")
     
-    const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint AND UPPER(P.Name) LIKE UPPER(?) AND Coordinates LIKE ? AND UPPER(Country) LIKE UPPER(?) AND UPPER(TypeOfPoint) = UPPER(?) AND NumberOfGuests LIKE ? AND NumberOfBedrooms LIKE ? AND UPPER(GeographicalArea) LIKE UPPER(?)'
+    const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint AND UPPER(P.Name) LIKE UPPER(?) AND UPPER(Country) LIKE UPPER(?) AND UPPER(TypeOfPoint) = UPPER(?) AND NumberOfGuests LIKE ? AND NumberOfBedrooms LIKE ? AND UPPER(GeographicalArea) LIKE UPPER(?)'
 
-    db.all(sql, [thisName, thisCoordinate, thisCountry, "Hut", thisNumberOfGuests, thisNumberOfBedrooms, thisGeographicalArea], (err, row) => {
+    db.all(sql, [thisName, thisCountry, "Hut", thisNumberOfGuests, thisNumberOfBedrooms, thisGeographicalArea], (err, row) => {
         if (err) {
             reject(err);
             return;
         }
-        const huts = row.map((h) => ({ IDPoint: h.IDPoint, Name: h.Name, Coordinates: h.Coordinates, GeographicalArea: h.GeographicalArea, Country: h.Country, NumberOfGuests: h.NumberOfGuests, NumberOfBedrooms: h.NumberOfBedrooms  }))
+        const huts = row.map((h) => ({ IDPoint: h.IDPoint, Name: h.Name, Coordinates: [h.Latitude,h.Longitude], GeographicalArea: h.GeographicalArea, Country: h.Country, NumberOfGuests: h.NumberOfGuests, NumberOfBedrooms: h.NumberOfBedrooms  }))
+        console.log("Returning huts",huts);
         resolve(huts);
     });
 });
@@ -45,11 +46,11 @@ function insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate) 
             return;
         }
 
-        insertPoint(name, coordinate, country, "Hut").then(pointId => {
+        insertPoint(name, coordinate[0],coordinate[1], country, "Hut").then(pointId => {
 
-            let query = `INSERT INTO HUTS (Name,Country ,NumberOfGuests,NumberOfBedrooms,IDPoint) VALUES(?,?,?,?,?);`;
+            let query = `INSERT INTO HUTS (Country ,NumberOfGuests,NumberOfBedrooms,IDPoint) VALUES(?,?,?,?);`;
             
-            db.run(query, [name, country, numberOfGuests, numberOfBedrooms, pointId], function (err) {
+            db.run(query, [country, numberOfGuests, numberOfBedrooms, pointId], function (err) {
                 if (err) {
                     rej(err);
                     return;

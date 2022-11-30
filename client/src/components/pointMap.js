@@ -1,4 +1,5 @@
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import { MapContainer, TileLayer,Marker, useMap } from 'react-leaflet'
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
@@ -11,6 +12,14 @@ function GetPoint(props){
     return <></>
 }
 function PointMap(props){
+
+    const myIcon = new L.Icon({
+        iconUrl: "/images/marker.webp",
+        iconRetinaUrl: "/images/marker.webp",
+        popupAnchor:  [-0, -0],
+        iconSize: [32,32],     
+    });
+
     return(
         <>
             <Modal show={props.openArea} onHide={e=>props.setOpenArea(false)}>
@@ -20,7 +29,7 @@ function PointMap(props){
                         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                         <GetPoint setCoors={props.setCoord}/>
                         {props.coord!==undefined?
-                            <Marker position={props.coord}/>
+                            <Marker icon={myIcon} position={props.coord}/>
                             :
                             <></>
                         }

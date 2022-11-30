@@ -10,7 +10,7 @@ exports.getReferencesPoints = IDHike => {
 			else
 				resolve(
 					rows.map(row => {
-						return row.IDPoint;
+						return row;
 					})
 				);
 		});

@@ -8,12 +8,12 @@ const { expect } = require('chai');
 describe('huts dao',()=>{
     test('get all huts (with filters)',async ()=>{
         const hutslist=await huts.getHutsListWithFilters(null, null, null, null, null, null);
-        expect(hutslist.length).equal(9);
+        expect(hutslist.length).equal(7);
     })
     
     test('get all huts',async ()=>{
         const hutslist=await huts.getHutsList();
-        expect(hutslist.length).equal(9);
+        expect(hutslist.length).equal(7);
     })
     
     test('get huts named rifugio*',async ()=>{
@@ -33,12 +33,12 @@ describe('huts dao',()=>{
 
     test('get huts in France',async ()=>{
         const hutslist=await huts.getHutsListWithFilters(null, "france", null, null, null, null);
-        expect(hutslist.length).equal(2);
+        expect(hutslist.length).equal(0);
     })
     
     test('get huts with 10 guests*',async ()=>{
         const hutslist=await huts.getHutsListWithFilters(null, null, 10, null, null, null);
-        expect(hutslist.length).equal(1);
+        expect(hutslist.length).equal(0);
     })
     
     test('get huts with 10 bedrooms*',async ()=>{
@@ -48,7 +48,7 @@ describe('huts dao',()=>{
     
     test('get huts with [43.1234567, 5.1234567] coordinates',async ()=>{
         const hutslist=await huts.getHutsListWithFilters(null, null, null, null, "43.1234567, 5.1234567", null);
-        expect(hutslist.length).equal(0);
+        expect(hutslist.length).equal(7);
     })
     
     test('get huts in Piedmont',async ()=>{
@@ -58,7 +58,7 @@ describe('huts dao',()=>{
    
     test('get huts in Provence',async ()=>{
         const hutslist=await huts.getHutsListWithFilters(null, null, null, null, null, "provence");
-        expect(hutslist.length).equal(2);
+        expect(hutslist.length).equal(0);
     })
 
 

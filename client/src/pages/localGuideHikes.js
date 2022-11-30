@@ -25,18 +25,15 @@ function LocalGuideHikeRow(props){
     return (
     <><Col xs={12} sm={6} lg={4} className="mt-2"><Card border="info">
     <Card.Header>
-    <Container><Row>
-      <Col xs={8}><h4>{props.hike.name}</h4></Col>
-      <Col className='text-secondary fst-italic'>{auth}</Col>
-      </Row>
-    </Container>
+      <h4>{props.hike.name}</h4>
+      <div className='text-secondary fst-italic'>{auth}</div>
     </Card.Header>
     <Card.Body>
       <HikeMap hike={props.hike}/>
-      <Card.Text><strong>Length: </strong>{props.hike.len} km<br></br>
+      <Card.Text><strong>Length: </strong>{Math.ceil(props.hike.len)} km<br></br>
       <strong>Difficulty: </strong>{props.hike.difficulty} <br></br>
       <strong>Ascent: </strong>{props.hike.ascent} m<br></br>
-      <strong>Expected Time: </strong>{props.hike.expectedTime} h
+      <strong>Expected Time: </strong>{Math.ceil(props.hike.expectedTime)} h
       </Card.Text>
       <Card.Text>{!open ? (
       <a className="text-decoration-none" style={{fontSize:"14px"}}
@@ -69,6 +66,7 @@ function LocalGuideHikeRow(props){
                     <Button variant="outline-dark" className="mx-2" size="sm" onClick={e=>{
                             e.preventDefault();
                             e.stopPropagation();
+                            navigate("/localGuide/hikes/"+props.hike.id+"/linkhut");
                         }}><strong>Link new hut!</strong></Button>
           </Col>
           </Row>

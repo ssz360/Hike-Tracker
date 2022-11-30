@@ -147,18 +147,15 @@ function HikeRow(props){
     return (
     <><Col xs={12} sm={6} md={4} className="mt-2"><Card>
     <Card.Header>
-    <Container><Row>
-      <Col xs={8}><h4>{props.hike.name}</h4></Col>
-      <Col className='text-secondary fst-italic'>{auth}</Col>
-      </Row>
-    </Container>
+      <h4>{props.hike.name}</h4>
+      <div className='text-secondary fst-italic'>{auth}</div>
     </Card.Header>
     <Card.Body>
       {props.logged?<HikeMap hike={props.hike}/>:<></>}
-      <Card.Text><strong>Length: </strong>{props.hike.len} km<br></br>
-      <strong>Difficulty: </strong>{props.hike.difficulty} <br></br>
-      <strong>Ascent: </strong>{props.hike.ascent} m<br></br>
-      <strong>Expected Time: </strong>{props.hike.expectedTime} h
+      <Card.Text><strong>Length: </strong><span className='test-length'>{Math.ceil(props.hike.len)}</span> km<br></br>
+      <strong>Difficulty: </strong><span className='test-difficulty'>{props.hike.difficulty}</span> <br></br>
+      <strong>Ascent: </strong><span className='test-ascent'>{props.hike.ascent}</span> m<br></br>
+      <strong>Expected Time: </strong><span className='test-time'>{Math.ceil(props.hike.expectedTime)}</span> h
       </Card.Text>
       <Card.Text>{!open ? (
       <a className="text-decoration-none" style={{fontSize:"14px"}}
