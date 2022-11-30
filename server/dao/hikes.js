@@ -3,20 +3,48 @@ const points = require('./points');
 const MAXDOUBLE = 4294967295;
 
 
-const newHike = async (name, author, len,expectedTime, ascent, desc, difficulty, startPoint, endPoint, coordinates, centerlat, centerlon, bounds) => new Promise((resolve, reject) => {
-    const sqlhike = "INSERT INTO HIKES (Name , Author, Length, ExpectedTime,CenterLat, CenterLon, Ascent, Difficulty, StartPoint, EndPoint, Description) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
-    const sqlmap = "INSERT INTO HIKESMAPDATA(Coordinates,Center,Bounds) VALUES(?,?,?)";
-    db.run(sqlhike, [name, author, len, expectedTime, centerlat, centerlon, ascent, difficulty, startPoint, endPoint, desc], err => {
-        if (err) {
-            //console.log("Err hike query",err);
+const insertHikePoint=async (hikeId,lat,lon,index)=>new Promise((resolve,reject)=>{
+    const sql="INSERT INTO HIKESCOORDINATES(hikeId,indexCoor,latitude,longitude) VALUES(?,?,?,?)";
+    db.run(sql,[hikeId,index,lat,lon],err=>{
+        if(err){
+            console.log("ERR IN INSERT COORDINATE",err,"WITH DATA HIKEID",hikeId,"lat",lat,"lon",lon,"index",index);
             reject({ status: 503, message: { err } });
         }
-        else db.run(sqlmap, [coordinates, JSON.stringify(centerlat,centerlon), bounds], errmap => {
+        else resolve();
+    })
+})
+
+const newHike = async (name, author, len,expectedTime, ascent, desc, difficulty, startPoint, endPoint, coordinates, centerlat, centerlon, maxlat,maxlon,minlat,minlon) => new Promise((resolve, reject) => {
+    const sqlhike = "INSERT INTO HIKES (Name , Author, Length, ExpectedTime,CenterLat, CenterLon, Ascent, Difficulty, StartPoint, EndPoint, Description) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+    const sqlmap = "INSERT INTO HIKESMAPDATA(CenterLat,CenterLon,MaxLat,MaxLon,MinLat,MinLon) VALUES(?,?,?,?,?,?)";
+    db.run(sqlhike, [name, author, len, expectedTime, centerlat, centerlon, ascent, difficulty, startPoint, endPoint, desc], err => {
+        if (err) {
+            console.log("Err new hike query",err);
+            reject({ status: 503, message: { err } });
+        }
+        else db.run(sqlmap, [centerlat,centerlon,maxlat,maxlon,minlat,minlon], errmap => {
             if (errmap) {
-                //console.log("Err hikemapdata",err);
+                console.log("Err INSERT INTO hikemapdata",errmap);
                 reject({ status: 503, message: { err } });
             }
-            else resolve();
+            else{
+                db.get("SELECT MAX(IDHike) AS max FROM HIKES",[],(errId,rowId)=>{
+                    if (err) {
+                        console.log("Err Get id query",errId);
+                        reject({ status: 503, message: { errId } });
+                    }
+                    const proms=[];
+                    const hikeId=rowId.max;
+                    let i=0;
+                    //console.log("\t\tCoordinates",coordinates);
+                    for (const c of coordinates){
+                        //console.log("Coordinate to insert c ",c);
+                        proms.push(insertHikePoint(hikeId,c[0],c[1],i));
+                        i++;
+                    }
+                    Promise.all(proms).then(()=>resolve()).catch(err=>reject({ status: 503, message: { err } }));
+                })
+            }
         });
     });
 });
@@ -102,11 +130,23 @@ const getHikeMap = async id => new Promise((resolve, reject) => {
     db.get(sql, [id], (err, row) => {
         //console.log("MAP RET",row,"err",err);
         if (err) {
+            console.log("ERR IN HIKESMAPDATA",err);
             reject({ status: 503, message: err });
             return;
         }
         else if (row === undefined) reject({ status: 404, message: "No hike associated to this id" });
-        resolve({ id: row.IDHike, coordinates: JSON.parse(row.Coordinates), center: JSON.parse(row.Center), bounds: JSON.parse(row.Bounds) })
+        const sqlcoors="SELECT latitude,longitude,indexCoor FROM HIKESCOORDINATES WHERE hikeId=?";
+        db.all(sqlcoors,[id],(err,rows)=>{
+            if(err){
+                console.log("ERR IN SQLCOORS",err);
+                reject({ status: 503, message: err });
+            }
+            else{
+                resolve({ id: row.IDHike, coordinates: rows.sort((a,b)=>a.indexCoor-b.indexCoor).map(c=>[c.latitude,c.longitude]), center: [row.CenterLat,row.CenterLon], bounds: [[row.MaxLat,row.MaxLon],[row.MinLat,row.MinLon]] });
+            }
+        })
+        
+        //resolve({ id: row.IDHike, coordinates: JSON.parse(row.Coordinates), center: JSON.parse(row.Center), bounds: JSON.parse(row.Bounds) })
     });
 });
 
