@@ -42,10 +42,10 @@ function HomePage(props){
           <Carousel.Caption>
           <h1 style={{fontFamily:"Montserrat,Helvetica,Arial,Lucida,sans-serif", 
             fontWeight: "800",
-            fontSize: "49px"}}><strong>Join us</strong></h1>
+            fontSize: "49px"}}><strong>JOIN US!</strong></h1>
             <p style={{fontFamily:"Montserrat,Helvetica,Arial,Lucida,sans-serif", 
             fontWeight: "750",
-            fontSize: "18px"}}>Click to sing up</p>
+            fontSize: "18px"}}>Click to sign up</p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
