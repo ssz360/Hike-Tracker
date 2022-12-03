@@ -2,6 +2,7 @@ import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container } from 'r
 import { useEffect, useState } from 'react';
 import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
+import MultiRangeSlider from '../components/MultiRangeSlider';
 
 function HikesList(props){
     //console.log("Rerendering hikeslist with",props.hikes);
@@ -15,6 +16,10 @@ function HikesList(props){
     const [timeMin, setTimeMin] = useState(null);
     const [timeMax, setTimeMax] = useState(null);
     const [openArea, setOpenArea] = useState(false);
+
+    const icon = (<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
+    <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
+  </svg>);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -76,28 +81,23 @@ function HikesList(props){
         <Row className="justify-content-md-center">
 
         <Col xs={4}> <InputGroup className="mb-3">
-                <InputGroup.Text>Min</InputGroup.Text>
-                <Form.Control type="number" min={0} aria-label="Lenght Min" onChange={(event) => setLenMin(event.target.value)}/>
-                <InputGroup.Text>km</InputGroup.Text>
-                 
-                <InputGroup.Text>Max</InputGroup.Text>
-                <Form.Control type="number" min={0} aria-label="Lenght Max" onChange={(event) => setLenMax(event.target.value)}/>
-                <InputGroup.Text>km</InputGroup.Text>
+        <MultiRangeSlider
+          min={0}
+          max={40}
+          onChange={({ min, max }) => {setLenMin(min); setLenMax(max);}}/>
               </InputGroup>
             </Col>
             
             <Col xs={4}> <InputGroup className="mb-3">
-                <InputGroup.Text>Min</InputGroup.Text>
-                <Form.Control type="number" min={0} step={50} aria-label="Ascent Min" onChange={(event) => setAscMin(event.target.value)}/>
-                <InputGroup.Text>m</InputGroup.Text>
-                <InputGroup.Text>Max</InputGroup.Text>
-                <Form.Control type="number" min={0} step={50} aria-label="Ascent Max" onChange={(event) => setAscMax(event.target.value)}/>
-                <InputGroup.Text>m</InputGroup.Text>
+            <MultiRangeSlider
+          min={0}
+          max={4000}
+          onChange={({ min, max }) => {setAscMin(min); setAscMax(max);}}/>
               </InputGroup>
             </Col>
             </Row>
 
-            <div className="mb-2">
+            <div className="mb-2 mt-4">
             <Row className="justify-content-md-center">
             <Col xs={8}> <div className="d-grid gap-2"><strong>Time Expected</strong></div>
             </Col>
@@ -106,12 +106,10 @@ function HikesList(props){
 
             <Row className="justify-content-md-center">
               <Col xs={4}> <InputGroup className="mb-3">
-                <InputGroup.Text>Min</InputGroup.Text>
-                <Form.Control type="number" min={0} step={0.5} aria-label="Time Min" onChange={(event) => setTimeMin(event.target.value)}/>
-                <InputGroup.Text>h</InputGroup.Text>
-                <InputGroup.Text>Max</InputGroup.Text>
-                <Form.Control type="number" min={0} step={0.5} aria-label="Time Max" onChange={(event) => setTimeMax(event.target.value)}/>
-                <InputGroup.Text>h</InputGroup.Text>
+              <MultiRangeSlider
+                min={0}
+                max={15}
+                onChange={({ min, max }) => {setTimeMin(min); setTimeMax(max);}}/>
               </InputGroup>
             </Col>
 
@@ -129,7 +127,8 @@ function HikesList(props){
                 <Display logged={props.logged} displayedHikes={props.hikes}/>
               }
         </Row>
-        <div className="mb-5"> </div>
+        <Row className="mb-5 mt-3"><Col xs={12}>
+        <a href="#carousel" color='#009999'>{icon}</a></Col></Row>
         </>
       )
 
@@ -154,7 +153,7 @@ function HikeRow(props){
       {props.logged?<HikeMap hike={props.hike}/>:<></>}
       <Card.Text><strong>Length: </strong><span className='test-length'>{Math.ceil(props.hike.len)}</span> km<br></br>
       <strong>Difficulty: </strong><span className='test-difficulty'>{props.hike.difficulty}</span> <br></br>
-      <strong>Ascent: </strong><span className='test-ascent'>{props.hike.ascent}</span> m<br></br>
+      <strong>Ascent: </strong><span className='test-ascent'>{Math.ceil(props.hike.ascent)}</span> m<br></br>
       <strong>Expected Time: </strong><span className='test-time'>{Math.ceil(props.hike.expectedTime)}</span> h
       </Card.Text>
       <Card.Text>{!open ? (

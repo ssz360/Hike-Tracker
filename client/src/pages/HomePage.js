@@ -14,7 +14,7 @@ function HomePage(props){
   </svg>);
 
     return (<>
-        <Carousel className="d-block w-100">
+        <Carousel id="carousel" className="d-block w-100">
         <Carousel.Item>
         <Image
         className="d-block w-100"
