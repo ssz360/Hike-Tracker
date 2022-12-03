@@ -124,7 +124,7 @@ function HikesList(props){
             </Col>
             </Row>
         </div>
-        <Row className="mt-2">
+        <Row>
               {
                 <Display logged={props.logged} displayedHikes={props.hikes}/>
               }
@@ -145,7 +145,7 @@ function HikeRow(props){
     const auth = props.hike.author.substring(0, props.hike.author.indexOf('@'));
     const [open, setOpen] = useState(false);
     return (
-    <><Col xs={12} sm={6} md={4} className="mt-2"><Card>
+    <><Col xs={12} sm={6} md={4} className="mt-2"><Card className="shadow mt-3">
     <Card.Header>
       <h4>{props.hike.name}</h4>
       <div className='text-secondary fst-italic'>{auth}</div>
