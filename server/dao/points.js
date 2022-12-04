@@ -15,7 +15,10 @@ getParkingsList = async () => new Promise((resolve, reject) => {
 const linkPointToHike=(hikeId,pointId)=>new Promise((resolve,reject)=>{
     const sql="INSERT INTO LINKEDPOINTS(IDPoint,IDHike) VALUES(?,?)";
     db.run(sql,[pointId,hikeId],err=>{
-        if(err) reject({status:503,message:err});
+        if(err){
+            console.log("Err in link point to hike",err);
+            reject({status:503,message:err});
+        }
         resolve();
     })
 })
@@ -75,10 +78,13 @@ const linkableEndPoints= async (startLat,startLon,endLat,endLon) =>new Promise((
     })
 });
 
-const linkableHuts= async (lat,lon,startLat,startLon,endLat,endLon) =>new Promise((resolve, reject) => {
-    let sql = "SELECT * FROM POINTS WHERE TypeOfPoint='Hut' AND 2 * 6371 * sqrt(pow(sin((radians(?) - radians(Latitude)) / 2), 2)+ cos(radians(Latitude))* cos(radians(?))* pow(sin((radians(?) - radians(Longitude)) / 2), 2))<=5000 AND NOT((Latitude=? AND Longitude=?) OR (Latitude=? AND Longitude=?))";
-    db.all(sql, [lat,lat,lon,startLat,startLon,endLat,endLon], (err, rows) => {
-        if (err)    reject({status:503,message:"Internal error"});
+const linkableHuts= async id =>new Promise((resolve, reject) => {
+    const sql = "SELECT * FROM POINTS WHERE TypeOfPoint='Hut' AND EXISTS(SELECT HIKESCOORDINATES.indexCoor FROM HIKESCOORDINATES WHERE HIKESCOORDINATES.hikeId=? AND 2 * 6371 * sqrt(pow(sin((radians(HIKESCOORDINATES.latitude) - radians(POINTS.Latitude)) / 2), 2)+ cos(radians(POINTS.Latitude))* cos(radians(HIKESCOORDINATES.latitude))* pow(sin((radians(HIKESCOORDINATES.longitude) - radians(POINTS.Longitude)) / 2), 2))<=5)";
+    db.all(sql, [id], (err, rows) => {
+        if (err){
+            console.log("Error in linkable huts",err);
+            reject({status:503,message:"Internal error"});
+        }
         resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: p.GeographicalArea, typeOfPoint: p.TypeOfPoint})));
     })
 });

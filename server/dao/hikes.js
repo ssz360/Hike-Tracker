@@ -59,7 +59,7 @@ getHikesList = async () => new Promise((resolve, reject) => {
         //console.log("Before adding points rows were ",row);
         row = await getHikesMoreData(row);
 
-        const hikes = row.map((h) => ({ IDHike: h.IDHike, Name: h.Name, Author: h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, Description: h.Description, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts: h.huts }))
+        const hikes = row.map((h) => ({ IDHike: h.IDHike, Name: h.Name, Author: h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, Description: h.Description, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts: h.huts, center: [h.CenterLat,h.CenterLon] }))
         //console.log("Returning hikes",hikes);
         resolve(hikes);
     });
@@ -90,9 +90,9 @@ const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, ex
             return;
         }
 
-        //console.log("Before adding points rows were ",row);
+        console.log("Before adding points rows were ",row);
         row = await getHikesMoreData(row);
-        const result = row.map((h) => ({ id: h.IDHike, name: h.Name, author: h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts:h.huts, description: h.Description }));
+        const result = row.map((h) => ({ id: h.IDHike, name: h.Name, author: h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts:h.huts, description: h.Description, center: [h.CenterLat,h.CenterLon] }));
         console.log("Returning hikes",result);
         resolve(result);
     });
@@ -100,7 +100,7 @@ const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, ex
 });
 
 const getHikesMoreData = async (row) => {
-    const getLinkedPoints = (id) => new Promise((resolve, reject) => {
+    const getLinkedPoints = (id) => new Promise(async (resolve, reject) => {
         const linkedPointsSql = "SELECT * FROM LINKEDPOINTS AS R JOIN POINTS AS P ON P.IDPoint = R.IDPoint WHERE R.IDHike = ?";
 
         db.all(linkedPointsSql, [id], (err, rows) => {
@@ -113,16 +113,15 @@ const getHikesMoreData = async (row) => {
     })
 
     for (let item of row) {
-
-        await points.getPointById(item.StartPoint).then(startPoint => {
-            item.startPoint = {id:startPoint.IDPoint,name:startPoint.Name,geographicalArea:startPoint.GeographicalArea,coordinates:[startPoint.Latitude,startPoint.Longitude],typeOfPoint:startPoint.TypeOfPoint};
-            points.getPointById(item.EndPoint).then(endPoint => {
-                item.endPoint = {id:endPoint.IDPoint,name:endPoint.Name,geographicalArea:endPoint.GeographicalArea,coordinates:[endPoint.Latitude,endPoint.Longitude],typeOfPoint:endPoint.TypeOfPoint};
-            })
-        });
+        //console.log("Getting more data for row",item);
+        const start=await points.getPointById(item.StartPoint);
+        const end=await points.getPointById(item.EndPoint);
+        item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:start.GeographicalArea,coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
+        item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:end.GeographicalArea,coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
+        console.log("Got more data for row",item);
         const linkedPoints = await getLinkedPoints(item.IDHike);
         item.referencePoints=linkedPoints.filter(p=>p.typeOfPoint=="referencePoint" || p.typeOfPoint=="hikePoint");
-        item.huts=linkedPoints.filter(p=>p.typeOfPoint==="hut");
+        item.huts=linkedPoints.filter(p=>p.typeOfPoint==="Hut");
     }
 
     return row;

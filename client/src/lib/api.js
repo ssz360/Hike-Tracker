@@ -105,8 +105,8 @@ async function getHikesList() {
             .then((response) => {
                 if (response.ok) {
                     response.json().then(ret=>{
-                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,h.Author,h.Length,h.Ascent,h.Difficulty,h.ExpectedTime,h.startPoint,h.endPoint,h.referencePoints,h.Description)));
-                        console.log("HIKES NO FILTERING",arr);
+                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.IDHike,h.Name,h.Author,h.Length,h.Ascent,h.Difficulty,h.ExpectedTime,h.startPoint,h.endPoint,h.referencePoints,h.Description,h.huts,h.center)));
+                        console.log("HIKES NO FILTERING",arr,"RECEIVED FROM TEHRE",ret);
                         resolve(arr);
                     });
                 } else {
@@ -134,7 +134,7 @@ async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, ex
             .then((response) => {
                 if (response.ok) {
                     response.json().then(ret=>{
-                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.id,h.name,h.author,h.length,h.ascent,h.difficulty,h.expectedTime,h.startPoint,h.endPoint,h.referencePoints,h.description)));
+                        const arr=[];ret.forEach(h=>arr.push(new Hike(h.id,h.name,h.author,h.length,h.ascent,h.difficulty,h.expectedTime,h.startPoint,h.endPoint,h.referencePoints,h.description,h.huts,h.center)));
                         console.log("RETURNING NEW ARR",arr);
                         resolve(arr);
                     });
@@ -286,14 +286,14 @@ const linkStartArrival=async (hikeId,startPointId,endPointId)=>{
 }
 
 
-const linkHut=async (hikeId,pointId)=>{
-    const res=await fetch(APIBASE+'addReferenceToHike',{
+const linkHut=async (hikeId,hutId)=>{
+    const res=await fetch(APIBASE+'hikes/linkHut',{
         credentials:"include",
         method:'POST',
         headers:{
             "Content-type": "application/json"
         },
-        body:JSON.stringify({IDHike:hikeId, IDPoint:pointId})
+        body:JSON.stringify({hikeId:hikeId, hutId:hutId})
     });
     if(res.ok) return;
     else{
@@ -302,5 +302,30 @@ const linkHut=async (hikeId,pointId)=>{
     }
 }
 
-const api={login, logout, getPointsInBounds,linkStartArrival, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters, linkHut, getHutsInBounds};
+const getHikesInBounds=async bounds=>{
+    const res=await fetch(APIBASE+'hikesinbounds',{
+        credentials:"include",
+        method:'POST',
+        headers:{
+            "Content-type": "application/json"
+        },
+        body:JSON.stringify({bounds:bounds})
+    });
+    const ret=await res.json();
+    //console.log("\t\tRECEIVED FROM GET HIKES IN BOUNDS ",ret);
+    if(res.ok) return ret.map(h=>({id:h.id,coordinates:h.coordinates}));
+    else    throw ret;
+}
+
+const getLinkableHuts=async id=>{
+    const res=await fetch(APIBASE+'hikes/'+id+'/linkablehuts',{
+        credentials:"include"
+    });
+    const ret=await res.json();
+    //console.log("\t\tRECEIVED FROM GET HIKES IN BOUNDS ",ret);
+    if(res.ok) return ret.map(h=>new Point(h.id,h.name,h.coordinates,h.geographicalArea,h.typeOfPoint));
+    else    throw ret;
+}
+
+const api={login, logout, getPointsInBounds,linkStartArrival, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters, linkHut, getHutsInBounds, getHikesInBounds, getLinkableHuts};
 export default api;

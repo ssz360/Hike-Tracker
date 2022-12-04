@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Alert, Button, Form, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
+import ServerReply from "./serverReply";
 
 function AddHikeForm(props){
     const [error,setError]=useState();
@@ -81,28 +82,7 @@ function AddHikeForm(props){
                 </div>
             </Form.Group>
         </Form>
-        {error?
-        <div className="text-center mt-5 mx-auto justify-content-center" style={{width:"85%"}}>
-            <Alert variant="danger">
-                <Alert.Heading>Error while adding a new hike</Alert.Heading>
-                <h5>
-                    {error}
-                </h5>
-            </Alert>
-        </div>
-        :
-        success?
-        <div className="text-center mt-5 mx-auto justify-content-center" style={{width:"85%"}}>
-            <Alert variant="success">
-                <Alert.Heading>New hike added correctly!</Alert.Heading>
-            </Alert>
-        </div>
-        :
-        waiting?
-        <Spinner animation="grow"/>
-        :
-        <></>
-        }
+        <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new hike"} successMessage={"New hike added correctly!"}/>
     </>
     )
 }

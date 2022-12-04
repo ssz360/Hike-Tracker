@@ -1,14 +1,25 @@
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { MapContainer, TileLayer,Marker, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer,Marker, useMap, Polyline } from 'react-leaflet'
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
+import api from '../lib/api';
 
-function GetPoint(props){
+function GetPointAndNewHikes(props){
     const map=useMap();
     map.on("click",e=>{
         props.setCoors([e.latlng.lat,e.latlng.lng]);
-    })
+    });
+    map.on('moveend', async event=> {   
+        const bounds = event.target.getBounds();
+        try {
+            const newHikes=await api.getHikesInBounds([[bounds._northEast.lat,bounds._northEast.lng],[bounds._southWest.lat,bounds._southWest.lng]]);
+            //console.log("NEWHIKES!",newHikes);
+            props.setHikes([...newHikes]);
+        } catch (error) {
+            props.setHikes([]);
+        }
+    });
     return <></>
 }
 function PointMap(props){
@@ -19,7 +30,9 @@ function PointMap(props){
         popupAnchor:  [-0, -0],
         iconSize: [32,32],     
     });
-
+    const opts = { color: 'red' }
+    const [hikes,setHikes]=useState([]);
+    //console.log("Rerendering with",hikes);
     return(
         <>
             <Modal show={props.openArea} onHide={e=>props.setOpenArea(false)}>
@@ -27,11 +40,14 @@ function PointMap(props){
                 <Modal.Body>
                     <MapContainer whenReady={m=>m.target.locate({setView:true})} center={[0,0]} zoom={13} style={{ height: "50vh", minHeight: "100%" }} scrollWheelZoom={true}>
                         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                        <GetPoint setCoors={props.setCoord}/>
+                        <GetPointAndNewHikes setCoors={props.setCoord} setHikes={setHikes}/>
                         {props.coord!==undefined?
                             <Marker icon={myIcon} position={props.coord}/>
                             :
                             <></>
+                        }
+                        {
+                            hikes.map(h=><Polyline key={h.id} pathOptions={opts} positions={h.coordinates} />)
                         }
                     </MapContainer>
                 </Modal.Body>
