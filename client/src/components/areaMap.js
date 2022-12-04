@@ -2,6 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, useMap,useMapEvents,Circle } from 'react-leaflet'
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
+import { getDistance } from 'geolib';
 
 const KMFROLAT=110574;
 
@@ -88,14 +89,12 @@ function CenterMapClick(props){
             if(edit && !control){
                 if(props.center!==undefined && !selecting){
                     props.setRadius(0);
-                    props.setRadiusMap(0);
                     props.setCenter(e.latlng);
                 }
                 else if(props.center===undefined && !selecting){
                     props.setCenter(e.latlng);
                 }
                 else if(selecting){
-                    console.log("DISTANZA",Math.pow(e.latlng.lat-props.center.lat,2)+Math.pow(e.latlng.lng-props.center.lng,2))
                     setSelecting(false);
                     setEdit(false);
                 }
@@ -103,15 +102,13 @@ function CenterMapClick(props){
         },
         mousemove: e =>{
             if(edit && props.center!==undefined && selecting){
-                props.setRadius(Math.pow(e.latlng.lat-props.center.lat,2)+Math.pow(e.latlng.lng-props.center.lng,2));
-                props.setRadiusMap(Math.max(Math.abs(e.latlng.lat-props.center.lat)*KMFROLAT,Math.abs(e.latlng.lng-props.center.lng)*111320 * Math.cos(Math.abs((e.latlng.lat-props.center.lat)/2) * (Math.PI / 180))));
+                props.setRadius(getDistance({latitude:e.latlng.lat,longitude:e.latlng.lng},{latitude:props.center.lat,longitude:props.center.lng}));
             }
         },
         mouseup: e=>{
             if(edit && !selecting) setSelecting(true);
         },
         mouseout: e=>{
-            console.log("DISTANZA",Math.pow(e.latlng.lat-props.center.lat,2)+Math.pow(e.latlng.lng-props.center.lng,2))
             if(edit && selecting){
                 setSelecting(false);
                 setEdit(false);
@@ -149,7 +146,6 @@ function CenterMapClick(props){
 }
 
 function AreaMap(props){
-    const [radiusMap,setRadiusMap]=useState(0);
     return(
         <>
             <Modal show={props.openArea} onHide={e=>props.setOpenArea(false)}>
@@ -160,10 +156,10 @@ function AreaMap(props){
                         {props.drag?
                             <CenterMapDrag center={props.center} radius={props.radius} setCenter={props.setCenter} setRadius={props.setRadius} />
                         :
-                            <CenterMapClick center={props.center} radius={props.radius} setCenter={props.setCenter} setRadius={props.setRadius} radiusMap={radiusMap} setRadiusMap={setRadiusMap} />
+                            <CenterMapClick center={props.center} radius={props.radius} setCenter={props.setCenter} setRadius={props.setRadius}/>
                         }
                         {props.center!==undefined?
-                            <Circle center={props.center} setCenter={props.setCenter} radius={radiusMap} setRadius={setRadiusMap}/>
+                            <Circle center={props.center} setCenter={props.setCenter} radius={props.radius} setRadius={props.setRadius}/>
                             :
                             <></>
                         }

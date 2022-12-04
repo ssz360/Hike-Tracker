@@ -33,8 +33,8 @@ const newHike = async (name, author, len,expectedTime, ascent, desc, difficulty,
                         console.log("Err Get id query",errId);
                         reject({ status: 503, message: { errId } });
                     }
-                    const proms=[];
                     const hikeId=rowId.max;
+                    const proms=[points.linkPointToHike(hikeId,startPoint),points.linkPointToHike(hikeId,endPoint)];
                     let i=0;
                     //console.log("\t\tCoordinates",coordinates);
                     for (const c of coordinates){
@@ -59,7 +59,7 @@ getHikesList = async () => new Promise((resolve, reject) => {
         //console.log("Before adding points rows were ",row);
         row = await getHikesMoreData(row);
 
-        const hikes = row.map((h) => ({ IDHike: h.IDHike, Name: h.Name, Author: h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, Description: h.Description, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints }))
+        const hikes = row.map((h) => ({ IDHike: h.IDHike, Name: h.Name, Author: h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, Description: h.Description, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts: h.huts }))
         //console.log("Returning hikes",hikes);
         resolve(hikes);
     });
@@ -68,7 +68,7 @@ getHikesList = async () => new Promise((resolve, reject) => {
 
 const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty, centerlat, centerlon, radius) => new Promise((resolve, reject) => {
     //console.log("Pars",getMap,lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty,centerlat,centerlon,latdeg,londegr)
-    const sql = 'SELECT * FROM HIKES H WHERE Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ? AND (((CenterLat-?)*(CenterLat-?))+((CenterLon-?)*(CenterLon-?)))<=? AND UPPER(Difficulty) LIKE UPPER(?)';
+    const sql = 'SELECT * FROM HIKES H WHERE Length >= ? AND Length <= ? AND ExpectedTime >= ? AND ExpectedTime <= ? AND Ascent >=  ? AND Ascent <= ? AND 2 * 6371 * sqrt(pow(sin((radians(?) - radians(CenterLat)) / 2), 2)+ cos(radians(CenterLat))* cos(radians(?))* pow(sin((radians(?) - radians(CenterLon)) / 2), 2))<=? AND UPPER(Difficulty) LIKE UPPER(?)';
 
     const lenMin = lengthMin == null ? 0 : lengthMin;
     const lenMax = lengthMax == null ? MAXDOUBLE : lengthMax;
@@ -83,7 +83,7 @@ const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, ex
     //console.log("lenMin",lenMin,"lenMax",lenMax,"expmin",expMin,"expmax",expMax,"ascmin",ascMin,"ascmax",ascMax,"maxlen",maxLen,"maxLon",maxLon,"minlen",minLen,"minlon",minLon);
 
     //console.log("SQL IS ",sql2,"with pars");
-    db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat, centerlat, centerlon, centerlon, radius, diff], async (err, row) => {
+    db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat, centerlat, centerlon, radius, diff], async (err, row) => {
         if (err) {
             console.log("Err in get hikes with filters",err);
             reject(err);
@@ -92,7 +92,7 @@ const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, ex
 
         //console.log("Before adding points rows were ",row);
         row = await getHikesMoreData(row);
-        const result = row.map((h) => ({ id: h.IDHike, name: h.Name, author: h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, description: h.Description }));
+        const result = row.map((h) => ({ id: h.IDHike, name: h.Name, author: h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts:h.huts, description: h.Description }));
         console.log("Returning hikes",result);
         resolve(result);
     });
@@ -100,10 +100,10 @@ const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, ex
 });
 
 const getHikesMoreData = async (row) => {
-    const getReferencePoints = (id) => new Promise((resolve, reject) => {
-        const referencePointsSql = "SELECT * FROM REFERENCE_POINTS AS R JOIN POINTS AS P ON P.IDPoint = R.IDPoint WHERE R.IDHike = ?";
+    const getLinkedPoints = (id) => new Promise((resolve, reject) => {
+        const linkedPointsSql = "SELECT * FROM LINKEDPOINTS AS R JOIN POINTS AS P ON P.IDPoint = R.IDPoint WHERE R.IDHike = ?";
 
-        db.all(referencePointsSql, [id], (err, rows) => {
+        db.all(linkedPointsSql, [id], (err, rows) => {
             if (err) {
                 reject(err);
                 return;
@@ -120,11 +120,27 @@ const getHikesMoreData = async (row) => {
                 item.endPoint = {id:endPoint.IDPoint,name:endPoint.Name,geographicalArea:endPoint.GeographicalArea,coordinates:[endPoint.Latitude,endPoint.Longitude],typeOfPoint:endPoint.TypeOfPoint};
             })
         });
-        item.referencePoints = await getReferencePoints(item.IDHike);
+        const linkedPoints = await getLinkedPoints(item.IDHike);
+        item.referencePoints=linkedPoints.filter(p=>p.typeOfPoint=="referencePoint" || p.typeOfPoint=="hikePoint");
+        item.huts=linkedPoints.filter(p=>p.typeOfPoint==="hut");
     }
 
     return row;
 }
+
+const getCoordinatesHike= async (row)=>new Promise((resolve,reject)=>{
+    const sqlcoors="SELECT latitude,longitude,indexCoor FROM HIKESCOORDINATES WHERE hikeId=?";
+    db.all(sqlcoors,[row.IDHike],(err,rows)=>{
+        if(err){
+            console.log("ERR IN SQLCOORS",err);
+            reject({ status: 503, message: err });
+        }
+        else{
+            resolve({ id: row.IDHike, coordinates: rows.sort((a,b)=>a.indexCoor-b.indexCoor).map(c=>[c.latitude,c.longitude]), center: [row.CenterLat,row.CenterLon], bounds: [[row.MaxLat,row.MaxLon],[row.MinLat,row.MinLon]] });
+        }
+    })
+})
+
 
 const getHikeMap = async id => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKESMAPDATA WHERE IDHike=?'
@@ -136,7 +152,7 @@ const getHikeMap = async id => new Promise((resolve, reject) => {
             return;
         }
         else if (row === undefined) reject({ status: 404, message: "No hike associated to this id" });
-        const sqlcoors="SELECT latitude,longitude,indexCoor FROM HIKESCOORDINATES WHERE hikeId=?";
+        /*const sqlcoors="SELECT latitude,longitude,indexCoor FROM HIKESCOORDINATES WHERE hikeId=?";
         db.all(sqlcoors,[id],(err,rows)=>{
             if(err){
                 console.log("ERR IN SQLCOORS",err);
@@ -145,7 +161,8 @@ const getHikeMap = async id => new Promise((resolve, reject) => {
             else{
                 resolve({ id: row.IDHike, coordinates: rows.sort((a,b)=>a.indexCoor-b.indexCoor).map(c=>[c.latitude,c.longitude]), center: [row.CenterLat,row.CenterLon], bounds: [[row.MaxLat,row.MaxLon],[row.MinLat,row.MinLon]] });
             }
-        })
+        })*/
+        getCoordinatesHike(row).then(res=>resolve(res)).catch(err=>reject(err));
         
         //resolve({ id: row.IDHike, coordinates: JSON.parse(row.Coordinates), center: JSON.parse(row.Center), bounds: JSON.parse(row.Bounds) })
     });
@@ -262,5 +279,24 @@ const updateStartingArrivalPoint = async (hikeId, startPointId, endPointId) => n
 
 });
 
-const hikes = { getHikesList, getHikesListWithFilters, newHike, getHikeMap, addReferenceToHike, updateStartingArrivalPoint };
+const hikesInBounds=async (maxlat,maxlon,minlat,minlon)=>new Promise((resolve,reject)=>{
+    const hikessql = 'SELECT * FROM HIKESMAPDATA WHERE IDHike IN (SELECT idHike FROM HIKESCOORDINATES WHERE latitude<=? AND latitude>=? AND longitude<=? AND longitude>=?)';
+    db.all(hikessql, [maxlat,minlat,maxlon,minlon], (err, rows) => {
+        //console.log("MAP RET",row,"err",err);
+        if (err) {
+            console.log("ERR IN HIKESMAPDATA",err);
+            reject({ status: 503, message: err });
+            return;
+        }
+        //else if (row === undefined) reject({ status: 404, message: "No hike associated to this id" });
+        const proms=[];
+        rows.forEach(r=>proms.push(getCoordinatesHike(r)));
+        Promise.all(proms).then(maps=>{console.log("At the end we got",maps);resolve(maps)}).catch(err=>reject(err));
+        
+        //resolve({ id: row.IDHike, coordinates: JSON.parse(row.Coordinates), center: JSON.parse(row.Center), bounds: JSON.parse(row.Bounds) })
+    });
+})
+
+
+const hikes = { getHikesList, getHikesListWithFilters, newHike, getHikeMap, addReferenceToHike, updateStartingArrivalPoint, hikesInBounds };
 module.exports = hikes;
