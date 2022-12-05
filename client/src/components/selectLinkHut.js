@@ -4,7 +4,7 @@ import icons from "../lib/iconspoint";
 import ServerReply from "./serverReply";
 
 function SelectLinkHut(props){
-    console.log("IN selectlinkhut WITH ",props.point,"and hike",props.hike);
+    //console.log("IN selectlinkhut WITH ",props.point,"and hike",props.hike);
     const isStart=props.point.id===props.startPoint.id;
     const isEnd=props.point.id===props.endPoint.id;
     const [link,setLink]=useState(props.hike.referencePoints.length>0?props.hike.referencePoints.map(p=>p.id).includes(props.point.id):false);

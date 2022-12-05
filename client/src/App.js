@@ -73,7 +73,7 @@ useEffect(() => {
   }
 }, [logged, dirty])
   const updateStartEndPoint=(initialHike,point,type)=>{
-    console.log("IN UPDATE START END POINT WITH INITIAL HIKE",initialHike);
+    //console.log("IN UPDATE START END POINT WITH INITIAL HIKE",initialHike);
     let hike=initialHike;
     if(type==="start"){
       hike.startPoint=point;
@@ -81,15 +81,15 @@ useEffect(() => {
     else if(type==="end"){
       hike.endPoint=point;
     }
-    console.log("NEW HIKE",hike);
-    console.log("TRYING TO SET UP HIKES AS ",[...hikes.filter(h=>h.id!==hike.id),hike])
+    //console.log("NEW HIKE",hike);
+    //console.log("TRYING TO SET UP HIKES AS ",[...hikes.filter(h=>h.id!==hike.id),hike])
     setHikes([...hikes.filter(h=>h.id!==hike.id),hike]);
   }
   const refreshHikes=async ()=>{
     try {
-      console.log("IN REFRESH HIKES");
+      //console.log("IN REFRESH HIKES");
       const h=await api.getHikesList();
-      console.log("HIKES",h);
+      //console.log("HIKES",h);
       setHikes([...h]);
     } catch (error) {
       setHikes([]);

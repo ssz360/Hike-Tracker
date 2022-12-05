@@ -21,13 +21,13 @@ import getMarkerForPoint from "../lib/markerPoint";
 
 
 function HikeMapLinkHut(props){
-    console.log("RENDERING LINK FOR HIKE",props.hike);
+    //console.log("RENDERING LINK FOR HIKE",props.hike);
     const [coordinates,setCoordinates]=useState([]);
     const [center,setCenter]=useState([0.05,0.05]);
     useEffect(()=>{
         const getMapDetails=async()=>{
             try {
-                console.log("GETTIN MAP DATA FOR",props.hike.id)
+                //console.log("GETTIN MAP DATA FOR",props.hike.id)
                 const mapdets=await api.getHikeMap(props.hike.id);
                 props.setBounds(mapdets.bounds);
                 setCoordinates(mapdets.coordinates);

@@ -288,23 +288,25 @@ app.post('/api/hikes/linkHut', isLoggedIn, async(req,res)=>{
     }
 })
 
-app.post('/api/linkableStartPoints',async(req,res)=>{
+app.get('/api/hikes/:hikeId/linkableStartPoints',isLoggedIn,async(req,res)=>{
     try {
         console.log("In get points in bounds with ",req.body);
-        const ret=await points.linkableStartPoints(req.body.hikeId);
+        const hike=await hikesdao.getHike(parseInt(req.params.hikeId));
+        const ret=await points.linkableStartPoints(hike.startPoint.coordinates[0],hike.startPoint.coordinates[1],hike.startPoint.id,hike.endPoint.id);
         console.log("Returning",ret);
-        res.status(201).json(ret);
+        res.status(200).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message)
     }
 })
 
-app.post('/api/linkableEndPoints',async(req,res)=>{
+app.get('/api/hikes/:hikeId/linkableEndPoints',isLoggedIn,async(req,res)=>{
     try {
         console.log("In get points in bounds with ",req.body);
-        const ret=await points.linkableEndPoints(req.body.startPoint.lat,req.body.startPoint.lon,req.body.endPoint.lat,req.body.endPoint.lon);
+        const hike=await hikesdao.getHike(parseInt(req.params.hikeId));
+        const ret=await points.linkableEndPoints(hike.endPoint.coordinates[0],hike.endPoint.coordinates[1],hike.startPoint.id,hike.endPoint.id);
         console.log("Returning",ret);
-        res.status(201).json(ret);
+        res.status(200).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message)
     }

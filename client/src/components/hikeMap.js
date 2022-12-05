@@ -13,7 +13,7 @@ function HikeMap(props){
     useEffect(()=>{
         const getMapDetails=async()=>{
             try {
-                console.log("GETTIN MAP DATA FOR",props.hike.id)
+                //console.log("GETTIN MAP DATA FOR",props.hike.id)
                 const mapdets=await api.getHikeMap(props.hike.id);
                 setBounds(mapdets.bounds);
                 setCoordinates(mapdets.coordinates);
