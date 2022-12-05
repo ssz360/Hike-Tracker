@@ -286,10 +286,10 @@ const linkStartArrival=async (hikeId,startPointId,endPointId)=>{
 }
 
 
-const linkHut=async (hikeId,hutId)=>{
+const linkHut=async (hikeId,hutId,link)=>{
     const res=await fetch(APIBASE+'hikes/linkHut',{
         credentials:"include",
-        method:'POST',
+        method:link?'POST':'DELETE',
         headers:{
             "Content-type": "application/json"
         },

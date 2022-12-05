@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
+import ServerReply from "./serverReply";
 
 
 function SelectPointStartEnd(props){
-    //console.log("IN SELECTPOINTSTARTEND WITH ",props.point);
+    console.log("IN SELECTPOINTSTARTEND WITH ",props.point);
     const euclidianDistance=(a,b)=>Math.sqrt(Math.pow(a[0]-b[0],2)+Math.pow(a[1]-b[1],2));
     const iconsvg={
         "Hut":<svg xmlns="http://www.w3.org/2000/svg" width="32" height="auto" fill="blue" class="bi bi-houses-fill" viewBox="0 0 16 16"><path d="M7.207 1a1 1 0 0 0-1.414 0L.146 6.646a.5.5 0 0 0 .708.708L1 7.207V12.5A1.5 1.5 0 0 0 2.5 14h.55a2.51 2.51 0 0 1-.05-.5V9.415a1.5 1.5 0 0 1-.56-2.475l5.353-5.354L7.207 1Z"/><path d="M8.793 2a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708L8.793 2Z"/></svg>,
@@ -15,7 +16,7 @@ function SelectPointStartEnd(props){
     const [link,setLink]=useState(euclidianDistance(props.point.coordinates,props.startPoint.coordinates)<euclidianDistance(props.point.coordinates,props.endPoint.coordinates)?"start":"end");
     const [error,setError]=useState();
     const [success,setSuccess]=useState(false);
-    const [desc,setDesc]=useState("Default desc");
+    const [waiting,setWaiting]=useState(false);
     const [info,setInfo]=useState("");
     useEffect(()=>{
         if(isStart){
@@ -26,21 +27,21 @@ function SelectPointStartEnd(props){
             setInfo("This point is already the ending point of this hike");
             setTimeout(()=>setInfo(""),3000);
         }
-        setDesc("Description for point #"+props.point.id);
-        setLink(euclidianDistance(props.point.coordinates,props.startPoint.coordinates)<euclidianDistance(props.point.coordinates,props.endPoint.coordinates)?"start":"end");
+        setLink(!props.linkableStart && !props.linkableEnd?"":euclidianDistance(props.point.coordinates,props.startPoint.coordinates)<euclidianDistance(props.point.coordinates,props.endPoint.coordinates)?"start":"end");
     },[props.point]);
     const submitHandler=async ()=>{
         try {
             if(link==="start" || link==="end"){
-                //console.log("link submitting with ",link);
+                setWaiting(true);
                 await props.linkPoint(link);
+                setWaiting(false);
                 setSuccess(true);
                 setError()
                 setTimeout(()=>setSuccess(false),3000);
             }
             else throw "You have to select between starting and ending point";
         } catch (error) {
-            //console.log("Error in link submit",error);
+            setWaiting(false);
             setSuccess(false);
             setError(error);
             setTimeout(()=>setError(false),3000);
@@ -51,7 +52,7 @@ function SelectPointStartEnd(props){
             <Form>
                 <Form.Group className="my-3 text-center">
                     {iconsvg[props.point.typeOfPoint]}
-                    <Form.Label style={{width:"100%",fontWeight:"bolder"}}><p className="mt-3">{desc}</p></Form.Label>
+                    <Form.Label style={{width:"100%",fontWeight:"bolder"}}><p className="mt-3">{props.point.name}</p></Form.Label>
                 </Form.Group>
                 <Form.Group className="mx-5 mb-3">
                     <Form.Label className="text-center" style={{width:"100%",fontWeight:"bolder"}}><h3>Link this point as the new</h3></Form.Label>
@@ -81,25 +82,8 @@ function SelectPointStartEnd(props){
                 </Form.Group>
             }
             </Form>
-            {error?
-            <div className="text-center mt-2 mx-auto justify-content-center" style={{width:"85%"}}>
-                <Alert variant="danger">
-                    <Alert.Heading>Error while linking this point as a {link} point for this hike</Alert.Heading>
-                    <h5>
-                        {error}
-                    </h5>
-                </Alert>
-            </div>
-            :
-            success?
-            <div className="text-center mt-5 mx-auto justify-content-center" style={{width:"85%"}}>
-                <Alert variant="success">
-                    <Alert.Heading>{props.point.typeOfPoint} linked as the new {link} point for this hike correctly!</Alert.Heading>
-                </Alert>
-            </div>
-            :
-            <></>
-            }{info!==""?
+            <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while trying to link "+props.point.name+" as a "+link+" point of "+props.hike.name} successMessage={"Linked "+props.point.name+" as a "+link+" point of "+props.hike.name+" correctly!"}/>
+            {info!=="" && !success && !error && !waiting?
             <div className="text-center mt-5 mx-auto justify-content-center" style={{width:"85%"}}>
                 <Alert variant="info">
                     <Alert.Heading>{info}</Alert.Heading>
