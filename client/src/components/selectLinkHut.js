@@ -1,26 +1,29 @@
 import { useEffect, useState } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import icons from "../lib/iconspoint";
+import ServerReply from "./serverReply";
 
 function SelectLinkHut(props){
-    console.log("IN selectlinkhut WITH ",props.point,"and hike",props.hike);
+    //console.log("IN selectlinkhut WITH ",props.point,"and hike",props.hike);
     const isStart=props.point.id===props.startPoint.id;
     const isEnd=props.point.id===props.endPoint.id;
     const [link,setLink]=useState(props.hike.referencePoints.length>0?props.hike.referencePoints.map(p=>p.id).includes(props.point.id):false);
     const [error,setError]=useState();
     const [success,setSuccess]=useState(false);
-    const [desc,setDesc]=useState("Default desc");
-    const [info,setInfo]=useState("");
+    const [waiting,setWaiting]=useState(false);
     useEffect(()=>{
-        setLink(props.hike.referencePoints.length>0?props.hike.referencePoints.map(p=>p.id).includes(props.point.id):false)
+        setLink(props.hike.huts.map(p=>p.id).includes(props.point.id))
     },[props.point])
     const submitHandler=async ()=>{
         try {
+            setWaiting(true);
             await props.linkHut();
+            setWaiting(false);
             setSuccess(true);
             setError();
             setTimeout(()=>setSuccess(false),3000);
         } catch (error) {
+            setWaiting(false);
             console.log("Error in link submit",error);
             setSuccess(false);
             setError(error);
@@ -32,7 +35,7 @@ function SelectLinkHut(props){
             <Form>
                 <Form.Group className="my-3 text-center">
                     {icons.iconsvgelement[props.point.typeOfPoint]}
-                    <Form.Label style={{width:"100%",fontWeight:"bolder"}}><p className="mt-3">{desc}</p></Form.Label>
+                    <Form.Label style={{width:"100%",fontWeight:"bolder"}}><p className="mt-3">{props.point.name}</p></Form.Label>
                 </Form.Group>
                 <Form.Group className="mx-5 my-3">
                     <div className="mx-auto text-center my-3">
@@ -44,32 +47,7 @@ function SelectLinkHut(props){
                     </div>
                 </Form.Group>
             </Form>
-            {error?
-            <div className="text-center mt-2 mx-auto justify-content-center" style={{width:"85%"}}>
-                <Alert variant="danger">
-                    <Alert.Heading>Error while linking this hut to this hike</Alert.Heading>
-                    <h5>
-                        {error}
-                    </h5>
-                </Alert>
-            </div>
-            :
-            success?
-            <div className="text-center mt-5 mx-auto justify-content-center" style={{width:"85%"}}>
-                <Alert variant="success">
-                    <Alert.Heading>Hut linked to this hike correctly!</Alert.Heading>
-                </Alert>
-            </div>
-            :
-            <></>
-            }{info!==""?
-            <div className="text-center mt-5 mx-auto justify-content-center" style={{width:"85%"}}>
-                <Alert variant="info">
-                    <Alert.Heading>{info}</Alert.Heading>
-                </Alert>
-            </div>
-            :<></>
-            }
+            <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while linking this hut to this hike"} successMessage={"Hut linked to this hike correctly!"} />
         </>
     )
 }

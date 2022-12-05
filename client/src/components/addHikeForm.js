@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Alert, Button, Form } from "react-bootstrap";
+import { Alert, Button, Form, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
+import ServerReply from "./serverReply";
 
 function AddHikeForm(props){
     const [error,setError]=useState();
@@ -11,6 +12,7 @@ function AddHikeForm(props){
     const [desc,setDesc]=useState('');
     const [file,setFile]=useState();
     const [fileName,setFileName]=useState('');
+    const [waiting,setWaiting]=useState(false);
     const navigate=useNavigate();
     const submitHandler=async ()=>{
         try {
@@ -19,14 +21,17 @@ function AddHikeForm(props){
             if(!difficulty) err+="No difficulty was selected. "
             if(!file) err+="The track file was not provided. ";
             if(err!=="") throw err;
+            setWaiting(true);
             //console.log("Trying to send an api call")
             await api.addHike(file,name,desc,difficulty);
+            setWaiting(false);
             //console.log("Success in api call");
             setSuccess(true);
             setTimeout(()=>setSuccess(false),3000);
             await props.refreshHikes();
         } catch (error) {
             //console.log("Error in try catch",error);
+            setWaiting(false);
             setSuccess(false);
             setError(error);
             setTimeout(()=>setError(false),3000);
@@ -77,24 +82,7 @@ function AddHikeForm(props){
                 </div>
             </Form.Group>
         </Form>
-        {error?
-        <div className="text-center mt-5 mx-auto justify-content-center" style={{width:"85%"}}>
-            <Alert variant="danger">
-                <Alert.Heading>Error while adding a new hike</Alert.Heading>
-                <h5>
-                    {error}
-                </h5>
-            </Alert>
-        </div>
-        :
-        success?
-        <div className="text-center mt-5 mx-auto justify-content-center" style={{width:"85%"}}>
-            <Alert variant="success">
-                <Alert.Heading>New hike added correctly!</Alert.Heading>
-            </Alert>
-        </div>
-        :<></>
-        }
+        <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new hike"} successMessage={"New hike added correctly!"}/>
     </>
     )
 }

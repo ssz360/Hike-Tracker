@@ -3,7 +3,7 @@ import { Alert, Button, Form } from "react-bootstrap";
 
 
 function SelectPointStartEnd(props){
-    console.log("IN SELECTPOINTSTARTEND WITH ",props.point);
+    //console.log("IN SELECTPOINTSTARTEND WITH ",props.point);
     const euclidianDistance=(a,b)=>Math.sqrt(Math.pow(a[0]-b[0],2)+Math.pow(a[1]-b[1],2));
     const iconsvg={
         "Hut":<svg xmlns="http://www.w3.org/2000/svg" width="32" height="auto" fill="blue" class="bi bi-houses-fill" viewBox="0 0 16 16"><path d="M7.207 1a1 1 0 0 0-1.414 0L.146 6.646a.5.5 0 0 0 .708.708L1 7.207V12.5A1.5 1.5 0 0 0 2.5 14h.55a2.51 2.51 0 0 1-.05-.5V9.415a1.5 1.5 0 0 1-.56-2.475l5.353-5.354L7.207 1Z"/><path d="M8.793 2a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708L8.793 2Z"/></svg>,
@@ -32,7 +32,7 @@ function SelectPointStartEnd(props){
     const submitHandler=async ()=>{
         try {
             if(link==="start" || link==="end"){
-                console.log("link submitting with ",link);
+                //console.log("link submitting with ",link);
                 await props.linkPoint(link);
                 setSuccess(true);
                 setError()
@@ -40,7 +40,7 @@ function SelectPointStartEnd(props){
             }
             else throw "You have to select between starting and ending point";
         } catch (error) {
-            console.log("Error in link submit",error);
+            //console.log("Error in link submit",error);
             setSuccess(false);
             setError(error);
             setTimeout(()=>setError(false),3000);
@@ -57,8 +57,8 @@ function SelectPointStartEnd(props){
                     <Form.Label className="text-center" style={{width:"100%",fontWeight:"bolder"}}><h3>Link this point as the new</h3></Form.Label>
                     <Form.Select disabled={isEnd || isStart} className="mx-auto text-center my-3" style={{width:"100%"}} value={link} onChange={e=>{console.log("Setting link as",e.target.value);setLink(e.target.value);}}>
                         <option value="">Link it as a start/end point</option>
-                        <option value="start">Starting point</option>
-                        <option value="end">Ending point</option>
+                        <option value="start" disabled={!props.linkableStart}>Starting point</option>
+                        <option value="end" disabled={!props.linkableEnd}>Ending point</option>
                     </Form.Select>
                 </Form.Group>
                 {isEnd || isStart?

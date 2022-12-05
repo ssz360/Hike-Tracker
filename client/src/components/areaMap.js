@@ -2,6 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, useMap,useMapEvents,Circle } from 'react-leaflet'
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
+import { getDistance } from 'geolib';
 
 const KMFROLAT=110574;
 
@@ -64,7 +65,7 @@ function CenterMapDrag(props){
                   </svg></Button>
                 }
                 {props.center!==undefined?
-                  <Button className="mx-2" variant="outline-danger" onMouseEnter={e=>{e.preventDefault();e.stopPropagation();setControl(true);}} onMouseLeave={e=>{e.preventDefault();e.stopPropagation();setControl(false);}}onClick={e=>{props.setCenter(undefined);props.setRadius(0);}}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                  <Button className="mx-2" variant="outline-danger" onMouseEnter={e=>{e.preventDefault();e.stopPropagation();setControl(true);}} onMouseLeave={e=>{e.preventDefault();e.stopPropagation();setControl(false);}}onClick={e=>{props.setCenter(undefined);props.setRadius(0);props.setRadiusMap(0)}}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
                 </svg></Button>
                 :
@@ -101,7 +102,7 @@ function CenterMapClick(props){
         },
         mousemove: e =>{
             if(edit && props.center!==undefined && selecting){
-                props.setRadius(Math.abs(e.latlng.lat-props.center.lat)*KMFROLAT);
+                props.setRadius(getDistance({latitude:e.latlng.lat,longitude:e.latlng.lng},{latitude:props.center.lat,longitude:props.center.lng}));
             }
         },
         mouseup: e=>{
@@ -133,7 +134,7 @@ function CenterMapClick(props){
                   </svg></Button>
                 }
                 {props.center!==undefined?
-                  <Button className="mx-2" variant="outline-danger" onMouseEnter={e=>{e.preventDefault();e.stopPropagation();setControl(true);}} onMouseLeave={e=>{e.preventDefault();e.stopPropagation();setControl(false);}} onClick={e=>{props.setCenter(undefined);props.setRadius(0);}}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                  <Button className="mx-2" variant="outline-danger" onMouseEnter={e=>{e.preventDefault();e.stopPropagation();setControl(true);}} onMouseLeave={e=>{e.preventDefault();e.stopPropagation();setControl(false);}} onClick={e=>{props.setCenter(undefined);props.setRadius(0);props.setRadiusMap(0)}}><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
                   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
                 </svg></Button>
                 :
@@ -155,7 +156,7 @@ function AreaMap(props){
                         {props.drag?
                             <CenterMapDrag center={props.center} radius={props.radius} setCenter={props.setCenter} setRadius={props.setRadius} />
                         :
-                            <CenterMapClick center={props.center} radius={props.radius} setCenter={props.setCenter} setRadius={props.setRadius} />
+                            <CenterMapClick center={props.center} radius={props.radius} setCenter={props.setCenter} setRadius={props.setRadius}/>
                         }
                         {props.center!==undefined?
                             <Circle center={props.center} setCenter={props.setCenter} radius={props.radius} setRadius={props.setRadius}/>

@@ -20,7 +20,7 @@ const newHike=async (name,user,desc,difficulty,file)=>{
         const startPoint=await pointsdao.insertPoint("Default start point of hike "+name,coors[0][0],coors[0][1],"Piedmont","hikePoint");
         const endPoint=await pointsdao.insertPoint("Default arrival point of hike "+name,coors[coors.length-1][0],coors[coors.length-1][1],"Piedmont","hikePoint");
         console.log("Finished putting points, start",startPoint,", end",endPoint);
-        await hikesdao.newHike(name,user.username,len/1000,(len/1000)/2,ascent,desc,difficulty.toUpperCase(),startPoint,endPoint,JSON.stringify(coors),centerlat,centerlon,JSON.stringify([[Math.max(...lats),Math.max(...lons)],[Math.min(...lats),Math.min(...lons)]]));
+        await hikesdao.newHike(name,user.username,len/1000,(len/1000)/2,ascent,desc,difficulty.toUpperCase(),startPoint,endPoint,coors,centerlat,centerlon,Math.max(...lats),Math.max(...lons),Math.min(...lats),Math.min(...lons));
     } catch (error) {
         console.log("Error in services newhike",error);
         throw {status:error.status,message:error.message};

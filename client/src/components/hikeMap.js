@@ -14,7 +14,7 @@ function HikeMap(props){
     useEffect(()=>{
         const getMapDetails=async()=>{
             try {
-                console.log("GETTIN MAP DATA FOR",props.hike.id)
+                //console.log("GETTIN MAP DATA FOR",props.hike.id)
                 const mapdets=await api.getHikeMap(props.hike.id);
                 setBounds(mapdets.bounds);
                 setCoordinates(mapdets.coordinates);
@@ -28,7 +28,7 @@ function HikeMap(props){
         getMapDetails();
     },[]);
     //console.log("IN HIKE MAP WITH HIKE",props.hike);
-    const limeOptions = { color: 'red' }
+    const opts = { color: 'red' }
     const [show,setShow]=useState(false);
     const [selectedPoint,setSelectedPoint]=useState(-1);
     return(
@@ -43,25 +43,25 @@ function HikeMap(props){
                                 <Col xs={12} md={8}>
                                 <MapContainer bounds={bounds} style={{ height: "60vh", width: "auto" }} scrollWheelZoom={true}>
                                     <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                                    <Polyline pathOptions={limeOptions} positions={coordinates} />
-                                    {props.hike.referencePoints.map(p=>getMarkerForPoint(p,p.id===props.hike.startPoint.id,p.id===props.hike.endPoint.id,selectedPoint===p.id,true,selectedPoint,setSelectedPoint))}
-                        {props.hike.startPoint!==undefined?getMarkerForPoint(props.hike.startPoint,true,false,selectedPoint===props.hike.startPoint.id,true,selectedPoint,setSelectedPoint):<></>}
-                        {props.hike.endPoint!==undefined?getMarkerForPoint(props.hike.endPoint,false,true,selectedPoint===props.hike.endPoint.id,true,selectedPoint,setSelectedPoint):<></>}
+                                    <Polyline pathOptions={opts} positions={coordinates} />
+                                    {[...props.hike.referencePoints,...props.hike.huts].filter(p=>p.id!==props.hike.startPoint.id && p.id!==props.hike.endPoint.id).map(p=>getMarkerForPoint(p,p.id===props.hike.startPoint.id,p.id===props.hike.endPoint.id,selectedPoint===p.id,true,selectedPoint,setSelectedPoint))}
+                                    {getMarkerForPoint(props.hike.startPoint,true,false,selectedPoint===props.hike.startPoint.id,true,selectedPoint,setSelectedPoint)}
+                                    {getMarkerForPoint(props.hike.endPoint,false,true,selectedPoint===props.hike.endPoint.id,true,selectedPoint,setSelectedPoint)}
                                 </MapContainer>
                                 </Col>
                                 <Col xs={12} md={4}>
-                                    <SelectedPoint startPoint={props.hike.startPoint} endPoint={props.hike.endPoint} point={[...props.hike.referencePoints,props.hike.startPoint,props.hike.endPoint].find(p=>p.id===selectedPoint)}/>
+                                    <SelectedPoint startPoint={props.hike.startPoint} endPoint={props.hike.endPoint} point={[...props.hike.referencePoints,...props.hike.huts,props.hike.startPoint,props.hike.endPoint].find(p=>p.id===selectedPoint)}/>
                                 </Col>
                             </Row>
                         </Container>
                         :
                         <MapContainer bounds={bounds} style={{ height: "60vh", width: "auto" }} scrollWheelZoom={true}>
-                                    <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                                    <Polyline pathOptions={limeOptions} positions={coordinates} />
-                                    {props.hike.referencePoints.map(p=>getMarkerForPoint(p,p.id===props.hike.startPoint.id,p.id===props.hike.endPoint.id,selectedPoint===p.id,true,selectedPoint,setSelectedPoint))}
-                        {props.hike.startPoint!==undefined?getMarkerForPoint(props.hike.startPoint,true,false,selectedPoint===props.hike.startPoint.id,true,selectedPoint,setSelectedPoint):<></>}
-                        {props.hike.endPoint!==undefined?getMarkerForPoint(props.hike.endPoint,false,true,selectedPoint===props.hike.endPoint.id,true,selectedPoint,setSelectedPoint):<></>}
-                                </MapContainer>
+                            <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                            <Polyline pathOptions={opts} positions={coordinates} />
+                            {[...props.hike.referencePoints,...props.hike.huts].filter(p=>p.id!==props.hike.startPoint.id && p.id!==props.hike.endPoint.id).map(p=>getMarkerForPoint(p,p.id===props.hike.startPoint.id,p.id===props.hike.endPoint.id,selectedPoint===p.id,true,selectedPoint,setSelectedPoint))}
+                            {getMarkerForPoint(props.hike.startPoint,true,false,selectedPoint===props.hike.startPoint.id,true,selectedPoint,setSelectedPoint)}
+                            {getMarkerForPoint(props.hike.endPoint,false,true,selectedPoint===props.hike.endPoint.id,true,selectedPoint,setSelectedPoint)}
+                        </MapContainer>
                         }
                     </Modal.Body>
             </Modal>
@@ -78,7 +78,7 @@ function HikeMap(props){
                 :
                     <MapContainer bounds={bounds} style={{ height: "30vh", width: "auto" }} scrollWheelZoom={false} doubleClickZoom={false}>
                         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                        <Polyline pathOptions={limeOptions} positions={coordinates} />
+                        <Polyline pathOptions={opts} positions={coordinates} />
                     </MapContainer>
                 }
             </div>

@@ -89,31 +89,26 @@ const KMPERLON = lat => {
 
 // every field can contain a value or be null -> everything null == getHikesList()
 app.post('/api/hikes', async (req, res) => {
-    //console.log("In hikes with",req.body);
-    let centerlat, centerlon, latdegr, londegr;
+    console.log("In hikes with",req.body);
+    let centerlat, centerlon, radius;
     if (req.body.area === undefined) {
         centerlat = 0;
         centerlon = 0;
-        latdegr = 90;
-        londegr = 180;
+        radius= 6371;
     }
     else {
         centerlat = req.body.area.center.lat;
         centerlon = req.body.area.center.lng;
-        latdegr = req.body.area.radius / KMPERLAT;
-        londegr = req.body.area.radius / KMPERLON(centerlon);
-        //console.log("Latdeggr",latdegr,"Londegr",londegr);
+        radius=req.body.area.radius;
     }
-    hikesdao.getHikesListWithFilters(req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty, centerlat, centerlon, latdegr, londegr)
+    hikesdao.getHikesListWithFilters(req.body.lengthMin, req.body.lengthMax, req.body.expectedTimeMin, req.body.expectedTimeMax, req.body.ascentMin, req.body.ascentMax, req.body.difficulty, centerlat, centerlon, radius)
         .then(hikes => { res.json(hikes) })
         .catch(error => res.status(error.status).json(error.message).end());
 });
 
 app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
     try {
-        console.log("IN GET MAP FOR ",req.params.id);
         const ret = await hikesdao.getHikeMap(parseInt(req.params.id));
-        //console.log("\n\n\n\tReturning\n",ret);
         res.status(200).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message);
@@ -124,7 +119,6 @@ app.post('/api/newHike', isLoggedIn, upload.single('file'), async (req, res) => 
     try {
         console.log("In new HIKE",req.body);
         await hikes.newHike(req.body["name"], req.user, req.body["description"], req.body["difficulty"], req.file.buffer.toString());
-        //console.log("Finished new hike");
         return res.status(201).end();
     } catch (error) {
         //console.log("Error in index new hike",error);
@@ -274,13 +268,55 @@ app.post('/api/pointsInBounds',isLoggedIn, async(req,res)=>{
     }
 })
 
-app.post('/api/hutsInBounds',isLoggedIn, async(req,res)=>{
+app.get('/api/hikes/:hikeId/linkablehuts', isLoggedIn, async(req,res)=>{
+    try {
+        console.log("In get points in bounds with ",req.params.hikeId);
+        const ret=await points.linkableHuts(parseInt(req.params.hikeId));
+        console.log("Returning",ret);
+        res.status(201).json(ret);
+    } catch (error) {
+        res.status(error.status).json(error.message)
+    }
+})
+
+app.post('/api/hikes/linkHut', isLoggedIn, async(req,res)=>{
+    try {
+        await points.linkPointToHike(req.body.hikeId,req.body.hutId);
+        return res.status(201).end();
+    } catch (error) {
+        res.status(error.status).json(error.message);
+    }
+})
+
+app.get('/api/hikes/:hikeId/linkableStartPoints',isLoggedIn,async(req,res)=>{
     try {
         console.log("In get points in bounds with ",req.body);
-        const ret=await points.hutsInBounds(req.body.bounds[1][0],req.body.bounds[0][0],
-            req.body.bounds[1][1],req.body.bounds[0][1],
-            req.body.startPointCoordinates[0],req.body.startPointCoordinates[1],
-            req.body.endPointCoordinates[0],req.body.endPointCoordinates[1]);
+        const hike=await hikesdao.getHike(parseInt(req.params.hikeId));
+        const ret=await points.linkableStartPoints(hike.startPoint.coordinates[0],hike.startPoint.coordinates[1],hike.startPoint.id,hike.endPoint.id);
+        console.log("Returning",ret);
+        res.status(200).json(ret);
+    } catch (error) {
+        res.status(error.status).json(error.message)
+    }
+})
+
+app.get('/api/hikes/:hikeId/linkableEndPoints',isLoggedIn,async(req,res)=>{
+    try {
+        console.log("In get points in bounds with ",req.body);
+        const hike=await hikesdao.getHike(parseInt(req.params.hikeId));
+        const ret=await points.linkableEndPoints(hike.endPoint.coordinates[0],hike.endPoint.coordinates[1],hike.startPoint.id,hike.endPoint.id);
+        console.log("Returning",ret);
+        res.status(200).json(ret);
+    } catch (error) {
+        res.status(error.status).json(error.message)
+    }
+})
+
+
+app.post('/api/hikesinbounds',isLoggedIn,async (req,res)=>{
+    try {
+        console.log("In get points in bounds with ",req.body);
+        const ret=await hikesdao.hikesInBounds(req.body.bounds[0][0],req.body.bounds[0][1],req.body.bounds[1][0],req.body.bounds[1][1]);
         console.log("Returning",ret);
         res.status(201).json(ret);
     } catch (error) {
