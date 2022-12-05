@@ -39,7 +39,8 @@ function SignUp(props) {
         height: '100vh',
         backgroundImage: "url(./images/bg_signup.jpg)",
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover'
+        backgroundSize: 'cover',
+        height:"100%"
     }}>
       <Container fluid>          
             <Row>
@@ -148,14 +149,19 @@ function SignUp(props) {
 
                         {error != '' ? <Alert className="my-3" variant="danger">{error}</Alert> : <></>}
                         {success != '' ? <Alert className="my-3" variant="success">{error}</Alert> : <></>}
-                            <Button type="submit" 
+                        <div className="d-grid gap-2">
+                            <Button type="submit"  className="rounded-pill"
                                 style={{ 
                                     justifyContent: 'right',
                                     backgroundColor: !isHover ? '#009999' : '#00cccc',
-                                    borderColor: "white"
+                                    borderColor: "white",
+                                    fontWeight: "670",
+                                    height: "45px"
                                 }}
                                 onMouseEnter={ () => setIsHover(true) }
-                                onMouseLeave={ () => setIsHover(false) }>Submit</Button>
+                                onMouseLeave={ () => setIsHover(false) }>Sign up</Button>
+                        </div>
+                        <div className="mt-3">Already have an account? <a href="/login">Log in</a></div>
                     </Form>
                     </div>
                     </Row>
