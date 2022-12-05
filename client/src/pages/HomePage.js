@@ -17,12 +17,13 @@ function HomePage(props){
         <Carousel id="carousel" className="d-block w-100">
         <Carousel.Item>
         <Image
-        className="d-block w-100"
-        style={{width: "100%",
-            height: "auto",
-            objectFit: "cover",
-            maxHeight: "92.2vh",
-            filter: "brightness(50%)"}}
+        //className="d-block w-100"
+        style={{
+          width: "100%",
+          height: "100vh",
+          objectFit: "cover",
+          filter: "brightness(50%)"
+        }}
         src=
         "/images/pexels-eric-sanman-1365425.jpg"
         />
@@ -46,9 +47,8 @@ function HomePage(props){
         <Image
         className="d-block w-100"
         style={{width: "100%",
-            height: "auto",
+            height: "100vh",
             objectFit: "cover",
-            maxHeight: "92.2vh",
             filter: "brightness(50%)"}}
         src=
         "/images/wp2392578-trekking-wallpapers.jpg"
@@ -72,10 +72,10 @@ function HomePage(props){
         <Carousel.Item>
         <Image
         className="d-block w-100"
-        style={{width: "100%",
-            height: "auto",
+        style={{
+            width: "100%",
+            height: "100vh",            
             objectFit: "cover",
-            maxHeight: "92.2vh",
             filter: "brightness(50%)"}}
         src=
         "/images/toomas-tartes-Yizrl9N_eDA-unsplash.jpg"

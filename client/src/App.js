@@ -146,7 +146,7 @@ useEffect(() => {
   }
   return (
     <>
-      <Header logged={logged} setLogged={setLogged} user={user} setUser={setUser} setDirty={setDirty}/>
+            <Header logged={logged} setLogged={setLogged} user={user} setUser={setUser} setDirty={setDirty}/>
             <Routes>
               <Route path='/' element={<HomePage logged={logged} hikes={hikes.filter(h=>h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering}/>} />
               <Route path='/parking' element={<ParkingLot/>} />

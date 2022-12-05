@@ -97,15 +97,17 @@ const getHikesMoreData = async (row) => {
     return row;
 }
 
-const getHikeMap = async id => new Promise((resolve, reject) => {
+const getHikeMap = async (id) => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKESMAPDATA WHERE IDHike=?'
+    console.log(id)
     db.get(sql, [id], (err, row) => {
         //console.log("MAP RET",row,"err",err);
         if (err) {
             reject({ status: 503, message: err });
             return;
         }
-        else if (row === undefined) reject({ status: 404, message: "No hike associated to this id" });
+        else if (row == undefined) reject({ status: 404, message: "No hike associated to this id" });
+        console.log(row)
         resolve({ id: row.IDHike, coordinates: JSON.parse(row.Coordinates), center: JSON.parse(row.Center), bounds: JSON.parse(row.Bounds) })
     });
 });

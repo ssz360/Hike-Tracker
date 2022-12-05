@@ -111,7 +111,7 @@ app.post('/api/hikes', async (req, res) => {
 
 app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
     try {
-        //console.log("IN GET MAP FOR ",req.params.id);
+        console.log("IN GET MAP FOR ",req.params.id);
         const ret = await hikesdao.getHikeMap(parseInt(req.params.id));
         //console.log("\n\n\n\tReturning\n",ret);
         res.status(200).json(ret);
