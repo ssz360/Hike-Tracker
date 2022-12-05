@@ -128,14 +128,14 @@ const getHikesMoreData = async (row) => {
 }
 
 const getCoordinatesHike= async (row)=>new Promise((resolve,reject)=>{
-    const sqlcoors="SELECT latitude,longitude,indexCoor FROM HIKESCOORDINATES WHERE hikeId=?";
+    const sqlcoors="SELECT latitude,longitude,indexCoor FROM HIKESCOORDINATES WHERE hikeId=? ORDER BY indexCoor";
     db.all(sqlcoors,[row.IDHike],(err,rows)=>{
         if(err){
             console.log("ERR IN SQLCOORS",err);
             reject({ status: 503, message: err });
         }
         else{
-            resolve({ id: row.IDHike, coordinates: rows.sort((a,b)=>a.indexCoor-b.indexCoor).map(c=>[c.latitude,c.longitude]), center: [row.CenterLat,row.CenterLon], bounds: [[row.MaxLat,row.MaxLon],[row.MinLat,row.MinLon]] });
+            resolve({ id: row.IDHike, coordinates: rows.map(c=>[c.latitude,c.longitude]), center: [row.CenterLat,row.CenterLon], bounds: [[row.MaxLat,row.MaxLon],[row.MinLat,row.MinLon]] });
         }
     })
 })
