@@ -42,8 +42,8 @@ const MultiRangeSlider = ({ min, max, onChange }) => {
   }, [minVal, maxVal, onChange]);
 
   return (
-    <div className="container" style ={{display:'block', width: '100%', height: '100%'}}>
-      <input 
+    <div className="container">
+      <input
         type="range"
         min={min}
         max={max}
@@ -54,9 +54,9 @@ const MultiRangeSlider = ({ min, max, onChange }) => {
           minValRef.current = value;
         }}
         className="thumb thumb--left"
-        style={{ display:'block', width: '93%', height: '100%', zIndex: minVal > max - 100 && "5" }}
+        style={{ zIndex: minVal > max - 100 && "5" }}
       />
-      <input style ={{display:'block', width: '93%', height: '100%'}}
+      <input
         type="range"
         min={min}
         max={max}
@@ -69,7 +69,7 @@ const MultiRangeSlider = ({ min, max, onChange }) => {
         className="thumb thumb--right"
       />
 
-      <div className="slider" style ={{display:'block', width: '100%', height: '100%', position:'relative'}}>
+      <div className="slider">
         <div className="slider__track" />
         <div ref={range} className="slider__range" />
         <div className="slider__left-value">{minVal}</div>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Container, Row, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import { Row, Col } from 'react-bootstrap';
+import {Col } from 'react-bootstrap';
 import api from "../lib/api";
 
 function Login(props) {

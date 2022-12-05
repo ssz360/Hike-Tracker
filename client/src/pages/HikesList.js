@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
 import MultiRangeSlider from '../components/MultiRangeSlider';
+import {ChevronCompactDown, ChevronCompactUp} from 'react-bootstrap-icons'
 
 function HikesList(props) {
   //console.log("Rerendering hikeslist with",props.hikes);
@@ -42,7 +43,8 @@ function HikesList(props) {
 
 
   return (
-    <Row>
+    <Container>
+    <Row id="first-row">
       <Col sm={3}>
 
       {openArea && (<AreaMap center={center} setCenter={setCenter} radius={radius} setRadius={setRadius} drag={false} openArea={openArea} setOpenArea={setOpenArea} />)}
@@ -128,13 +130,16 @@ function HikesList(props) {
     </Col>
 
     {/***** Button to go up to carousel ******/ }
+    <div className="d-flex flex-row-reverse">
     <Row className="mb-5 mt-3">
       <Col xs={12}>
-        <a href="#carousel" color='#009999'>{icon}</a>
+        <a href="#first-row" color='#009999'>{icon}</a>
       </Col>
     </Row>
+    </div>
 
   </Row>
+  </Container>
   )
 
 }
@@ -161,16 +166,22 @@ function HikeRow(props) {
           <strong>Ascent: </strong><span className='test-ascent'>{Math.ceil(props.hike.ascent)}</span> m<br></br>
           <strong>Expected Time: </strong><span className='test-time'>{Math.ceil(props.hike.expectedTime)}</span> h
         </Card.Text>
-        <Card.Text>{!open ? (
-          <a className="text-decoration-none" style={{ fontSize: "14px" }}
+        <Card.Text >{!open ? (
+          <div className="d-flex flex-row-reverse">
+
+          < ChevronCompactDown role="button" className="text-decoration-none" style={{ fontSize: "20px"}}
             onClick={() => setOpen(!open)}
             aria-controls="example-collapse-text"
-            aria-expanded={open}>• show more</a>)
+            aria-expanded={open}/>
+            </div>)
           :
-          (<a className="text-decoration-none" style={{ fontSize: "14px" }}
+          (<div className="d-flex flex-row-reverse">
+
+          < ChevronCompactUp role="button" className="text-decoration-none" style={{ fontSize: "20px"}}
             onClick={() => setOpen(!open)}
             aria-controls="example-collapse-text"
-            aria-expanded={open}>• show less</a>)}
+            aria-expanded={open}/>
+            </div>)}
           <Collapse in={open}>
             <div id="example-collapse-text">
               <Card className="bg-light text-dark">

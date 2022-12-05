@@ -31,14 +31,14 @@ function HomePage(props){
             <h1 style={{fontFamily:"Montserrat,Helvetica,Arial,Lucida,sans-serif", 
             fontWeight: "800",
             fontSize: "49px"}}><strong>HIKES TRACKER</strong></h1>
-            <p><a href="#list" style={{fontFamily:"Montserrat,Helvetica,Arial,Lucida,sans-serif", 
+            <p><a href="/hikes" style={{fontFamily:"Montserrat,Helvetica,Arial,Lucida,sans-serif", 
             fontWeight: "750",
             fontSize: "18px",
             color: !isHover ? "white" : "#009999"}} 
             onMouseEnter={ () => setIsHover(true) }
             onMouseLeave={ () => setIsHover(false) }>
-                {!isHover? <>See all the hikes below</> :
-                <>See all the hikes below {down_arr}</>
+                {!isHover? <>See all the hikes</> :
+                <>See all the hikes {right_arr}</>
                 }
                 </a></p>
           </Carousel.Caption>
@@ -92,12 +92,12 @@ function HomePage(props){
         </Carousel.Item>
       </Carousel>
       <Container>
-        <Row><Col>
+        {/* <Row><Col>
         <div id="list">
         <HikesList logged={props.logged} hikes={props.hikes.filter(h=>h.show)} 
         setAllHikesShow={props.setAllHikesShow} filtering={props.filtering}/>
         </div>
-        </Col></Row>
+        </Col></Row> */}
     </Container>
     
     </>)
