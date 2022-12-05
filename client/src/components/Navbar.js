@@ -9,7 +9,7 @@ function Header(props) {
     );
     const navigate = useNavigate();
     return (<>
-        <Navbar bg="black" variant="dark">
+        <Navbar bg="black" variant="dark" fixed="top">
             <Navbar.Brand as={Link} to="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
             <Nav>
                 {props.logged ? (

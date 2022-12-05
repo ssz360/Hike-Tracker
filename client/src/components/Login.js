@@ -19,9 +19,11 @@ function Login(props) {
             backgroundImage: "url(./images/bg_login.jpg)",
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
-            minHeight: '92.2vh',
+            minHeight: '100vh',
+            overflowY: 'hidden'
+
         }}>
-          <Container fluid>          
+          <Container fluid className="mt-5">          
             <Row>
             <div className="d-flex align-items-center justify-content-center text-center not-found-container">
                 <h3 className="mt-3" 

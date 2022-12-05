@@ -43,7 +43,7 @@ function HikesList(props) {
 
 
   return (
-    <Container>
+    <Container className="mt-5">
     <Row id="first-row">
       <Col sm={3}>
 
@@ -176,7 +176,6 @@ function HikeRow(props) {
             </div>)
           :
           (<div className="d-flex flex-row-reverse">
-
           < ChevronCompactUp role="button" className="text-decoration-none" style={{ fontSize: "20px"}}
             onClick={() => setOpen(!open)}
             aria-controls="example-collapse-text"
