@@ -6,6 +6,7 @@ import { Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import api from "../lib/api";
 import SelectedPoint from "./selectedPoint";
 import getMarkerForPoint from "../lib/markerPoint";
+
 function HikeMap(props){
     const [bounds,setBounds]=useState([[0,0],[0.1,0.1]]);
     const [coordinates,setCoordinates]=useState([]);

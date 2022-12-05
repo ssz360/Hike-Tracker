@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Container, Row, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import {Col } from 'react-bootstrap';
 import api from "../lib/api";
 
 function Login(props) {
@@ -13,7 +14,6 @@ function Login(props) {
     const [isHover, setIsHover] = useState(false);
 
     var emailValidator = require("node-email-validation");
-
     return (
         <div style={{ 
             backgroundImage: "url(./images/bg_login.jpg)",
@@ -51,28 +51,28 @@ function Login(props) {
                         e.preventDefault();
                         e.stopPropagation();
 
-                        if (!emailValidator.is_email_valid(username)) {
-                            setError('Email has a wrong format')
-                        }
-                        else {
-                            try {
-                                const emp = await api.login(username, password);
-                                //console.log("emp is",emp);
-                                props.setUser(emp);
-                                props.setLogged(true);
-                                navigate('/');
-                            } catch (error) {
-                                setError("Error during login");
-                            }
-                        }
-                    }}>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <FloatingLabel controlId="floatingInput" label="Username" className="mb-3">
-                                <Form.Control type="text" placeholder="insert username" name="username" required value={username} onChange={e => setUsername(e.target.value)} />
-                            </FloatingLabel>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
+                                if (!emailValidator.is_email_valid(username)) {
+                                    setError('Email has a wrong format')
+                                }
+                                else {
+                                    try {
+                                        const emp = await api.login(username, password);
+                                        //console.log("emp is",emp);
+                                        props.setUser(emp);
+                                        props.setLogged(true);
+                                        navigate('/hikes');
+                                    } catch (error) {
+                                        setError("Error during login");
+                                    }
+                                }
+                            }}>
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <FloatingLabel controlId="floatingInput" label="Username" className="mb-3">
+                                    <Form.Control type="text" placeholder="insert username" name="username" required value={username} onChange={e => setUsername(e.target.value)} />
+                                </FloatingLabel>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
 
                                 <Form.Control type="password" placeholder="insert password" name="password" required onChange={p => setPassword(p.target.value)} />
                             </FloatingLabel>
