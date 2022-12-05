@@ -60,7 +60,7 @@ function Login(props) {
                                         //console.log("emp is",emp);
                                         props.setUser(emp);
                                         props.setLogged(true);
-                                        navigate('/');
+                                        navigate('/hikes');
                                     } catch (error) {
                                         setError("Error during login");
                                     }
