@@ -24,7 +24,7 @@ function HikesList(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await props.filtering(center !== undefined ? { center: center, radius: radius } : undefined,
+    await props.filtering(center !== undefined ? { center: center, radius: radius/1000 } : undefined,
       lenMin !== '' ? lenMin : null,
       lenMax !== '' ? lenMax : null,
       dif !== '' ? dif : null,
