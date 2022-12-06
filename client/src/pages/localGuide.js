@@ -126,7 +126,7 @@ function LocalGuide(props){
     const [hikeFileName,setHikeFileName]=useState('');*/
     return(
         <Routes>
-            <Route path="/hikes" element={<LocalGuideHikes hikes={props.hikes}/>}/>
+            <Route path="/hikes" element={<LocalGuideHikes hikes={props.hikes} user={props.user}/>}/>
             <Route path="/hikes/:hikeid/*" element={<LocalGuideHikeUpdate hikes={props.hikes} refreshHikes={props.refreshHikes} updateStartEndPoint={props.updateStartEndPoint}/>}/>
             <Route path="/newHike" element={<AddHikeForm refreshHikes={props.refreshHikes}/>}/>
             <Route path="/newHut" element={<AddHutForm newHut={props.newHut}/>}/>

@@ -11,9 +11,6 @@ export function SidebarFilterByPerformance(props) {
 
 	let current_filter = {};
 
-	// lengthMin, lengthMax, expectedTimeMin, expectedTimeMax, ascentMin, ascentMax, difficulty, area
-	// center!==undefined?{center:center,radius:radius/1000}:undefined,
-	// { ...current_filter, area: { center, radius: radius/1000 } }
 	const handleSubmit = async event => {
 		event.preventDefault();
 		current_filter.area = center ? { center, radius: radius / 1000 } : undefined;
@@ -32,6 +29,7 @@ export function SidebarFilterByPerformance(props) {
 				throw err;
 			});
 		props.setHikeList(newHikeList);
+		props.setShowSidebar(false);
 	};
 
 	const handleSubmitByPerformance = async event => {
@@ -75,6 +73,9 @@ export function SidebarFilterByPerformance(props) {
 							<option value="HIKER">Hiker</option>
 							<option value="PROFESSIONAL HIKER">Professional hiker</option>
 						</Form.Select>
+					</Row>
+					<Row className="d-flex justify-content-center">
+						<strong>Length</strong>
 					</Row>
 					<Row className="d-flex justify-content-center">
 						<MultiRangeSlider
@@ -124,6 +125,17 @@ export function SidebarFilterByPerformance(props) {
 						<Row className="d-flex justify-content-center">
 							<Button variant="info" onClick={handleSubmitByPerformance}>
 								APPLY MY PERFORMANCE
+							</Button>
+						</Row>
+						<Row className="d-flex justify-content-center">
+							<Button
+								variant="outline-dark"
+								onClick={(event) => {
+									current_filter = {}
+									handleSubmit(event);
+									props.setShowSidebar(false);
+								}}>
+								SHOW ALL HIKES
 							</Button>
 						</Row>
 					</Stack>

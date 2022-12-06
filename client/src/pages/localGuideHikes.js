@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Col, Container, Row, Button, Card, Collapse } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import HikeMap from '../components/hikeMap';
@@ -9,7 +9,7 @@ import { SidebarFilterByPerformance} from "../components/SidebarFilterByPerforma
 function LocalGuideHikes(props){
 
     const [showSidebar, setShowSidebar] = useState(false);
-    const [hikeList, setHikeList] = useState();
+    const [hikeList, setHikeList] = useState(props.hikes);
 
     return (
         <>
@@ -17,12 +17,9 @@ function LocalGuideHikes(props){
                 <Row className="mt-2">
                   <Col xs={1} className="d-flex justify-content-start">
                     <ButtonFilterByPerformance showSidebar={showSidebar} setShowSidebar={setShowSidebar}/>
-                    <SidebarFilterByPerformance logged={props.logged} showSidebar={showSidebar} setShowSidebar={setShowSidebar} setHikeList={setHikeList}/>
+                    <SidebarFilterByPerformance user={props.user} showSidebar={showSidebar} setShowSidebar={setShowSidebar} setHikeList={setHikeList}/>
               </Col>
-                { hikeList ?
-                    hikeList.map(hike=> <LocalGuideHikeRow key={hike.id} hike={hike}/>) :
-                    props.hikes.map(hike=> <LocalGuideHikeRow key={hike.id} hike={hike}/>)
-                }
+                    { hikeList.map(hike => <LocalGuideHikeRow key={hike.id} hike={hike}/>) }
                 </Row>
             </Container>
         </>
