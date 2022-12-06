@@ -202,6 +202,17 @@ const getHikeMap=async id=>{
     else throw ret;
 }
 
+const getHikesByPerformance = async (username) => {
+    // TODO: finish after HT-10
+    return await getHikesList();
+}
+
+const getUserPerformance = async (username) => {
+    // TODO: finish after HT-10
+    const user = await isLogged();
+    return {...user, altitude: 2000, duration: 5000, time: 5}
+}
+
 const isLogged=async ()=>{
     const res=await fetch(APIBASE+'logged',{
         credentials:"include"

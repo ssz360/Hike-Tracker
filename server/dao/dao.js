@@ -37,4 +37,5 @@ const db = new sqlite.Database(__dirname + "/hiketrackerdb.sqlite", async e => {
 	}
 });
 
+
 module.exports = db;
