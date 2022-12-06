@@ -29,7 +29,7 @@ function Header(props) {
                                         }
                                     }}>Log out</Nav.Link></>
                                 :
-                                <><Navbar.Brand as={Link} to="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
+                                <><Navbar.Brand as={Link} to="/hikes" className="px-4">{icon} HikeTracker</Navbar.Brand>
                                 <Nav.Link as={Link} to="/hut" onClick={() => props.setDirty(true)}>Huts</Nav.Link>
                                 <Nav.Link as={Link} to="/" className="px-4" onClick={async e => {
                                     try {
@@ -44,7 +44,7 @@ function Header(props) {
                     </>
                 ) :
                     (
-                        <>
+                        <>  <Navbar.Brand as={Link} to="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
                             <Nav.Link as={Link} to="/login" className="px-4">Sign in</Nav.Link>
                             <Nav.Link as={Link} to="/signup" className="px-4">Sign up</Nav.Link>
                         </>
