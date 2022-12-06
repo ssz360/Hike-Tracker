@@ -2,8 +2,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import LocalGuide from './pages/localGuide';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
-import { ParkingLot, HikesList, Hut, HomePage} from './pages';
+import { Container } from 'react-bootstrap';
+import { ParkingLot, Hut, HomePage, Profile} from './pages';
 import api from './lib/api';
 import { Header, Login, SignUp,CheckEmail } from './components';
 import { useEffect, useState } from 'react';
@@ -145,18 +145,19 @@ useEffect(() => {
     setHikes([...newHikes]);
   }
   return (
-    <>
+    <Container fluid className="px-0">
       <Header logged={logged} setLogged={setLogged} user={user} setUser={setUser} setDirty={setDirty}/>
-            <Routes>
-              <Route path='/' element={<HomePage logged={logged} hikes={hikes.filter(h=>h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering}/>} />
-              <Route path='/parking' element={<ParkingLot/>} />
-              <Route path='/localGuide/*' element={<LocalGuide refreshHikes={refreshHikes} updateStartEndPoint={updateStartEndPoint} hikes={user!==undefined?hikes.filter(h=>h.author===user.username):[]} user={user} newHut={newHut}/>}></Route>
-              <Route path='/hut' element={<Hut huts={huts} filteringHut={filteringHut}/>} />
-              <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
-              <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
-              <Route path='/checkemail' element={<CheckEmail/>}/>
-            </Routes>
-    </>
+      <Routes>
+        <Route path='/' element={<HomePage logged={logged} hikes={hikes.filter(h=>h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering}/>} />
+        <Route path='/parking' element={<ParkingLot/>} />
+        <Route path='/localGuide/*' element={<LocalGuide refreshHikes={refreshHikes} updateStartEndPoint={updateStartEndPoint} hikes={user!==undefined?hikes.filter(h=>h.author===user.username):[]} user={user} newHut={newHut}/>}></Route>
+        <Route path='/hut' element={<Hut huts={huts} filteringHut={filteringHut}/>} />
+        <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
+        <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
+        <Route path='/checkemail' element={<CheckEmail/>}/>
+        <Route path='/profile/*' element={<Profile/>}/>
+      </Routes>
+    </Container>
   );
 }
 
