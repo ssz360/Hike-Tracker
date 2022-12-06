@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Col, Container, Row, Button, Card, Collapse, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import HikeMap from '../components/hikeMap';
-import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp, HouseAddFill } from 'react-bootstrap-icons'
+import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp, PlusCircle } from 'react-bootstrap-icons'
 
 
 function LocalGuideHikes(props) {
@@ -29,7 +29,7 @@ function LocalGuideHikes(props) {
             }
             onMouseEnter={ () => setIsHover(true) }
             onMouseLeave={ () => setIsHover(false) }
-            onClick = {() => navigate("/localGuide/newHike")}><strong>Add new hike</strong> <HouseAddFill size={"20px"}/></Button>
+            onClick = {() => navigate("/localGuide/newHike")}><strong><PlusCircle size={"20px"} className="mb-1"/> Add new hike</strong> </Button>
         </div>
         </Row>
       </Container>
