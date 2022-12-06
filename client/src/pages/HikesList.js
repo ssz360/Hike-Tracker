@@ -1,9 +1,9 @@
-import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container } from 'react-bootstrap';
+import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
 import MultiRangeSlider from '../components/MultiRangeSlider';
-import {ChevronCompactDown, ChevronCompactUp} from 'react-bootstrap-icons'
+import { ChevronCompactDown, ChevronCompactUp, BookmarkHeartFill, Search } from 'react-bootstrap-icons'
 
 function HikesList(props) {
   //console.log("Rerendering hikeslist with",props.hikes);
@@ -43,103 +43,115 @@ function HikesList(props) {
 
 
   return (
-    <Container className="mt-5">
-    <Row id="first-row">
-      <Col sm={3}>
+    <Container className="mt-5" fluid style={{ height: "100vh" }}>
+      <Row id="first-row" style={{ height: "100vh" }}>
+        <Col sm={2} className="mr-3" style={{ height: "100vh", backgroundColor: "#e0e3e5" }}>
 
-      {openArea && (<AreaMap center={center} setCenter={setCenter} radius={radius} setRadius={setRadius} drag={false} openArea={openArea} setOpenArea={setOpenArea} />)}
+          {openArea && (<AreaMap center={center} setCenter={setCenter} radius={radius} setRadius={setRadius} drag={false} openArea={openArea} setOpenArea={setOpenArea} />)}
+          <div className="mt-4">
+            <div className="d-grid gap-2">
+              <OverlayTrigger
+                placement="right"
+                delay={{ show: 250, hide: 400 }}
+                overlay={<Tooltip> Your preferences</Tooltip>}
+              >
+                <BookmarkHeartFill oclassName="ml-4" role="button" size={"20px"} />
+              </OverlayTrigger>
+            </div>
+          </div>
+          {/***** Area filter *****/}
+          <div className="mt-4">
+            <div className="d-grid gap-2">
+              <Button variant={center !== undefined ? "success" : "outline-dark"} onClick={() => setOpenArea(true)}>{center !== undefined ? "Area selected!" : "Select Area..."}</Button>
+            </div>
+          </div>
 
-      {/***** Area filter *****/}
-      <div className="mt-4">
-        <div className="d-grid gap-2">
-          <Button variant={center !== undefined ? "success" : "outline-dark"} onClick={() => setOpenArea(true)}>{center !== undefined ? "Area selected!" : "Select Area..."}</Button>
-        </div>
-      </div>
-      
-      {/***** Difficulty filter *****/}
-      <div className="mt-4">
-        <div className="d-grid gap-2">
-          <Form.Select aria-label="Difficulty" onChange={(event) => setDif(event.target.value)}>
-            <option value="" >Difficulty</option>
-            <option value="TOURIST">Tourist</option>
-            <option value="HIKER">Hiker</option>
-            <option value="PROFESSIONAL HIKER">Professional hiker</option>
-          </Form.Select>
-        </div>
-      </div>
+          {/***** Difficulty filter *****/}
+          <div className="mt-4">
+            <div className="d-grid gap-2">
+              <Form.Select className="text-center" style={{ backgroundColor: "#e0e3e5", border: '1px solid #000000' }} aria-label="Difficulty" onChange={(event) => setDif(event.target.value)}>
+                <option value="" >Difficulty</option>
+                <option value="TOURIST">Tourist</option>
+                <option value="HIKER">Hiker</option>
+                <option value="PROFESSIONAL HIKER">Professional hiker</option>
+              </Form.Select>
+            </div>
+          </div>
 
 
-      {/***** Length filter *****/}
-      <Row>
-        <div className="mt-4 flex" style={{display: 'flex', flexDirection: 'column'}}>
-          <div className="d-grid gap-2" style ={{display:'block', width: '100%', height: '100%', position:'relative'}}>
-            <strong>Length</strong>
+          {/***** Length filter *****/}
+          <Row>
+            <div className="mt-4 flex" style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="d-grid gap-2" style={{ display: 'block', width: '100%', height: '100%', position: 'relative' }}>
+                <strong>Length</strong>
+                <InputGroup className="mb-3">
+                  <MultiRangeSlider
+                    min={0}
+                    max={40}
+                    onChange={({ min, max }) => { setLenMin(min); setLenMax(max); }} />
+                </InputGroup>
+              </div>
+            </div>
+          </Row>
+
+          {/***** Ascent filter *****/}
+          <div className="mt-4">
+            <div className="d-grid gap-2">
+              <strong>Ascent</strong>
               <InputGroup className="mb-3">
                 <MultiRangeSlider
                   min={0}
-                  max={40}
-                  onChange={({ min, max }) => { setLenMin(min); setLenMax(max); }} />
+                  max={4000}
+                  onChange={({ min, max }) => { setAscMin(min); setAscMax(max); }} />
               </InputGroup>
+            </div>
           </div>
-        </div>
-      </Row>
 
-      {/***** Ascent filter *****/}
-      <div className="mt-4">
-        <div className="d-grid gap-2">
-          <strong>Ascent</strong>
-          <InputGroup className="mb-3">
-            <MultiRangeSlider
-              min={0}
-              max={4000}
-              onChange={({ min, max }) => { setAscMin(min); setAscMax(max); }} />
-          </InputGroup>
-        </div>
-      </div>
-
-      {/***** Time Expected filter *****/}
-        <div className="mt-4">
-        <div className="d-grid gap-2">
-          <strong>Time Expected</strong>
-          <InputGroup className="mb-3">
-            <MultiRangeSlider
-              min={0}
-              max={15}
-              onChange={({ min, max }) => { setTimeMin(min); setTimeMax(max); }} />
-          </InputGroup>
-        </div>
-      </div>
-
-      {/***** Submit button *****/}
-      <div className="mt-4">
-        <div className="d-grid gap-2">
-        <Form onSubmit={(handleSubmit)}>
-          <div className="d-grid gap-2">
-            <Button variant="success" type='submit'><strong>Search</strong></Button>
+          {/***** Time Expected filter *****/}
+          <div className="mt-4">
+            <div className="d-grid gap-2">
+              <strong>Time Expected</strong>
+              <InputGroup className="mb-3">
+                <MultiRangeSlider
+                  min={0}
+                  max={15}
+                  onChange={({ min, max }) => { setTimeMin(min); setTimeMax(max); }} />
+              </InputGroup>
+            </div>
           </div>
-        </Form>
+
+          {/***** Submit button *****/}
+          <div className="mt-4">
+            <div className="d-grid gap-2">
+              <Form>
+                <div className="d-grid gap-2">
+                  <Col md={{ span: 3, offset: 10 }}>
+                    <Search className="mt-4" onClick={(handleSubmit)} type='submit' size={"20px"} />
+                  </Col>
+                </div>
+              </Form>
+            </div>
+          </div>
+        </Col>
+
+        {/***** Hikes List *****/}
+        <Col sm={9} className="mx-2">
+          <Row>
+            {<Display logged={props.logged} displayedHikes={props.hikes} />}
+          </Row>
+        </Col>
+
+        {/***** Button to go up to carousel ******/}
+        <div className="d-flex flex-row-reverse">
+          <Row className="mb-5 mt-3">
+            <Col xs={12}>
+              <a href="#first-row" color='#009999'>{icon}</a>
+            </Col>
+          </Row>
         </div>
-      </div>
-    </Col>
 
-    {/***** Hikes List *****/}
-    <Col sm={9}>
-      <Row>
-        {<Display logged={props.logged} displayedHikes={props.hikes} />}
       </Row>
-    </Col>
-
-    {/***** Button to go up to carousel ******/ }
-    <div className="d-flex flex-row-reverse">
-    <Row className="mb-5 mt-3">
-      <Col xs={12}>
-        <a href="#first-row" color='#009999'>{icon}</a>
-      </Col>
-    </Row>
-    </div>
-
-  </Row>
-  </Container>
+    </Container>
   )
 
 }
@@ -169,18 +181,18 @@ function HikeRow(props) {
         <Card.Text >{!open ? (
           <div className="d-flex flex-row-reverse">
 
-          < ChevronCompactDown role="button" className="text-decoration-none" style={{ fontSize: "20px"}}
-            onClick={() => setOpen(!open)}
-            aria-controls="example-collapse-text"
-            aria-expanded={open}/>
-            </div>)
+            < ChevronCompactDown role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
+              onClick={() => setOpen(!open)}
+              aria-controls="example-collapse-text"
+              aria-expanded={open} />
+          </div>)
           :
           (<div className="d-flex flex-row-reverse">
-          < ChevronCompactUp role="button" className="text-decoration-none" style={{ fontSize: "20px"}}
-            onClick={() => setOpen(!open)}
-            aria-controls="example-collapse-text"
-            aria-expanded={open}/>
-            </div>)}
+            < ChevronCompactUp role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
+              onClick={() => setOpen(!open)}
+              aria-controls="example-collapse-text"
+              aria-expanded={open} />
+          </div>)}
           <Collapse in={open}>
             <div id="example-collapse-text">
               <Card className="bg-light text-dark">

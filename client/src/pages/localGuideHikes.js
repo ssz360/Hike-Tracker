@@ -47,7 +47,7 @@ function LocalGuideHikeRow(props) {
 
         <Card.Text>
           {/* DEFINE REFERENCE POINTS - PIN ON MAP */}
-          <OverlayTrigger trigger="focus" overlay = {<Tooltip style={{ maxWidth: "none" }}> Define reference points</Tooltip>}>
+          <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay = {<Tooltip> Define reference points</Tooltip>}>
             <PinMapFill role="button" size="20px" style={{
               color: !isHoverPin ? "black" : "#009999"}} 
               onMouseEnter={ () => setHoverPin(true) }
@@ -56,7 +56,7 @@ function LocalGuideHikeRow(props) {
           </OverlayTrigger>
 
           {/* LINK START/END POINT - FLAG */}
-          <OverlayTrigger trigger="focus" overlay = {<Tooltip style={{ maxWidth: "none" }}> Link start/end point</Tooltip>}>
+          <OverlayTrigger  delay={{ show: 250, hide: 400 }} overlay = {<Tooltip> Link start/end point</Tooltip>}>
             <FlagFill role="button" size="20px" className="ms-2" style={{
               color: !isHoverFlag ? "black" : "#009999"}} 
               onMouseEnter={ () => setHoverFlag(true) }
@@ -70,7 +70,7 @@ function LocalGuideHikeRow(props) {
           </OverlayTrigger>
 
           {/* LINK HUT TO HIKE - HOUSE */}
-          <OverlayTrigger trigger="focus" overlay = {<Tooltip style={{ maxWidth: "none" }}> Link hut to hike</Tooltip>}>
+          <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay = {<Tooltip> Link hut to hike</Tooltip>}>
             <HouseDoorFill role="button" size="20px" className="ms-2" style={{
               color: !isHoverHut ? "black" : "#009999"}} 
               onMouseEnter={ () => setHoverHut(true) }

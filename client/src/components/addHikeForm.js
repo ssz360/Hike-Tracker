@@ -3,7 +3,7 @@ import { Alert, Button, Container, Form, Spinner, Row, FloatingLabel, Col } from
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import ServerReply from "./serverReply";
-
+import {Upload, XCircle} from 'react-bootstrap-icons'
 function AddHikeForm(props) {
     const [error, setError] = useState();
     const [success, setSuccess] = useState(false);
@@ -37,7 +37,6 @@ function AddHikeForm(props) {
             setTimeout(() => setError(false), 3000);
         }
     }
-    // pexels-yaroslav-shuraev-8968134
     return (
         <>
             <div style={{
@@ -45,7 +44,9 @@ function AddHikeForm(props) {
                 backgroundImage: "url(/images/pexels-yaroslav-shuraev-8968134.jpg)",
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
-                height: "100%"
+                height: "100%",
+                overflowY: 'hidden'
+
             }}>
                 <Container fluid className="mt-5">
                     <div className="d-flex align-items-center justify-content-center text-center not-found-container">
@@ -58,24 +59,21 @@ function AddHikeForm(props) {
                                 textShadow: "2px 2px 4px #cccccc"
                             }}>Add a new hike</h3>
                     </div>
-                    <Row >
+                    <Row fluid>
                         <div className="d-flex align-items-center justify-content-center not-found-container mt-4"
                             style={{
                                 opacity: "90%"
                             }}>
 
-                            <Form className="shadow-lg p-3 mb-5 bg-white rounded"
-                                style={{
-                                    width: "40%"
-                                }}>
-                                <Form.Group className="mx-5 my-2">
+                            <Form className="shadow-lg p-3 mb-5 bg-white rounded " style={{ width: "40%" }}>
+                                <Form.Group className="mb-3">
                                     <FloatingLabel controlId="floatingName" label="Hike Name" className="mb-3">
                                         <Form.Control placeholder="Insert Name" className="mx-auto" type="text" value={name} onChange={e => setName(e.target.value)} />
                                     </FloatingLabel>
                                 </Form.Group>
-                                <Form.Group className="mx-5 my-2">
+                                <Form.Group className="mb-3">
 
-                                    <Form.Select className="mx-auto mb-3" value={difficulty} onChange={e => setDifficulty(e.target.value)}>
+                                    <Form.Select className="mb-3" value={difficulty} onChange={e => setDifficulty(e.target.value)}>
                                         <option value={undefined}>Difficulty</option>
                                         <option value="TOURIST">Tourist</option>
                                         <option value="HIKER">Hiker</option>
@@ -83,25 +81,26 @@ function AddHikeForm(props) {
                                     </Form.Select>
                                 </Form.Group>
 
-                                <Form.Group className="mx-5 my-2">
+                                <Form.Group className="mb-3" >
 
                                     <FloatingLabel controlId="floatingName" label="Hike Description" className="mb-3">
-                                        <Form.Control placeholder="Insert description" className="mx-auto" as="textarea" value={desc} onChange={e => setDesc(e.target.value)} />
+                                        <Form.Control style={{ height: "120px" }} placeholder="Insert description" className="mx-auto" as="textarea" value={desc} onChange={e => setDesc(e.target.value)} />
                                     </FloatingLabel>
                                 </Form.Group>
 
-                                <Form.Group controlId="formFile" className="mx-5 my-2" onChange={e => { setFileName(e.target.value); setFile(e.target.files[0]); }}>
+                                <Form.Group controlId="formFile" className="mb-3" onChange={e => { setFileName(e.target.value); setFile(e.target.files[0]); }}>
                                     <Form.Label > <strong>Track file</strong></Form.Label>
                                     <Form.Control type="file" value={fileName} />
                                 </Form.Group>
-                                <Form.Group className="mx-5 my-2">
-                                    <div className="mx-auto text-center my-3">
-                                        <Button variant="outline-success" size="lg" onClick={e => {
+                                <Form.Group className="mb-3">
+                                    <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new hike"} successMessage={"New hike added correctly!"} />
+                                    <div className="d-flex flex-row-reverse">
+                                        <Upload role="button" className="me-3"onClick={e => {
                                             e.preventDefault();
                                             e.stopPropagation();
                                             submitHandler();
-                                        }}><strong>Submit</strong></Button>
-                                        <Button variant="outline-warning" className="mx-3" size="lg" onClick={e => {
+                                        }} type="submit" size="20px" />
+                                        <XCircle role="button" className="me-3 "onClick={e => {
                                             e.preventDefault();
                                             e.stopPropagation();
                                             setName('');
@@ -111,11 +110,10 @@ function AddHikeForm(props) {
                                             setFileName('');
                                             setError();
                                             setSuccess();
-                                        }}><strong>Cancel</strong></Button>
+                                        }} size="20px" />
                                     </div>
                                 </Form.Group>
                             </Form>
-                            <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new hike"} successMessage={"New hike added correctly!"} />
                         </div>
                     </Row>
                 </Container>

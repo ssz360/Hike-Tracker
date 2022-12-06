@@ -1,6 +1,6 @@
 import { Row, Col, Form, FloatingLabel, Button, Alert, Container } from 'react-bootstrap';
 import { PointMap } from '../components';
-import { Upload, GeoFill } from 'react-bootstrap-icons'
+import { Upload, GeoFill, XCircle } from 'react-bootstrap-icons'
 import { useState } from 'react';
 
 function AddHutForm(props) {
@@ -24,6 +24,17 @@ function AddHutForm(props) {
             setErr(true);
         }
 
+    }
+    
+    const resetFields = () => {
+        setName("");
+        setCountry("");
+        setNumGuests("");
+        setNumBeds("");
+        setCoord("");
+        setMessage("");
+        setErr("");
+        setDone("");
     }
 
     return (<>
@@ -56,8 +67,8 @@ function AddHutForm(props) {
 
 
                         {/* FORM */}
-                        <Form className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: "40%"}}>
-                            
+                        <Form className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: "40%" }}>
+
                             {/* Hut name */}
                             <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
                                 <Form.Control type="text" placeholder="Name" value={name} onClick={() => setErr(false)} onChange={(event) => setName(event.target.value)} />
@@ -67,7 +78,7 @@ function AddHutForm(props) {
                             <FloatingLabel controlId="floatingInput" label="Country" className="mb-3">
                                 <Form.Control type="text" placeholder="Country" value={country} onClick={() => setErr(false)} onChange={(event) => setCountry(event.target.value)} />
                             </FloatingLabel>
-                            
+
                             {/* Number of guests */}
                             <FloatingLabel controlId="floatingInput" label="Number of guest" className="mb-3">
                                 <Form.Control type="number" min={0} placeholder="NumOfGuest"
@@ -78,7 +89,11 @@ function AddHutForm(props) {
                             <FloatingLabel controlId="floatingInput" label="Number of bedrooms" className="mb-3">
                                 <Form.Control type="number" min={0} placeholder="NumOfRooms" value={numBeds} onClick={() => setErr(false)} onChange={(event) => setNumBeds(event.target.value)} />
                             </FloatingLabel>
-
+                            <Alert role="button" variant="light" style={{ backgroundColor: "#FFFFFF", border: "1px solid #ced4da", color: "#000000" }} onClick={() => setOpenArea(true)}>
+                                {/* <Button variant="l ight" syle={{backgroundColor:"#FFFFFF"}} fluid> */}
+                                <GeoFill className="me-3" />
+                                Position
+                            </Alert>
                             {/* ERROR HANDLING */}
                             {err && <Alert variant="danger" onClose={() => setErr(false)} dismissible>{message}</Alert>}
 
@@ -88,7 +103,8 @@ function AddHutForm(props) {
                             {/* BUTTONS */}
                             <div className="d-flex flex-row-reverse">
                                 <Upload role="button" className="me-3" onClick={(handleSubmit)} type="submit" size="20px" />
-                                <GeoFill role="button" className="me-3 " variant="outline-dark" onClick={() => setOpenArea(true)} size="20px">Select point</GeoFill>
+                                <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
+
                             </div>
                         </Form>
                     </div>
