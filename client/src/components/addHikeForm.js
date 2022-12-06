@@ -3,7 +3,7 @@ import { Alert, Button, Container, Form, Spinner, Row, FloatingLabel, Col } from
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import ServerReply from "./serverReply";
-import {Upload, XCircle} from 'react-bootstrap-icons'
+import {Upload, XCircle, ArrowLeft} from 'react-bootstrap-icons'
 function AddHikeForm(props) {
     const [error, setError] = useState();
     const [success, setSuccess] = useState(false);
@@ -44,8 +44,7 @@ function AddHikeForm(props) {
                 backgroundImage: "url(/images/pexels-yaroslav-shuraev-8968134.jpg)",
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
-                height: "100%",
-                overflowY: 'hidden'
+                minHeight: "100%"
 
             }}>
                 <Container fluid className="mt-5">
@@ -111,6 +110,7 @@ function AddHikeForm(props) {
                                             setError();
                                             setSuccess();
                                         }} size="20px" />
+                                        <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/hikes")}  size="20px" />
                                     </div>
                                 </Form.Group>
                             </Form>

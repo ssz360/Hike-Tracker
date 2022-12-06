@@ -32,8 +32,7 @@ function ParkingLot() {
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
             backgroundImage: "url(/images/DSC_0089.jpg)",
-            height: "100vh",
-            overflowY: "hidden"
+            minHeight: "100%"
         }}>
 
             <Container fluid className="mt-5">

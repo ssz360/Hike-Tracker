@@ -19,8 +19,7 @@ function Login(props) {
             backgroundImage: "url(./images/bg_login.jpg)",
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
-            minHeight: '100vh',
-            overflowY: 'hidden'
+            minHeight: '100%'
 
         }}>
           <Container fluid className="mt-5">          

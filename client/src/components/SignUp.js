@@ -36,12 +36,10 @@ function SignUp(props) {
 
     return (
     <div style={{ 
-        height: '100vh',
         backgroundImage: "url(./images/bg_signup.jpg)",
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
-        overflowY: 'hidden'
-
+        heightMin: '100%'
         
     }}>
       <Container fluid className="mt-5">          

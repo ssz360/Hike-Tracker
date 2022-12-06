@@ -10,15 +10,13 @@ function Header(props) {
     const navigate = useNavigate();
     return (<>
         <Navbar bg="black" variant="dark" fixed="top">
-            <Navbar.Brand as={Link} to="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
             <Nav>
                 {props.logged ? (
                     <>
                         {
                             props.user.type === "localGuide" ?
-                                <><Nav.Link as={Link} to="/localGuide/hikes">My hikes</Nav.Link>
-                                <Nav.Link as={Link} to="/localGuide/newHike">New Hike</Nav.Link>
-                                <Nav.Link as={Link} to="/localGuide/newHut">New hut</Nav.Link>
+                                <><Navbar.Brand as={Link} to="/hikes" className="px-4">{icon} HikeTracker</Navbar.Brand>
+                                <Nav.Link as={Link} to="/localGuide/hikes">My Hikes</Nav.Link>
                                 <Nav.Link as={Link} to="/localGuide/newParking">Parking</Nav.Link>
                                 <Nav.Link as={Link} to="/hut" onClick={() => props.setDirty(true)}>Huts</Nav.Link>
                                     <Nav.Link as={Link} to="/" className="px-4" onClick={async e => {
@@ -31,7 +29,8 @@ function Header(props) {
                                         }
                                     }}>Log out</Nav.Link></>
                                 :
-                                <><Nav.Link as={Link} to="/hut" onClick={() => props.setDirty(true)}>Huts</Nav.Link>
+                                <><Navbar.Brand as={Link} to="/" className="px-4">{icon} HikeTracker</Navbar.Brand>
+                                <Nav.Link as={Link} to="/hut" onClick={() => props.setDirty(true)}>Huts</Nav.Link>
                                 <Nav.Link as={Link} to="/" className="px-4" onClick={async e => {
                                     try {
                                         await api.logout();

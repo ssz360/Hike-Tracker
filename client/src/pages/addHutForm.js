@@ -1,7 +1,8 @@
 import { Row, Col, Form, FloatingLabel, Button, Alert, Container } from 'react-bootstrap';
 import { PointMap } from '../components';
-import { Upload, GeoFill, XCircle } from 'react-bootstrap-icons'
+import { Upload, GeoFill, XCircle, ArrowLeft } from 'react-bootstrap-icons'
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function AddHutForm(props) {
     const [openArea, setOpenArea] = useState(false);
@@ -13,6 +14,7 @@ function AddHutForm(props) {
     const [message, setMessage] = useState("");
     const [err, setErr] = useState(false);
     const [done, setDone] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -42,9 +44,7 @@ function AddHutForm(props) {
             backgroundImage: "url(/images/pexels-arianna-tavaglione-5771589.jpg)",
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
-            height: '100vh',
-            overflowY: 'hidden'
-            //height: "100%"
+            minHeight: "100%"
         }}>
             <Container fluid className="mt-5">
                 <div className="d-flex align-items-center justify-content-center text-center not-found-container">
@@ -104,7 +104,7 @@ function AddHutForm(props) {
                             <div className="d-flex flex-row-reverse">
                                 <Upload role="button" className="me-3" onClick={(handleSubmit)} type="submit" size="20px" />
                                 <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
-
+                                <ArrowLeft role="button" className="me-3" onClick={() => navigate("/hut")}  size="20px" />
                             </div>
                         </Form>
                     </div>

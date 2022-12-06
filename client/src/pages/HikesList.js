@@ -44,7 +44,7 @@ function HikesList(props) {
 
   return (
     <Container className="mt-5" fluid style={{ height: "100vh" }}>
-      <Row id="first-row" style={{ height: "100vh" }}>
+      <Row id="first-row" style={{ height: "100vh"}}>
         <Col sm={2} className="mr-3" style={{ height: "100vh", backgroundColor: "#e0e3e5" }}>
 
           {openArea && (<AreaMap center={center} setCenter={setCenter} radius={radius} setRadius={setRadius} drag={false} openArea={openArea} setOpenArea={setOpenArea} />)}

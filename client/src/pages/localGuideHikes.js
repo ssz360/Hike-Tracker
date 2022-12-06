@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Col, Container, Row, Button, Card, Collapse, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import HikeMap from '../components/hikeMap';
-import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons'
+import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp, HouseAddFill } from 'react-bootstrap-icons'
 
 
 function LocalGuideHikes(props) {
+  const [isHover, setIsHover] = useState(false);
+  const navigate = useNavigate();
   return (
     <>
       <Container fluid className="mt-5" style={{ width: "85%" }} >
@@ -14,6 +16,21 @@ function LocalGuideHikes(props) {
           {
             props.hikes.map(hike => <LocalGuideHikeRow key={hike.id} hike={hike} />)
           }
+        </Row>
+        <Row className="mt-3">
+        <div className="d-grid gap-2">
+            <Button className="rounded-pill" style={
+              {
+                width: "15%",
+                height: "45px",
+                borderColor: "white",
+                backgroundColor: !isHover ? '#009999' : '#00cccc'
+              }
+            }
+            onMouseEnter={ () => setIsHover(true) }
+            onMouseLeave={ () => setIsHover(false) }
+            onClick = {() => navigate("/localGuide/newHike")}><strong>Add new hike</strong> <HouseAddFill size={"20px"}/></Button>
+        </div>
         </Row>
       </Container>
     </>
