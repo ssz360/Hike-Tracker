@@ -6,6 +6,8 @@ const APIURL = new URL('http://localhost:3001/api/');
 
 const APIBASE='http://localhost:3001/api/';
 
+const OSMELAPI='https://api.open-elevation.com/api/v1/lookup?';
+
 const register=async(username,password, name, surname, phone)=>{
     const res=await fetch(APIBASE+'register',{
         method:'POST',
@@ -346,5 +348,13 @@ const getLinkableEndPoints=async id=>{
     else throw ret;
 }
 
-const api={login, logout, getPointsInBounds,linkStartArrival, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters, linkHut, getHutsInBounds, getHikesInBounds, getLinkableHuts, getLinkableStartPoints, getLinkableEndPoints};
+const getElevation=async (lat,lng)=>{
+    const res=await fetch(OSMELAPI+'locations='+lat+','+lng);
+    const ret=await res.json();
+    if(res.ok) return ret.results[0].elevation;
+    else throw ret;
+}
+
+
+const api={login, logout, getPointsInBounds,linkStartArrival, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters, linkHut, getHutsInBounds, getHikesInBounds, getLinkableHuts, getLinkableStartPoints, getLinkableEndPoints, getElevation};
 export default api;
