@@ -39,10 +39,10 @@ function SignUp(props) {
         backgroundImage: "url(./images/bg_signup.jpg)",
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
-        heightMin: '100%'
-        
+        height: '100vh', 
+        overflowY: "hidden"
     }}>
-      <Container fluid className="mt-5">          
+      <Container fluid className="mt-5" style={{overflowY:"auto"}}>          
             <Row>
             <div className="d-flex align-items-center justify-content-center text-center not-found-container">
             <h3 className="mt-3" 
