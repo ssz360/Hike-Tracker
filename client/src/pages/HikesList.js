@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
 import MultiRangeSlider from '../components/MultiRangeSlider';
-import { ChevronCompactDown, ChevronCompactUp, BookmarkHeartFill, Search } from 'react-bootstrap-icons'
+import { ChevronCompactDown, ChevronCompactUp, BookmarkHeartFill, Search, XLg } from 'react-bootstrap-icons'
+import { useNavigate } from 'react-router-dom'
 
 function HikesList(props) {
   //console.log("Rerendering hikeslist with",props.hikes);
@@ -17,6 +18,10 @@ function HikesList(props) {
   const [timeMin, setTimeMin] = useState(null);
   const [timeMax, setTimeMax] = useState(null);
   const [openArea, setOpenArea] = useState(false);
+  const [searchHover, setSearchHover] = useState(false);
+  const [clearHover, setClearHover] = useState(false);
+
+  const navigate = useNavigate();
 
   const icon = (<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-up-circle-fill" viewBox="0 0 16 16">
     <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
@@ -35,6 +40,7 @@ function HikesList(props) {
 
   }
 
+
   //if we get again in this page no filter should be on and we should see again all hikes
   useEffect(() => {
     if (center === undefined && radius === 0 && lenMin === null && lenMax === null
@@ -43,9 +49,9 @@ function HikesList(props) {
 
 
   return (
-    <Container className="mt-5" fluid style={{ height: "100vh" }}>
-      <Row id="first-row" style={{ height: "100vh"}}>
-        <Col sm={2} className="mr-3" style={{ height: "100vh", backgroundColor: "#e0e3e5" }}>
+    <Container className="mt-5" fluid style={{ height: "93vh" }}>
+      <Row id="first-row" style={{ height: "93vh"}}>
+        <Col sm={2} className="mr-3" style={{ height: "93vh", backgroundColor: "#e0e3e5" }}>
 
           {openArea && (<AreaMap center={center} setCenter={setCenter} radius={radius} setRadius={setRadius} drag={false} openArea={openArea} setOpenArea={setOpenArea} />)}
           <div className="mt-4">
@@ -125,8 +131,39 @@ function HikesList(props) {
             <div className="d-grid gap-2">
               <Form>
                 <div className="d-grid gap-2">
-                  <Col md={{ span: 3, offset: 10 }}>
-                    <Search className="mt-4" onClick={(handleSubmit)} type='submit' size={"20px"} />
+                  <Col md={{ span: 10, offset: 4 }}>
+                    <Button className="rounded-pill mt-4" onClick={(handleSubmit)} type='submit'
+                    style={{
+                      backgroundColor: !searchHover ? '#006666' : '#009999',
+                      borderColor: '#e0e3e5',
+                      height: '42px',
+                      width: '150px'
+                    }}
+                    onMouseEnter={ () => setSearchHover(true) }
+                    onMouseLeave={ () => setSearchHover(false) }><strong>Search</strong> <Search className='mb-1' size={"18px"}/>
+                    </Button>
+                  </Col>
+                </div>
+              </Form>
+            </div>
+          </div>
+
+          {/***** Clear filters *****/}
+          <div className="mt-4">
+            <div className="d-grid gap-2">
+              <Form>
+                <div className="d-grid gap-2">
+                  <Col md={{ span: 10, offset: 4 }}>
+                    <Button className='rounded-pill'
+                    onClick={() => window.location.reload(false)} 
+                    style={{
+                      backgroundColor: !clearHover? '#800000' : '#cc0000' ,
+                      borderColor: '#e0e3e5',
+                      height: '42px',
+                      width: '150px'
+                    }} 
+                    onMouseEnter={ () => setClearHover(true) }
+                    onMouseLeave={ () => setClearHover(false) }><strong>Clear filters</strong> <XLg className='mb-1' size={'18px'}/></Button>
                   </Col>
                 </div>
               </Form>
@@ -135,21 +172,11 @@ function HikesList(props) {
         </Col>
 
         {/***** Hikes List *****/}
-        <Col sm={9} className="mx-2">
+        <Col sm={9} className="mx-2" style={{overflowY: 'scroll', height: '93vh'}}>
           <Row>
             {<Display logged={props.logged} displayedHikes={props.hikes} />}
           </Row>
         </Col>
-
-        {/***** Button to go up to carousel ******/}
-        <div className="d-flex flex-row-reverse">
-          <Row className="mb-5 mt-3">
-            <Col xs={12}>
-              <a href="#first-row" color='#009999'>{icon}</a>
-            </Col>
-          </Row>
-        </div>
-
       </Row>
     </Container>
   )

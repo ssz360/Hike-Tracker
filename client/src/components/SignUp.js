@@ -153,7 +153,7 @@ function SignUp(props) {
                             <Button type="submit"  className="rounded-pill"
                                 style={{ 
                                     justifyContent: 'right',
-                                    backgroundColor: !isHover ? '#009999' : '#00cccc',
+                                    backgroundColor: !isHover ? '#006666' : '#009999',
                                     borderColor: "white",
                                     fontWeight: "670",
                                     height: "45px"
