@@ -37,7 +37,7 @@ function LinkPointStartEnd(props){
             console.log("Linkable start points",linkableStartPoints);
             console.log("Linkable end points",linkableEndPoints);
             setLinkableStartPoints([...linkableStartPoints]);
-                setLinkableEndPoints([...linkableEndPoints]);
+            setLinkableEndPoints([...linkableEndPoints]);
         } catch (error) {
             console.log("Error in linkpoint",error);
         }
