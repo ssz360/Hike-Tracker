@@ -43,7 +43,7 @@ function HikesList(props) {
 
 
   return (
-    <Container>
+    <Container className="my-3">
     <Row id="first-row">
       <Col sm={3}>
 
@@ -123,7 +123,7 @@ function HikesList(props) {
     </Col>
 
     {/***** Hikes List *****/}
-    <Col sm={9}>
+    <Col sm={9} style={{overflow:"hidden","overflow-y":"scroll",height:"100vh"}}>
       <Row>
         {<Display logged={props.logged} displayedHikes={props.hikes} />}
       </Row>

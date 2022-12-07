@@ -46438,8 +46438,8 @@ INSERT INTO "POINTS" VALUES (1,'Default start point of hike Rocciamelone',45.177
 INSERT INTO "POINTS" VALUES (2,'Default arrival point of hike Rocciamelone',45.203531,7.07734,'Piedmont','hikePoint');
 INSERT INTO "POINTS" VALUES (3,'Default start point of hike Becetto',44.5892845652998,7.20338109880686,'Piedmont','hikePoint');
 INSERT INTO "POINTS" VALUES (4,'Default arrival point of hike Becetto',44.6133209299296,7.07638755440712,'Piedmont','hikePoint');
-INSERT INTO "POINTS" VALUES (5,'Rifugio Sampeyre',44.584599008752,7.20188140869141,'Italy','Hut');
-INSERT INTO "POINTS" VALUES (6,'Rifugio Castelfidino',44.5924231071787,7.07450866699219,'Italy','Hut');
+INSERT INTO "POINTS" VALUES (5,'Rifugio Sampeyre',44.584599008752,7.20188140869141,'Italy','hut');
+INSERT INTO "POINTS" VALUES (6,'Rifugio Castelfidino',44.5924231071787,7.07450866699219,'Italy','hut');
 INSERT INTO "POINTS" VALUES (7,'Default start point of hike Borgo San Paolo - Borgo Cina',45.05609,7.64846,'Piedmont','hikePoint');
 INSERT INTO "POINTS" VALUES (8,'Default arrival point of hike Borgo San Paolo - Borgo Cina',45.05609,7.64846,'Piedmont','hikePoint');
 INSERT INTO "POINTS" VALUES (9,'Default start point of hike Via Francigena Variante Valle di Susa, Segment 5: Collegno - Turin',45.08437,7.57505,'Piedmont','hikePoint');

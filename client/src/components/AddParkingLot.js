@@ -32,6 +32,7 @@ function AddParkingLot({ setParkings }) {
             "coordinates": coord,
             "geographicalArea": geographicalArea
         };
+        //here call api.elevation with coord to get elevation
         await api.addParking(pk);
         const pks = await api.getParkings();
         setParkings(pks);
