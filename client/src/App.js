@@ -152,7 +152,6 @@ function App() {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='hikes' element={<HikesList logged={logged} hikes={hikes.filter(h => h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering} />} />              
-          <Route path='/parking' element={<ParkingLot />} />
           <Route path='/localGuide/*' element={<LocalGuide refreshHikes={refreshHikes} updateStartEndPoint={updateStartEndPoint} hikes={user !== undefined ? hikes.filter(h => h.author === user.username) : []} user={user} newHut={newHut} />}></Route>
           <Route path='/hut' element={<Hut huts={huts} filteringHut={filteringHut} user={user} />} />
           <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser} />} />

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Row, Col, Form, FloatingLabel, Alert, InputGroup, Container, Button } from 'react-bootstrap';
-import { } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { PointMap } from '../components';
-import { GeoFill, Upload, XCircle } from 'react-bootstrap-icons'
+import { GeoFill, Upload, XCircle, ArrowLeft } from 'react-bootstrap-icons'
 
 function AddParkingLot({ setParkings }) {
     const [name, setName] = useState("");
@@ -15,6 +15,7 @@ function AddParkingLot({ setParkings }) {
     const [done, setDone] = useState(false);
     const [openArea, setOpenArea] = useState(false);
     const [coord, setCoord] = useState();
+    const navigate = useNavigate();
 
     const resetFields = () => {
         setName("");
@@ -45,6 +46,26 @@ function AddParkingLot({ setParkings }) {
     }
 
     return (<>
+        <div style={{
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundImage: "url(/images/DSC_0089.jpg)",
+            minHeight: "100%"
+        }}>
+            <Container fluid className="mt-5">
+                <div className="d-flex align-items-center justify-content-center text-center not-found-container">
+                    <h3 className="mt-3"
+                        style={{
+                            fontFamily: "Montserrat,Helvetica,Arial,Lucida,sans-serif",
+                            fontWeight: "800",
+                            fontSize: "49px",
+                            color: "#0d0d0d",
+                            textShadow: "2px 2px 4px #cccccc"
+                        }}>Add a new parking lot</h3>
+                </div>
+                <Row>
+                    <div className="d-flex align-items-center justify-content-center not-found-container mt-4"
+                            style={{opacity: "90%"}}>
         {openArea && <PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoord} coord={coord} />}
         <Form className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: "40%" }}>
             <FloatingLabel className="mb-3" controlId="floatingInput" label="Parking name">
@@ -90,8 +111,13 @@ function AddParkingLot({ setParkings }) {
             <div className="d-flex flex-row-reverse">
                 <Upload role="button" className="me-3" onClick={(handleSubmit)} type="submit" size="20px" />
                 <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
+                <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/parking")}  size="20px" />
             </div>
         </Form>
+        </div>
+                </Row>
+            </Container>
+        </div>
     </>);
 }
 

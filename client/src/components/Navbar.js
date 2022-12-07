@@ -27,7 +27,7 @@ function Header(props) {
                 <Nav>
                     {props.user.type === "localGuide" && <>
                         <Nav.Link as={Link} to="/localGuide/hikes" style={path==="/localGuide/hikes" ? {"font-weight":"bold"} : null}>My hikes</Nav.Link>
-                        <Nav.Link as={Link} to="/localGuide/newParking" style={path==="/localGuide/newParking" ? {"font-weight":"bold"} : null}>Parking</Nav.Link>
+                        <Nav.Link as={Link} to="/localGuide/parking" style={path==="/localGuide/parking" ? {"font-weight":"bold"} : null}>Parking</Nav.Link>
                     </>}
                     <Nav.Link as={Link} to="/hut" style={path==="/hut" ? {"font-weight":"bold"} : null} onClick={() => props.setDirty(true)}>Huts</Nav.Link>
                 </Nav>

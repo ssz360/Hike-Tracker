@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Row, Table, Container, Form } from 'react-bootstrap';
-import { } from 'react-router-dom';
+import { Row, Table, Container, Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { AddParkingLot } from '../components';
+import {PlusCircle} from 'react-bootstrap-icons'
 
 function ParkingLotRow({ p, i }) {
     return (
@@ -18,7 +19,9 @@ function ParkingLotRow({ p, i }) {
 
 function ParkingLot() {
     const [parkings, setParkings] = useState([]);
-    
+    const navigate = useNavigate();
+    const [isHover, setIsHover] = useState(false);
+
     useEffect(() => {
         const getParkings = async () => {
             const pks = await api.getParkings();
@@ -26,53 +29,32 @@ function ParkingLot() {
         }
         getParkings();
     }, []);
-    
-    return (<>
-        <div style={{
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            backgroundImage: "url(/images/DSC_0089.jpg)",
-            minHeight: "100%"
-        }}>
 
-            <Container fluid className="mt-5">
-                <div className="d-flex align-items-center justify-content-center text-center not-found-container">
-                    <h3 className="mt-3"
-                        style={{
-                            fontFamily: "Montserrat,Helvetica,Arial,Lucida,sans-serif",
-                            fontWeight: "800",
-                            fontSize: "49px",
-                            color: "#0d0d0d",
-                            textShadow: "2px 2px 4px #cccccc"
-                        }}>Add a new parking lot</h3>
-                </div>
-                <Row>
-                    <div className="d-flex align-items-center justify-content-center not-found-container mt-4"
-                            style={{opacity: "90%"}}>
-                        
-                         <AddParkingLot setParkings={setParkings} />                        
-                         {/* <Row className="mt-4">
-                            <h1>Parking lots</h1>
-                        </Row> */}
-                        {/* <Table striped bordered hover>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Total slots</th>
-                                    <th>Empty slots</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {parkings.map((p, i) => (<ParkingLotRow p={p} i={i} key={i} />))}
-                            </tbody>
-                        </Table> */}
-                    </div>
-                </Row>
-            </Container>
+    return (<>
+        <Container fluid className="mt-5" style={{ width: "85%" }} >
+            <br></br>
+            <Row>
+                {parkings.map((p, i) => (<ParkingLotRow p={p} i={i} key={i} />))}
+            </Row>
+            <Row>
+            <div className="d-grid gap-2">
+            <Button className="rounded-pill" style={
+              {
+                width: "20%",
+                height: "45px",
+                borderColor: "white",
+                backgroundColor: !isHover ? '#006666' : '#009999'
+              }
+            }
+            onMouseEnter={ () => setIsHover(true) }
+            onMouseLeave={ () => setIsHover(false) }
+            onClick = {() => navigate("/localGuide/newParking")}><strong><PlusCircle size={"20px"} className="mb-1"/> Add new parking lot</strong> </Button>
         </div>
+            </Row>
+        </Container>
     </>);
 }
+
+//parkings.map((p, i) => (<ParkingLotRow p={p} i={i} key={i} />))
 
 export default ParkingLot;
