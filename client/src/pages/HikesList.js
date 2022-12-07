@@ -136,8 +136,8 @@ function HikesList(props) {
                     style={{
                       backgroundColor: !searchHover ? '#006666' : '#009999',
                       borderColor: '#e0e3e5',
-                      height: '42px',
-                      width: '150px'
+                      height: '70%',
+                      width: '80%'
                     }}
                     onMouseEnter={ () => setSearchHover(true) }
                     onMouseLeave={ () => setSearchHover(false) }><strong>Search</strong> <Search className='mb-1' size={"18px"}/>
@@ -149,18 +149,18 @@ function HikesList(props) {
           </div>
 
           {/***** Clear filters *****/}
-          <div className="mt-4">
+          <div>
             <div className="d-grid gap-2">
               <Form>
                 <div className="d-grid gap-2">
                   <Col md={{ span: 10, offset: 4 }}>
-                    <Button className='rounded-pill'
+                    <Button className='rounded-pill mt-4'
                     onClick={() => window.location.reload(false)} 
                     style={{
                       backgroundColor: !clearHover? '#800000' : '#cc0000' ,
                       borderColor: '#e0e3e5',
-                      height: '42px',
-                      width: '150px'
+                      height: '70%',
+                      width: '80%'
                     }} 
                     onMouseEnter={ () => setClearHover(true) }
                     onMouseLeave={ () => setClearHover(false) }><strong>Clear filters</strong> <XLg className='mb-1' size={'18px'}/></Button>
