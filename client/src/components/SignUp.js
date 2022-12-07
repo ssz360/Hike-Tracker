@@ -39,8 +39,7 @@ function SignUp(props) {
         backgroundImage: "url(./images/bg_signup.jpg)",
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
-        height: '100vh', 
-        overflowY: "hidden"
+        minHeight: '100vh'
     }}>
       <Container fluid className="mt-5" style={{overflowY:"auto"}}>          
             <Row>

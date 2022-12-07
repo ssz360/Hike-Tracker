@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Col, Container, Row, Button, Card, Collapse, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import HikeMap from '../components/hikeMap';
-import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp, PlusCircle } from 'react-bootstrap-icons'
+import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp, PlusCircle, ArrowUpCircleFill } from 'react-bootstrap-icons'
 
 
 function LocalGuideHikes(props) {
@@ -11,20 +11,15 @@ function LocalGuideHikes(props) {
   return (
     <>
       <Container fluid className="mt-5" style={{ width: "85%" }} >
-        <br></br>
-        <Row className="mt-2">
-          {
-            props.hikes.map(hike => <LocalGuideHikeRow key={hike.id} hike={hike} />)
-          }
-        </Row>
-        <Row className="mt-3">
+      <br></br>
+      <Row id="top" className="mt-3" >
         <div className="d-grid gap-2">
             <Button className="rounded-pill" style={
               {
                 width: "15%",
                 height: "45px",
                 borderColor: "white",
-                backgroundColor: !isHover ? '#009999' : '#00cccc'
+                backgroundColor: !isHover ? '#006666' : '#009999'
               }
             }
             onMouseEnter={ () => setIsHover(true) }
@@ -32,6 +27,19 @@ function LocalGuideHikes(props) {
             onClick = {() => navigate("/localGuide/newHike")}><strong><PlusCircle size={"20px"} className="mb-1"/> Add new hike</strong> </Button>
         </div>
         </Row>
+        <Row className="mt-2">
+          {
+            props.hikes.map(hike => <LocalGuideHikeRow key={hike.id} hike={hike} />)
+          }
+        </Row>
+
+        <Row className="mt-4">
+           <div className="d-grid gap-2">
+          <a href="#top"><ArrowUpCircleFill size={"30px"}/></a>
+          </div>
+        </Row>
+        <br></br>
+        
       </Container>
     </>
   );
@@ -45,7 +53,7 @@ function LocalGuideHikeRow(props) {
   const [isHoverFlag, setHoverFlag] = useState(false);
   const [isHoverHut, setHoverHut] = useState(false);
   return (
-    <><Col xs={12} sm={6} lg={4} className="mt-2"><Card >
+    <><Col xs={12} sm={6} lg={4} className="mt-2 mb-2"><Card >
       <Card.Header>
         <h4>{props.hike.name}</h4>
         <div className='text-secondary fst-italic'>{auth}</div>
