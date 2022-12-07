@@ -7,7 +7,7 @@ function SelectLinkHut(props){
     //console.log("IN selectlinkhut WITH ",props.point,"and hike",props.hike);
     const isStart=props.point.id===props.startPoint.id;
     const isEnd=props.point.id===props.endPoint.id;
-    const [link,setLink]=useState(props.hike.referencePoints.length>0?props.hike.referencePoints.map(p=>p.id).includes(props.point.id):false);
+    const [link,setLink]=useState(props.hike.huts.map(p=>p.id).includes(props.point.id));
     const [error,setError]=useState();
     const [success,setSuccess]=useState(false);
     const [waiting,setWaiting]=useState(false);
@@ -17,7 +17,7 @@ function SelectLinkHut(props){
     const submitHandler=async ()=>{
         try {
             setWaiting(true);
-            await props.linkHut();
+            await props.linkHut(!link);
             setWaiting(false);
             setSuccess(true);
             setError();
@@ -39,15 +39,15 @@ function SelectLinkHut(props){
                 </Form.Group>
                 <Form.Group className="mx-5 my-3">
                     <div className="mx-auto text-center my-3">
-                        <Button variant={link?"info":"outline-success"} disabled={link?true:false} onClick={e=>{
+                        <Button variant={link?"outline-danger":"outline-success"} onClick={e=>{
                             e.preventDefault();
                             e.stopPropagation();
                             submitHandler();
-                        }}>{link?"This point is already linked to this hike":"Link this point to this hike"}</Button>
+                        }}>{link?"Unlink this point from this hike":"Link this point to this hike"}</Button>
                     </div>
                 </Form.Group>
             </Form>
-            <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while linking this hut to this hike"} successMessage={"Hut linked to this hike correctly!"} />
+            <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while updating link of "+props.point.name+" to "+props.hike.name} successMessage={"Updated link of "+props.point.name+" to "+props.hike.name+" correctly!"} />
         </>
     )
 }

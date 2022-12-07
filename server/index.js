@@ -288,6 +288,15 @@ app.post('/api/hikes/linkHut', isLoggedIn, async(req,res)=>{
     }
 })
 
+app.delete('/api/hikes/linkHut', isLoggedIn, async(req,res)=>{
+    try {
+        await points.unlinkPointFromHike(req.body.hikeId,req.body.hutId);
+        return res.status(204).end();
+    } catch (error) {
+        res.status(error.status).json(error.message);
+    }
+})
+
 app.get('/api/hikes/:hikeId/linkableStartPoints',isLoggedIn,async(req,res)=>{
     try {
         console.log("In get points in bounds with ",req.body);
