@@ -3,6 +3,7 @@ import { Row, Col, Form, FloatingLabel, Button, InputGroup } from 'react-bootstr
 import { } from 'react-router-dom';
 import api from '../lib/api';
 import { PointMap } from '../components';
+import services from '../lib/services';
 
 
 function AddParkingLot({ setParkings }) {
@@ -38,8 +39,14 @@ function AddParkingLot({ setParkings }) {
         resetFields();
     }
 
+    
+    const setCoordinateAndGetAddress = (coordinate) => {
+        setCoord(coordinate);
+        services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setGeographicalArea(`${x.address.city}, ${x.address.county}, ${x.address.country}`.replace('undefined,','')));
+    }
+
     return (<>
-        {openArea && <PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoord} coord={coord} />}
+        {openArea && <PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoordinateAndGetAddress} coord={coord} />}
         <Row>
             <Col xs={6} className="mx-auto">
                 <Row className="mt-4">
@@ -58,7 +65,7 @@ function AddParkingLot({ setParkings }) {
                     Select point
                 </Button>
                 <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical Area">
-                    <Form.Control type="text" data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} placeholder="Geographical Area" />
+                    <Form.Control disabled='true' type="text" data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} placeholder="Geographical Area" />
                 </FloatingLabel>
                 {/* <Row className="mb-3">
                     <Col>
