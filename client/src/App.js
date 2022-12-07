@@ -132,6 +132,7 @@ useEffect(() => {
  async function newHut(name, country, numberOfGuests, numberOfBedrooms, coordinate){
   try {
     //console.log(name, country, numberOfGuests, numberOfBedrooms, coordinate);
+    //here call api.elevation with coordinate to get elevation
     await api.insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate);
   } catch (error) {
     throw error;

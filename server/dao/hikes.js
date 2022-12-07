@@ -19,10 +19,10 @@ const getHikeMoreData = async (item) => {
     const end=await points.getPointById(item.EndPoint);
     item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:start.GeographicalArea,coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
     item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:end.GeographicalArea,coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
-    console.log("Got more data for row",item);
+    //console.log("Got more data for row",item);
     const linkedPoints = await getLinkedPoints(item.IDHike);
     item.referencePoints=linkedPoints.filter(p=>p.typeOfPoint=="referencePoint" || p.typeOfPoint=="hikePoint");
-    item.huts=linkedPoints.filter(p=>p.typeOfPoint==="Hut");
+    item.huts=linkedPoints.filter(p=>p.typeOfPoint==="hut");
 
     return item;
 }
@@ -158,7 +158,7 @@ const getHikesMoreData = async (row) => {
         console.log("Got more data for row",item);
         const linkedPoints = await getLinkedPoints(item.IDHike);
         item.referencePoints=linkedPoints.filter(p=>p.typeOfPoint=="referencePoint" || p.typeOfPoint=="hikePoint");
-        item.huts=linkedPoints.filter(p=>p.typeOfPoint==="Hut");
+        item.huts=linkedPoints.filter(p=>p.typeOfPoint==="hut");
     }
 
     return row;
@@ -316,7 +316,7 @@ const updateStartingArrivalPoint = async (hikeId, startPointId, endPointId) => n
 });
 
 const hikesInBounds=async (maxlat,maxlon,minlat,minlon)=>new Promise((resolve,reject)=>{
-    const hikessql = 'SELECT * FROM HIKESMAPDATA WHERE IDHike IN (SELECT idHike FROM HIKESCOORDINATES WHERE latitude<=? AND latitude>=? AND longitude<=? AND longitude>=?)';
+    const hikessql = 'SELECT * FROM HIKESMAPDATA WHERE EXISTS(SELECT HIKESCOORDINATES.hikeId FROM HIKESCOORDINATES WHERE HIKESCOORDINATES.hikeId=HIKESMAPDATA.IDHike AND HIKESCOORDINATES.latitude<=? AND HIKESCOORDINATES.latitude>=? AND HIKESCOORDINATES.longitude<=? AND HIKESCOORDINATES.longitude>=?)';
     db.all(hikessql, [maxlat,minlat,maxlon,minlon], (err, rows) => {
         //console.log("MAP RET",row,"err",err);
         if (err) {
@@ -327,7 +327,7 @@ const hikesInBounds=async (maxlat,maxlon,minlat,minlon)=>new Promise((resolve,re
         //else if (row === undefined) reject({ status: 404, message: "No hike associated to this id" });
         const proms=[];
         rows.forEach(r=>proms.push(getCoordinatesHike(r)));
-        Promise.all(proms).then(maps=>{console.log("At the end we got",maps);resolve(maps)}).catch(err=>reject(err));
+        Promise.all(proms).then(maps=>resolve(maps)).catch(err=>reject(err));
         
         //resolve({ id: row.IDHike, coordinates: JSON.parse(row.Coordinates), center: JSON.parse(row.Center), bounds: JSON.parse(row.Bounds) })
     });
