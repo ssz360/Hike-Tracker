@@ -3,7 +3,7 @@ import './App.css';
 import LocalGuide from './pages/localGuide';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import { ParkingLot,  HikesList, Hut, HomePage, Profile } from './pages';
+import { ParkingLot,  HikesList, Hut, HomePage, Profile , HikesList} from './pages';
 import api from './lib/api';
 import { Header, Login, SignUp, CheckEmail } from './components';
 import { useEffect, useState } from 'react';

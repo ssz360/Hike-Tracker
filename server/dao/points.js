@@ -23,6 +23,17 @@ const linkPointToHike=(hikeId,pointId)=>new Promise((resolve,reject)=>{
     })
 })
 
+const unlinkPointFromHike=(hikeId,pointId)=>new Promise((resolve,reject)=>{
+    const sql="DELETE FROM LINKEDPOINTS WHERE IDPoint=? AND IDHike=?";
+    db.run(sql,[pointId,hikeId],err=>{
+        if(err){
+            console.log("Err in UNLINK point to hike",err);
+            reject({status:503,message:err});
+        }
+        resolve();
+    })
+})
+
 function insertPoint(name, latitude, longitude, GeographicalArea, TypeOfPoint) {
     return new Promise((res, rej) => {
         console.log("In insert point with name",name,"lat",latitude,"long",longitude,"geoarea",GeographicalArea,"type",TypeOfPoint)
@@ -90,21 +101,5 @@ const linkableHuts= async id =>new Promise((resolve, reject) => {
 });
 
 
-const points = { getParkingsList, insertPoint, getPointById, getPointsInBounds, linkableHuts, linkableStartPoints, linkableEndPoints , linkPointToHike }
+const points = { getParkingsList, insertPoint, getPointById, getPointsInBounds, linkableHuts, linkableStartPoints, linkableEndPoints , linkPointToHike, unlinkPointFromHike }
 module.exports = points;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

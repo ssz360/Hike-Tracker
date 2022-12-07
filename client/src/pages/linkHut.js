@@ -25,9 +25,9 @@ function LinkHut(props){
         linkableHuts();
     },[]);
     console.log("IN LINK POINT START END WITH HIKE",props.hike,"selected point",selectedPoint,"linkable huts",linkableHuts);
-    const linkHut=async ()=>{
+    const linkHut=async linkType=>{
         try {
-            await api.linkHut(props.hike.id,selectedPoint);
+            await api.linkHut(props.hike.id,selectedPoint,linkType);
             await props.refreshHikes();//props.hike,points.find(p=>p.id===selectedPoint),linkType);
             const newPoints=await api.getLinkableHuts(props.hike.id);
             setLinkableHuts([...newPoints]);
