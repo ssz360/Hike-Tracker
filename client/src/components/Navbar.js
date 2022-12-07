@@ -19,7 +19,7 @@ function Header(props) {
     return (<>
         
         {/* <Navbar bg="black" variant="dark" fixed="top"> */}
-        <Navbar bg="black" variant="dark">
+        <Navbar bg="black" variant="dark" fixed="top">
             <Navbar.Brand as={Link} to="/" className="px-4">
                 <Image className="mb-1" fluid roundedCircle src={process.env.PUBLIC_URL + "/favicon.ico"} style={{"width":"20%"}}/>
                 {" HikeTracker"}

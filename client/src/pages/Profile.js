@@ -23,7 +23,7 @@ function Profile() {
     },[]);
 
     return(<>
-        <Row className="px-0 mx-0">
+        <Row className="px-0 mx-0 mt-5">
             <Col>
                 <h1 className="mx-4 my-4">Profile settings</h1>
             </Col>
