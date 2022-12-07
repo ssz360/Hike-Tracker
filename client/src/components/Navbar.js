@@ -19,17 +19,14 @@ function Header(props) {
     return (<>
         
         {/* <Navbar bg="black" variant="dark" fixed="top"> */}
-        <Navbar bg="black" variant="dark">
-            <Navbar.Brand as={Link} to="/" className="px-4">
+        <Navbar bg="black" variant="dark" fixed="top">
+            {props.logged ? <> <Navbar.Brand as={Link} to="/hikes" className="px-4">
                 <Image className="mb-1" fluid roundedCircle src={process.env.PUBLIC_URL + "/favicon.ico"} style={{"width":"20%"}}/>
                 {" HikeTracker"}
             </Navbar.Brand>
-            {props.logged ? <>
                 <Nav>
                     {props.user.type === "localGuide" && <>
                         <Nav.Link as={Link} to="/localGuide/hikes" style={path==="/localGuide/hikes" ? {"font-weight":"bold"} : null}>My hikes</Nav.Link>
-                        <Nav.Link as={Link} to="/localGuide/newHike" style={path==="/localGuide/newHike" ? {"font-weight":"bold"} : null}>New Hike</Nav.Link>
-                        <Nav.Link as={Link} to="/localGuide/newHut" style={path==="/localGuide/newHut" ? {"font-weight":"bold"} : null}>New hut</Nav.Link>
                         <Nav.Link as={Link} to="/localGuide/newParking" style={path==="/localGuide/newParking" ? {"font-weight":"bold"} : null}>Parking</Nav.Link>
                     </>}
                     <Nav.Link as={Link} to="/hut" style={path==="/hut" ? {"font-weight":"bold"} : null} onClick={() => props.setDirty(true)}>Huts</Nav.Link>
@@ -50,6 +47,11 @@ function Header(props) {
                     </NavDropdown>
                 </Nav>
             </> : <Nav>
+             <Navbar.Brand as={Link} to="/" className="px-4">
+             <Image className="mb-1" fluid roundedCircle src={process.env.PUBLIC_URL + "/favicon.ico"} style={{"width":"20%"}}/>
+             {" HikeTracker"}
+         </Navbar.Brand>
+            
                 <Nav.Link as={Link} to="/login" className="px-4">Sign in</Nav.Link>
                 <Nav.Link as={Link} to="/signup" className="px-4">Sign up</Nav.Link>
             </Nav>}
