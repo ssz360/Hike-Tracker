@@ -36,13 +36,12 @@ function SignUp(props) {
 
     return (
     <div style={{ 
-        height: '100vh',
         backgroundImage: "url(./images/bg_signup.jpg)",
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
-        height:"100%"
+        minHeight: '100vh'
     }}>
-      <Container fluid>          
+      <Container fluid className="mt-5" style={{overflowY:"auto"}}>          
             <Row>
             <div className="d-flex align-items-center justify-content-center text-center not-found-container">
             <h3 className="mt-3" 
@@ -153,7 +152,7 @@ function SignUp(props) {
                             <Button type="submit"  className="rounded-pill"
                                 style={{ 
                                     justifyContent: 'right',
-                                    backgroundColor: !isHover ? '#009999' : '#00cccc',
+                                    backgroundColor: !isHover ? '#006666' : '#009999',
                                     borderColor: "white",
                                     fontWeight: "670",
                                     height: "45px"

@@ -7,6 +7,7 @@ import LocalGuideHikes from "./localGuideHikes";
 import ParkingLot from "./ParkingLot";
 import LocalGuideHikeUpdate from './localGuideHikeUpdate';
 import AddHutForm from "./addHutForm";
+import { AddParkingLot } from "../components";
 
 /*function LocalGuide(props){
     const [newHike,setNewHike]=useState(false);
@@ -130,7 +131,8 @@ function LocalGuide(props){
             <Route path="/hikes/:hikeid/*" element={<LocalGuideHikeUpdate hikes={props.hikes} refreshHikes={props.refreshHikes} updateStartEndPoint={props.updateStartEndPoint}/>}/>
             <Route path="/newHike" element={<AddHikeForm refreshHikes={props.refreshHikes}/>}/>
             <Route path="/newHut" element={<AddHutForm newHut={props.newHut}/>}/>
-            <Route path="/newParking" element={<ParkingLot/>}/>
+            <Route path="/newParking" element={<AddParkingLot/>}/>
+            <Route path="/parking" element={<ParkingLot/>}/>
         </Routes>
     )
 }

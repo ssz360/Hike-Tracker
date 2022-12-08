@@ -1,87 +1,138 @@
-import { useState, useEffect } from "react";
-import { Col, Container, Row, Button, Card, Collapse } from "react-bootstrap";
+import { useState } from "react";
+import { Col, Container, Row, Button, Card, Collapse, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import HikeMap from '../components/hikeMap';
-import ButtonFilterByPerformance from "../components/ButtonFilterByPerformance";
-import { SidebarFilterByPerformance} from "../components/SidebarFilterByPerformance"
+import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp, PlusCircle, ArrowUpCircleFill } from 'react-bootstrap-icons'
 
 
-function LocalGuideHikes(props){
+function LocalGuideHikes(props) {
+  const [isHover, setIsHover] = useState(false);
+  const navigate = useNavigate();
+  return (
+    <>
+      <Container fluid className="mt-5" style={{ width: "85%" }} >
+      <br></br>
+      <Row id="top" className="mt-3" >
+        <div className="d-grid gap-2">
+            <Button className="rounded-pill" style={
+              {
+                width: "15%",
+                height: "45px",
+                borderColor: "white",
+                backgroundColor: !isHover ? '#006666' : '#009999'
+              }
+            }
+            onMouseEnter={ () => setIsHover(true) }
+            onMouseLeave={ () => setIsHover(false) }
+            onClick = {() => navigate("/localGuide/newHike")}><strong><PlusCircle size={"20px"} className="mb-1"/> Add new hike</strong> </Button>
+        </div>
+        </Row>
+        <Row className="mt-2">
+          {
+            props.hikes.map(hike => <LocalGuideHikeRow key={hike.id} hike={hike} />)
+          }
+        </Row>
 
-    const [showSidebar, setShowSidebar] = useState(false);
-    const [hikeList, setHikeList] = useState(props.hikes);
-
-    return (
-        <>
-            <Container fluid className="my-4 text-center" style={{width:"85%"}} >
-                <Row className="mt-2">
-                  <Col xs={1} className="d-flex justify-content-start">
-                    <ButtonFilterByPerformance showSidebar={showSidebar} setShowSidebar={setShowSidebar}/>
-                    <SidebarFilterByPerformance user={props.user} showSidebar={showSidebar} setShowSidebar={setShowSidebar} setHikeList={setHikeList}/>
-              </Col>
-                    { hikeList.map(hike => <LocalGuideHikeRow key={hike.id} hike={hike}/>) }
-                </Row>
-            </Container>
-        </>
-    );
+        <Row className="mt-4">
+           <div className="d-grid gap-2">
+          <a href="#top"><ArrowUpCircleFill size={"30px"}/></a>
+          </div>
+        </Row>
+        <br></br>
+        
+      </Container>
+    </>
+  );
 }
 
-function LocalGuideHikeRow(props){
-  const navigate=useNavigate();
-    const auth = props.hike.author.substring(0, props.hike.author.indexOf('@'));
-    const [open, setOpen] = useState(false);
-    return (
-    <><Col xs={12} sm={6} lg={4} className="mt-2"><Card border="info">
-    <Card.Header>
-      <h4>{props.hike.name}</h4>
-      <div className='text-secondary fst-italic'>{auth}</div>
-    </Card.Header>
-    <Card.Body>
-      <HikeMap hike={props.hike}/>
-      <Card.Text><strong>Length: </strong>{Math.ceil(props.hike.len)} km<br></br>
-      <strong>Difficulty: </strong>{props.hike.difficulty} <br></br>
-      <strong>Ascent: </strong>{props.hike.ascent} m<br></br>
-      <strong>Expected Time: </strong>{Math.ceil(props.hike.expectedTime)} h
-      </Card.Text>
-      <Card.Text>{!open ? (
-      <a className="text-decoration-none" style={{fontSize:"14px"}}
-      onClick={() => setOpen(!open)}
-      aria-controls="example-collapse-text"
-      aria-expanded={open}>• show more</a>) 
-    :
-    (<a className="text-decoration-none" style={{fontSize:"14px"}}
-    onClick={() => setOpen(!open)}
-    aria-controls="example-collapse-text"
-    aria-expanded={open}>• show less</a>)}
-    <Collapse in={open}>
-        <div id="example-collapse-text">
-          <Card className="bg-light text-dark">
-            <Card.Body><strong>Description: </strong>{props.hike.description}</Card.Body>
-          </Card>
-        </div>
-      </Collapse>
-      </Card.Text>
-      <Container fluid>
-        <Row>
-          <Col xs={12} sm={6}>
-                    <Button variant="outline-info" size="sm" onClick={e=>{
-                        e.preventDefault();
-                        e.stopPropagation();
-                        navigate("/localGuide/hikes/"+props.hike.id+"/linkstartend");
-                    }}><strong>Update start/end point!</strong></Button>
-          </Col>
-          <Col xs={12} sm={6}>
-                    <Button variant="outline-dark" className="mx-2" size="sm" onClick={e=>{
-                            e.preventDefault();
-                            e.stopPropagation();
-                            navigate("/localGuide/hikes/"+props.hike.id+"/linkhut");
-                        }}><strong>Link new hut!</strong></Button>
-          </Col>
-          </Row>
-      </Container>
+function LocalGuideHikeRow(props) {
+  const navigate = useNavigate();
+  const auth = props.hike.author.substring(0, props.hike.author.indexOf('@'));
+  const [open, setOpen] = useState(false);
+  const [isHoverPin, setHoverPin] = useState(false);
+  const [isHoverFlag, setHoverFlag] = useState(false);
+  const [isHoverHut, setHoverHut] = useState(false);
+  return (
+    <><Col xs={12} sm={6} lg={4} className="mt-2 mb-2"><Card >
+      <Card.Header>
+        <h4>{props.hike.name}</h4>
+        <div className='text-secondary fst-italic'>{auth}</div>
+      </Card.Header>
+      <Card.Body>
+        {/* MAP */}
+        <HikeMap hike={props.hike} />
+        
+        {/* ATTRIBUTES */}
+        <Card.Text>
+          <strong>Length: </strong> {Math.ceil(props.hike.len)} km<br></br>
+          <strong>Difficulty: </strong>{props.hike.difficulty} <br></br>
+          <strong>Ascent: </strong>{props.hike.ascent} m<br></br>
+          <strong>Expected Time: </strong>{Math.ceil(props.hike.expectedTime)} h
+        </Card.Text>
+
+        <Card.Text>
+          {/* DEFINE REFERENCE POINTS - PIN ON MAP */}
+          <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay = {<Tooltip> Define reference points</Tooltip>}>
+            <PinMapFill role="button" size="20px" style={{
+              color: !isHoverPin ? "black" : "#009999"}} 
+              onMouseEnter={ () => setHoverPin(true) }
+              onMouseLeave={ () => setHoverPin(false) }
+            /> 
+          </OverlayTrigger>
+
+          {/* LINK START/END POINT - FLAG */}
+          <OverlayTrigger  delay={{ show: 250, hide: 400 }} overlay = {<Tooltip> Link start/end point</Tooltip>}>
+            <FlagFill role="button" size="20px" className="ms-2" style={{
+              color: !isHoverFlag ? "black" : "#009999"}} 
+              onMouseEnter={ () => setHoverFlag(true) }
+              onMouseLeave={ () => setHoverFlag(false) }
+              onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate("/localGuide/hikes/" + props.hike.id + "/linkstartend");
+              }}
+            />
+          </OverlayTrigger>
+
+          {/* LINK HUT TO HIKE - HOUSE */}
+          <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay = {<Tooltip> Link hut to hike</Tooltip>}>
+            <HouseDoorFill role="button" size="20px" className="ms-2" style={{
+              color: !isHoverHut ? "black" : "#009999"}} 
+              onMouseEnter={ () => setHoverHut(true) }
+              onMouseLeave={ () => setHoverHut(false) }onClick={e => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate("/localGuide/hikes/" + props.hike.id + "/linkhut");
+            }} />
+          </OverlayTrigger>
+
+          {/* OPEN/CLOSE DESCRIPTION */}
+          {!open ? (
+            <div className="d-flex flex-row-reverse">
+              < ChevronCompactDown role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
+                onClick={() => setOpen(!open)}
+                aria-controls="example-collapse-text"
+                aria-expanded={open} />
+            </div>)
+            :
+            (<div className="d-flex flex-row-reverse">
+              < ChevronCompactUp role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
+                onClick={() => setOpen(!open)}
+                aria-controls="example-collapse-text"
+                aria-expanded={open} />
+            </div>)}
+          <Collapse in={open}>
+            <div id="example-collapse-text">
+              <Card className="bg-light text-dark">
+                <Card.Body><strong>Description: </strong>{props.hike.description}</Card.Body>
+              </Card>
+            </div>
+          </Collapse>
+
+        </Card.Text>
       </Card.Body>
-  </Card>
-  </Col></>);
+    </Card>
+    </Col></>);
 }
 
 export default LocalGuideHikes;
