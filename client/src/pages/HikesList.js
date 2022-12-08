@@ -145,7 +145,7 @@ function HikesList(props) {
         <div className="d-flex flex-row-reverse">
           <Row className="mb-5 mt-3">
             <Col xs={12}>
-              <a href="#first-row" color='#009999'>{icon}</a>
+              <a href="#first-row" className='go-top-btn' color='#009999'>{icon}</a>
             </Col>
           </Row>
         </div>

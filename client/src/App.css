@@ -63,3 +63,16 @@
   height: 100%;
   line-height: 45px;
 }
+
+.go-top-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+}
+
+
+.custom-modal-body {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+}
