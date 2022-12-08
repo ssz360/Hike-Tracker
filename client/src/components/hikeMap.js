@@ -76,7 +76,7 @@ function HikeMap(props){
                 {bounds[0][0]===0?
                     <Spinner animation="grow" />
                 :
-                    <MapContainer bounds={bounds} style={{ height: "30vh", width: "auto" }} scrollWheelZoom={false} doubleClickZoom={false}>
+                    <MapContainer bounds={bounds} style={{ height: "35vh", width: "auto" }} scrollWheelZoom={false} doubleClickZoom={false}>
                         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
                         <Polyline pathOptions={opts} positions={coordinates} />
                     </MapContainer>
