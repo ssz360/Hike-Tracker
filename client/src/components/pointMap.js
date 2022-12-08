@@ -4,6 +4,7 @@ import { MapContainer, TileLayer,Marker, useMap, Polyline } from 'react-leaflet'
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
 import api from '../lib/api';
+import globalVariables from "../lib/globalVariables";
 
 function GetPointAndNewHikes(props){
     const map=useMap();
@@ -39,7 +40,7 @@ function PointMap(props){
                 <Modal.Header closeButton>Select the desired area</Modal.Header>
                 <Modal.Body>
                     <MapContainer whenReady={m=>m.target.locate({setView:true})} center={[0,0]} zoom={13} style={{ height: "50vh", minHeight: "100%" }} scrollWheelZoom={true}>
-                        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles}/>
                         <GetPointAndNewHikes setCoors={props.setCoord} setHikes={setHikes}/>
                         {props.coord!==undefined?
                             <Marker icon={myIcon} position={props.coord}/>

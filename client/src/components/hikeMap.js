@@ -6,6 +6,7 @@ import { Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import api from "../lib/api";
 import SelectedPoint from "./selectedPoint";
 import getMarkerForPoint from "../lib/markerPoint";
+import globalVariables from "../lib/globalVariables";
 
 function HikeMap(props) {
     const [bounds, setBounds] = useState([[0, 0], [0.1, 0.1]]);
@@ -41,7 +42,7 @@ function HikeMap(props) {
                                 <Row>
                                     <Col xs={12} md={8}>
                                         <MapContainer bounds={bounds} style={{ height: "60vh", width: "auto" }} scrollWheelZoom={true}>
-                                            <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                            <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles} />
                                             <Polyline pathOptions={opts} positions={coordinates} />
                                             {[...props.hike.referencePoints, ...props.hike.huts].filter(p => p.id !== props.hike.startPoint.id && p.id !== props.hike.endPoint.id).map(p => getMarkerForPoint(p, p.id === props.hike.startPoint.id, p.id === props.hike.endPoint.id, selectedPoint === p.id, true, selectedPoint, setSelectedPoint))}
                                             {getMarkerForPoint(props.hike.startPoint, true, false, selectedPoint === props.hike.startPoint.id, true, selectedPoint, setSelectedPoint)}
@@ -55,7 +56,7 @@ function HikeMap(props) {
                             </Container>
                             :
                             <MapContainer bounds={bounds} style={{ height: "60vh", width: "auto" }} scrollWheelZoom={true}>
-                                <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles} />
                                 <Polyline pathOptions={opts} positions={coordinates} />
                                 {[...props.hike.referencePoints, ...props.hike.huts].filter(p => p.id !== props.hike.startPoint.id && p.id !== props.hike.endPoint.id).map(p => getMarkerForPoint(p, p.id === props.hike.startPoint.id, p.id === props.hike.endPoint.id, selectedPoint === p.id, true, selectedPoint, setSelectedPoint))}
                                 {getMarkerForPoint(props.hike.startPoint, true, false, selectedPoint === props.hike.startPoint.id, true, selectedPoint, setSelectedPoint)}
@@ -81,7 +82,7 @@ function HikeMap(props) {
                     <Spinner animation="grow" />
                     :
                     <MapContainer bounds={bounds} style={{ height: "35vh", width: "auto" }} scrollWheelZoom={false} doubleClickZoom={false}>
-                        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles} />
                         <Polyline pathOptions={opts} positions={coordinates} />
                     </MapContainer>
                 }
