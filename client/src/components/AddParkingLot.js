@@ -85,10 +85,10 @@ function AddParkingLot({ setParkings }) {
     }
 
     
-    const setCoordinateAndGetAddress = (coordinate) => {
-        setCoord(coordinate);
-        services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setGeographicalArea(`${x.address.city}, ${x.address.county}, ${x.address.country}`.replace('undefined,','')));
-    }
+    // const setCoordinateAndGetAddress = (coordinate) => {
+    //     setCoord(coordinate);
+    //     services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setGeographicalArea(`${x.address.city}, ${x.address.county}, ${x.address.country}`.replace('undefined,','')));
+    // }
 
     return (<>
         <div style={{

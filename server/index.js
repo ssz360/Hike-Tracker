@@ -365,6 +365,31 @@ app.post('/api/preferences', isLoggedIn, async (req, res) => {
     }
 })
 
+// req.body: { user: { username: string }}
+// res.body: { hikeList: Array<Hike> }
+
+app.get("/api/hikes/byUserPreference", isLoggedIn, async (req, res) => {
+	try {
+		const userPref = await preferences.getUserPreferences(parseInt(req.user.username)).catch(err => {
+			throw err;
+		});
+		// console.log("userPref", userPref);
+		await hikesdao
+			.getHikesListWithFilters(undefined, userPref.length, undefined, userPref.time, undefined, userPref.ascent)
+			.then(
+				hikeList => {
+					// console.log("hikeList.length", hikeList.length);
+					return res.status(200).json(hikeList);
+				},
+				err => {
+					throw err;
+				}
+			);
+	} catch (err) {
+		res.status(err.status).json(err.message);
+	}
+});
+
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
 );
