@@ -23,7 +23,7 @@ function AddParkingLot({ setParkings }) {
         setName("");
         setDescription("");
         setTotalSlots("");
-        setCoord("");
+        setCoord();
         setGeographicalArea("");
     }
 
@@ -68,14 +68,15 @@ function AddParkingLot({ setParkings }) {
                 "coordinates": coord,
                 "geographicalArea": geographicalArea
             };
+            setWaiting(true);
             await api.addParking(pk);
+            setWaiting(false);
             setSuccess(true);
-            setError(false);
             setTimeout(() => setSuccess(false), 3000);
-            const pks = await api.getParkings();
-            setParkings(pks);
+            // const pks = await api.getParkings();
+            // setParkings(pks);
             resetFields();
-        } catch (error) {
+        } catch {
             setWaiting(false);
             setSuccess(false);
             setError(error);
@@ -103,58 +104,45 @@ function AddParkingLot({ setParkings }) {
                 </div>
                 <Row>
                     <div className="d-flex align-items-center justify-content-center not-found-container mt-4"
-                            style={{opacity: "90%"}}>
-        {openArea && <PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoord} coord={coord} />}
-        <Form className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: "40%" }}>
-            <FloatingLabel className="mb-3" controlId="floatingInput" label="Parking name">
-                <Form.Control type="text" value={name} onChange={ev => setName(ev.target.value)} placeholder="Name" />
-            </FloatingLabel>
-            <FloatingLabel className="mb-3" controlId="floatingTextarea" label="Parking description">
-                <Form.Control as="textarea" value={description} onChange={ev => setDescription(ev.target.value)} placeholder="Description" style={{ height: "120px" }} />
-            </FloatingLabel>
-            <FloatingLabel className="mb-3" controlId="floatingInput" label="Total slots">
-                <Form.Control type="number" data-test="total-cost" value={totalSlots} onChange={ev => setTotalSlots(ev.target.value)} min={0} placeholder="Total slots" />
-            </FloatingLabel>
-            <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical area">
-                <Form.Control type="text" data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} placeholder="Geographical Area" />
-            </FloatingLabel>
-          
-            {/* <FloatingLabel className="mb-3" controlId="floatingInput" label={"Position"}> */}
-                {/* <Form.Control type="button" value={<GeoFill>Position</GeoFill>} onClick={() => setOpenArea(true)} /> */}
-            {/* </FloatingLabel> */}
-            <Alert role="button" variant="light" style={{backgroundColor:"#FFFFFF", border:"1px solid #ced4da", color:"#000000"}} onClick={() => setOpenArea(true)}>
-                {/* <Button variant="l ight" syle={{backgroundColor:"#FFFFFF"}} fluid> */}
-                    <GeoFill className="me-3"/>
-                     Position
-            </Alert>
-            {/* <GeoFill role="button" className="me-3 " variant="outline-dark" onClick={() => setOpenArea(true)} size="20px">Select point</GeoFill> */}
-          
+                        style={{ opacity: "90%" }}>
+                        {openArea && <PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoord} coord={coord} />}
+                        <Form className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: "40%" }}>
+                            <FloatingLabel className="mb-3" controlId="floatingInput" label="Parking name">
+                                <Form.Control type="text" value={name} onChange={ev => setName(ev.target.value)} placeholder="Name" />
+                            </FloatingLabel>
+                            <FloatingLabel className="mb-3" controlId="floatingTextarea" label="Parking description">
+                                <Form.Control as="textarea" value={description} onChange={ev => setDescription(ev.target.value)} placeholder="Description" style={{ height: "120px" }} />
+                            </FloatingLabel>
+                            <FloatingLabel className="mb-3" controlId="floatingInput" label="Total slots">
+                                <Form.Control type="number" data-test="total-cost" value={totalSlots} onChange={ev => setTotalSlots(ev.target.value)} min={0} placeholder="Total slots" />
+                            </FloatingLabel>
+                            <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical area">
+                                <Form.Control type="text" data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} placeholder="Geographical Area" />
+                            </FloatingLabel>
+                            <Alert role="button" variant="light" style={{ backgroundColor: "#FFFFFF", border: "1px solid #ced4da", color: "#000000" }} onClick={() => setOpenArea(true)}>
+                                <GeoFill className="me-3" />
+                                Position
+                            </Alert>
 
 
-            {/* ERROR HANDLING */}
-            <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new parking"} successMessage={"New parking lot added correctly!"} />
-            {/* <Row className="mb-3">
-                    <Col>
-                        Total slots: <Form.Control type="number" data-test="total-cost" value={totalSlots} onChange={ev => setTotalSlots(ev.target.value)} />
-                    </Col>
-                    <Col>
-                        Geographical Area: <input type="text"  data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} />
-                    </Col>
-                    <Col>
-                        <Button variant="outline-dark" style={{ height: "58px" }} onClick={() => setOpenArea(true)}>Select point</Button>
-                    </Col>
-                </Row> */}
-            <div className="d-flex flex-row-reverse">
-                <Upload role="button" className="me-3" onClick={e => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            handleSubmit();
-                                        }} type="submit" size="20px" />
-                <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
-                <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/parking")}  size="20px" />
-            </div>
-        </Form>
-        </div>
+
+                            {/* ERROR HANDLING */}
+                            <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new parking"} successMessage={"New parking lot added correctly!"} />
+                            
+                            {/* ICONS */}
+                            <div className="d-flex flex-row-reverse">
+                                <Upload role="button" className="me-3" onClick={e => {
+                                    if (!waiting) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleSubmit();
+                                    }
+                                }} type="submit" size="20px" />
+                                <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
+                                <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/parking")} size="20px" />
+                            </div>
+                        </Form>
+                    </div>
                 </Row>
             </Container>
         </div>

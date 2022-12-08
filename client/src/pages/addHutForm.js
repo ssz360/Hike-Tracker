@@ -3,6 +3,7 @@ import { PointMap } from '../components';
 import { Upload, GeoFill, XCircle, ArrowLeft } from 'react-bootstrap-icons'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ServerReply from "../components/serverReply";
 
 function AddHutForm(props) {
     const [openArea, setOpenArea] = useState(false);
@@ -14,16 +15,28 @@ function AddHutForm(props) {
     const [message, setMessage] = useState("");
     const [err, setErr] = useState(false);
     const [done, setDone] = useState(false);
+    const [waiting, setWaiting] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (validateInfo(name, country, numGuests, numBeds, coord, setMessage)) {
-            props.newHut(name, country, numGuests, numBeds, coord);
-            setDone(true);
-        }
-        else {
-            setErr(true);
+        try {
+            if (validateInfo(name, country, numGuests, numBeds, coord, setMessage)) {
+                setWaiting(true);
+                props.newHut(name, country, numGuests, numBeds, coord);
+                setWaiting(false);
+                setDone(true);
+                setTimeout(() => setDone(false), 3000);
+                resetFields();
+            }
+            else {
+                setErr(message);
+            }
+        } catch {
+            setWaiting(false);
+            setDone(false);
+            setErr(err);
+            setTimeout(() => setErr(false), 3000);
         }
 
     }
@@ -33,10 +46,7 @@ function AddHutForm(props) {
         setCountry("");
         setNumGuests("");
         setNumBeds("");
-        setCoord("");
-        setMessage("");
-        setErr("");
-        setDone("");
+        setCoord();
     }
 
     return (<>
@@ -95,11 +105,9 @@ function AddHutForm(props) {
                                 Position
                             </Alert>
                             {/* ERROR HANDLING */}
-                            {err && <Alert variant="danger" onClose={() => setErr(false)} dismissible>{message}</Alert>}
+                            <ServerReply error={err} success={done} waiting={waiting} errorMessage={"Error while adding a new hut"} successMessage={"New hut added correctly!"} />
 
-                            {/* HUT SUCCESSFULLY ADDED */}
-                            {done && <Alert variant="success" onClose={() => setDone(false)} dismissible>Hut successfully added!</Alert>}
-
+                            
                             {/* BUTTONS */}
                             <div className="d-flex flex-row-reverse">
                                 <Upload role="button" className="me-3" onClick={(handleSubmit)} type="submit" size="20px" />
