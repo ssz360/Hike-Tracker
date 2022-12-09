@@ -7,6 +7,7 @@ import Hike from "../lib/hike";
 
 
 function LinkPointStartEnd(props){
+    console.log("IN LINKPOINTSTARTEND WITH",props.hike);
     const [selectedPoint,setSelectedPoint]=useState(-1);
     const [submit,setSubmit]=useState(false);
     const [bounds,setBounds]=useState([[0,0],[0.1,0.1]]);

@@ -44,3 +44,81 @@
     transform: rotate(360deg);
   }
 }
+
+.imggallerybody {
+  height: 100%;
+  width: 100%;
+  margin: 0rem;
+  overflow: hidden;
+}
+
+#imggallery {
+  display: flex;
+  gap: 4vmin;
+  transform: translate(25%,0%);
+}
+
+#imggallery > .cardimages > .image {
+  width: 14vmin;
+  height: 20vmin;
+  object-fit: cover;
+  object-position: center;
+}
+
+.addimage > .image {
+  width: 14vmin;
+  height: 20vmin;
+  object-fit: cover;
+  object-position: center;
+}
+
+
+.addimage:hover .image {
+  filter: brightness(50%);
+}
+
+.cardimages:hover .image {
+  filter: brightness(50%);
+}
+
+.cardimages:hover .cardimagesoverlay {
+  display: block;
+}
+
+.cardimagesoverlay {
+  position: absolute;
+  bottom: 0;
+  color: #f1f1f1;
+  width: 14vmin;
+  height: 20vmin;
+  transition: .5s ease;
+  display: none;
+  color: white;
+  font-size: 20px;
+  padding: 20px;
+  text-align: center;
+}
+
+.imageuploader {
+  position: absolute;
+  top:0;
+  left:0;
+  color: #f1f1f1;
+  width: 14vmin;
+  height: 20vmin;
+  opacity: 0;
+  transition: .5s ease;
+  color: white;
+}
+
+.cardoverlayimageremove {
+  width: 100%
+}
+
+.cardoverlayimageremove > .bi {
+  fill: red;
+}
+
+.cardoverlayimageremove:hover > .bi{
+  fill: white;
+}

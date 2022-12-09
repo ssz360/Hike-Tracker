@@ -5,10 +5,20 @@ const hikes = require('./services/hikes');
 const parkings = require('./dao/parkings');
 const multer = require('multer');
 const huts = require('./dao/huts');
+const uuid = require('uuid');
+const path = require('path');
 const app = express();
 const port = 3001;
 const upload = multer();
-
+const storageEngine = multer.diskStorage({
+    destination: "./public/images",
+    filename: (req, file, cb) => {
+    cb(null, uuid.v4()+path.extname(file.originalname) );
+    },
+});
+const uploadImages=multer({
+    storage: storageEngine,
+});
 // AUTHENTICATION CONTROL
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -115,10 +125,10 @@ app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
     }
 })
 
-app.post('/api/newHike', isLoggedIn, upload.single('file'), async (req, res) => {
+app.post('/api/newHike', upload.single('file'), async (req, res) => {
     try {
         console.log("In new HIKE",req.body);
-        await hikes.newHike(req.body["name"], req.user, req.body["description"], req.body["difficulty"], req.file.buffer.toString());
+        //await hikes.newHike(req.body["name"], req.user, req.body["description"], req.body["difficulty"], req.file.buffer.toString());
         return res.status(201).end();
     } catch (error) {
         //console.log("Error in index new hike",error);
@@ -332,6 +342,31 @@ app.post('/api/hikesinbounds',isLoggedIn,async (req,res)=>{
         res.status(error.status).json(error.message)
     }
 })
+
+app.post('/api/hikes/:hikeId/referencePoint',uploadImages.array('images'),async (req,res)=>{
+    try {
+        console.log("IN REFERENCE POINT WITH",req.body, "AND FILES",req.files);
+        const pointId=await points.insertPoint(req.body.name,req.body.latitude,req.body.longitude,"ITALY","referencePoint");
+        await points.linkPointToHike(parseInt(req.params.hikeId),pointId);
+        for(const i of req.files){
+            await points.insertImageForPoint(pointId,i);
+        }
+        return res.status(201).json();
+    } catch (error) {
+        res.status(error.status).json(error.message);
+    }
+})
+
+app.get('/api/point/:pointId/images',async (req,res)=>{
+    try {
+        const ret=await points.getImages(parseInt(req.params.pointId));
+        return res.status(200).json(ret);
+    } catch (error) {
+        res.status(error.status).json(error.message);
+    }
+})
+
+app.use(express.static('public'));
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
