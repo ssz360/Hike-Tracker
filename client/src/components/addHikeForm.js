@@ -47,7 +47,7 @@ function AddHikeForm(props) {
                 minHeight: "100%"
 
             }}>
-                <Container fluid className="mt-5">
+                <Container fluid >
                     <div className="d-flex align-items-center justify-content-center text-center not-found-container">
                         <h3 className="mt-3"
                             style={{

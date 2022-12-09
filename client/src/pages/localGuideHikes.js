@@ -10,13 +10,13 @@ function LocalGuideHikes(props) {
   const navigate = useNavigate();
   return (
     <>
-      <Container fluid className="mt-5" style={{ width: "85%" }} >
+      <Container fluid style={{ width: "85%" }} >
       <br></br>
       <Row id="top" className="mt-3" >
         <div className="d-grid gap-2">
             <Button className="rounded-pill" style={
               {
-                width: "15%",
+                width: "fit-content",
                 height: "45px",
                 borderColor: "white",
                 backgroundColor: !isHover ? '#006666' : '#009999'

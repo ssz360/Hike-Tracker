@@ -1,9 +1,9 @@
-import { Container, Row, Col, Form, FloatingLabel, Button, Card } from 'react-bootstrap';
-import { PointMap } from '../components';
+import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-
-import { useState } from 'react';
-import { Search, PlusLg } from 'react-bootstrap-icons'
+import { useState, useEffect } from 'react';
+import { Search, PlusLg } from 'react-bootstrap-icons';
+import { PlusCircle, XLg } from 'react-bootstrap-icons';
+import api from '../lib/api';
 
 function Hut(props) {
 
@@ -11,10 +11,19 @@ function Hut(props) {
   const [filterCountry, setFilterCountry] = useState(null);
   const [filterGuests, setFilterGuests] = useState(null);
   const [filterBeds, setFilterBeds] = useState(null);
-  const navigate = useNavigate();
+  const [isHover, setIsHover] = useState(false);
+  const [searchHover, setSearchHover] = useState(false);
+  const [clearHover, setClearHover] = useState(false);
 
-  let displayedHuts = [];
-  props.huts.forEach(hut => displayedHuts.push(hut));
+  useEffect(() => {
+    const getHuts = async () => {
+        const huts = await api.getHutsListWithFilters(null, null, null, null, null, null);
+        props.setHuts(huts);
+    }
+    if (filterName==null && filterCountry==null && filterGuests==null && filterBeds==null) {getHuts(); console.log(props.user)};
+  }, []);
+
+  const navigate = useNavigate();
 
   const filterHutSubmit = (event) => {
     event.preventDefault();
@@ -22,101 +31,137 @@ function Hut(props) {
       filterCountry !== '' ? filterCountry : null,
       filterGuests !== '' ? filterGuests : null,
       filterBeds !== '' ? filterBeds : null);
-
   }
 
-  return (<><Container className="mt-5" fluid style={{ height: "100vh" }}>
-    <Row id="first-row" style={{ height: "100vh" }}>
-      <Col sm={2} className="mr-3" style={{ height: "100vh", backgroundColor: "#e0e3e5" }}>
+  const resetFields = () => {
+    setFilterName(null);
+    setFilterCountry(null);
+    setFilterGuests(null);
+    setFilterBeds(null);
+    setIsHover(false);
+    setSearchHover(false);
+    setClearHover(false);
+  }
 
-        {/***** Name filter *****/}
-        <div className="mt-4">
-          <div className="d-grid gap-2">
-            <Form>
-              <Form.Group className="mb-3" controlId="InputName">
-                <Form.Label><strong>Name</strong></Form.Label>
-                <Form.Control type="text" placeholder="Name" onChange={(event) => setFilterName(event.target.value)} />
-              </Form.Group>
-            </Form>
+  return (<>
+    <Container fluid style={{ height: "93vh" }}>
+
+      <Row id="first-row" fluid style={{ height: "93vh" }}>
+        <Col sm={2} style={{ height: "93vh", backgroundColor: "#e0e3e5" }}>
+
+          {/***** Name filter *****/}
+          <div className="mt-4">
+            <div className="d-grid gap-2">
+              <Form>
+                <Form.Group className="mb-3" controlId="InputName">
+                  <Form.Label><strong>Name</strong></Form.Label>
+                  <Form.Control type="text" placeholder="Name" onChange={(event) => setFilterName(event.target.value)} />
+                </Form.Group>
+              </Form>
+            </div>
           </div>
-        </div>
 
-        {/***** Country filter *****/}
-        <div className="mt-2">
-          <div className="d-grid gap-2">
-            <Form>
-              <Form.Group className="mb-3" controlId="InputCountry">
-                <Form.Label><strong>Country</strong></Form.Label>
-                <Form.Control type="text" placeholder="Country" onChange={(event) => setFilterCountry(event.target.value)} />
-              </Form.Group>
-            </Form>
+          {/***** Country filter *****/}
+          <div className="mt-2">
+            <div className="d-grid gap-2">
+              <Form>
+                <Form.Group className="mb-3" controlId="InputCountry">
+                  <Form.Label><strong>Country</strong></Form.Label>
+                  <Form.Control type="text" placeholder="Country" onChange={(event) => setFilterCountry(event.target.value)} />
+                </Form.Group>
+              </Form>
+            </div>
           </div>
-        </div>
 
-        {/***** N° of guest filter *****/}
-        <div className="mt-2">
-          <div className="d-grid gap-2">
-            <Form>
-              <Form.Group className="mb-3" controlId="InputGuests">
-                <Form.Label><strong>N° of guest</strong></Form.Label>
-                <Form.Control type="number" min={0} step={1} onChange={(event) => setFilterGuests(event.target.value)} />
-              </Form.Group>
-            </Form>
+          {/***** N° of guest filter *****/}
+          <div className="mt-2">
+            <div className="d-grid gap-2">
+              <Form>
+                <Form.Group className="mb-3" controlId="InputGuests">
+                  <Form.Label><strong>N° of guest</strong></Form.Label>
+                  <Form.Control type="number" min={0} step={1} onChange={(event) => setFilterGuests(event.target.value)} />
+                </Form.Group>
+              </Form>
+            </div>
           </div>
-        </div>
 
-        {/***** N° of bedrooms filter *****/}
-        <div className="mt-2">
-          <div className="d-grid gap-2">
-            <Form>
-              <Form.Group className="mb-3" controlId="InputBeds">
-                <Form.Label><strong>N° of bedrooms</strong></Form.Label>
-                <Form.Control type="number" min={0} step={1} onChange={(event) => setFilterBeds(event.target.value)} />
-              </Form.Group>
-            </Form>
+          {/***** N° of bedrooms filter *****/}
+          <div className="mt-2">
+            <div className="d-grid gap-2">
+              <Form>
+                <Form.Group className="mb-3" controlId="InputBeds">
+                  <Form.Label><strong>N° of bedrooms</strong></Form.Label>
+                  <Form.Control type="number" min={0} step={1} onChange={(event) => setFilterBeds(event.target.value)} />
+                </Form.Group>
+              </Form>
+            </div>
           </div>
-        </div>
 
-        {/***** Submit button *****/}
-        <div className="mt-2">
-          <div className="d-grid gap-2">
-            <Form>
-              <div className="d-grid gap-2">
-                <Col md={{ span: 3, offset: 10 }}>
-                  <Search className="mt-2" onClick={(filterHutSubmit)} type='submit' size={"20px"} />
-                </Col>
-              </div>
-            </Form>
-          </div>
-        </div>
+          {/***** Submit button *****/}
+            <Row>
+            <div className="mt-3">
+              <Form>
+                <div className="d-grid gap-2">
+                  <Button className="rounded-pill mt-4" onClick={(filterHutSubmit)} type='submit'
+                    style={{
+                      backgroundColor: !searchHover ? '#006666' : '#009999',
+                      borderColor: '#e0e3e5',
+                      height: '70%',
+                      // width: '80%'
+                    }}
+                    onMouseEnter={() => setSearchHover(true)}
+                    onMouseLeave={() => setSearchHover(false)}><strong>Search</strong> <Search className='mb-1' size={"18px"} />
+                  </Button>
+                </div>
+              </Form>
+            </div>
+          </Row>
 
-      {/***** Add new hut button *****/}
-      {props.user.type === "localGuide" &&
-      <div className="mt-2">
-          <div className="d-grid gap-2">
-            <Form>
-              <div className="d-grid gap-2">
-                <Col md={{ span: 3, offset: 10 }}>
-                  <PlusLg className="mt-2" role='button' size={"25px"} onClick={(() => navigate("/localGuide/newHut"))} />
-                </Col>
-              </div>
-            </Form>
-          </div>
-        </div>
-      }
+          {/* Clear filters  */}
+          <Row>
+              <Form>
+                <div className="d-grid gap-2">
+                    <Button className='rounded-pill mt-4'
+                      // onClick={() => window.location.reload(false)}
+                      onClick={() => resetFields()}
+                      style={{
+                        backgroundColor: !clearHover ? '#800000' : '#cc0000',
+                        borderColor: '#e0e3e5',
+                        height: '70%',
+                      }}
+                      onMouseEnter={() => setClearHover(true)}
+                      onMouseLeave={() => setClearHover(false)}><strong>Clear filters</strong> <XLg className='mb-1' size={'18px'} /></Button>
+                </div>
+              </Form>
+          </Row>
 
+        </Col>
+        <Col sm={10} className="mt-4" style={{ overflowY: 'scroll', height: '93vh' }}>
+          {/* {console.log(props.user)} */}
+          {1 == 1 ? <Row className="mt-3">
+            <div className="d-grid gap-2">
+              <Button className="rounded-pill" style={
+                {
+                  width: "fit-content",
+                  // width: "20%",
+                  // display: "inline-block",
+                  height: "45px",
+                  borderColor: "white",
+                  backgroundColor: !isHover ? '#006666' : '#009999'
+                }
+              }
+                onMouseEnter={() => setIsHover(true)}
+                onMouseLeave={() => setIsHover(false)}
+                onClick={() => navigate("/localGuide/newHut")}><strong><PlusCircle size={"20px"} className="mb-1" /> Add new hut</strong> </Button>
+            </div>
+          </Row> : <Row className="mt-3"/>}
+          <Row>
+            {<DisplayHut displayedHuts={props.huts} />}
+          </Row>
+        </Col>
 
-      </Col>
-      <Col sm={9} className="mx-2">
-        <Row>
-          {
-            <DisplayHut displayedHuts={displayedHuts} />
-          }
-        </Row>
-      </Col>
-
-    </Row>
-  </Container></>)
+      </Row>
+    </Container></>)
 }
 
 function DisplayHut(props) {

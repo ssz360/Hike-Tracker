@@ -31,6 +31,7 @@ function AddHutForm(props) {
             }
             else {
                 setErr(message);
+                setTimeout(() => setErr(false), 3000);
             }
         } catch {
             setWaiting(false);
@@ -56,7 +57,7 @@ function AddHutForm(props) {
             backgroundSize: 'cover',
             minHeight: "100%"
         }}>
-            <Container fluid className="mt-5">
+            <Container fluid >
                 <div className="d-flex align-items-center justify-content-center text-center not-found-container">
                     <h3 className="mt-3"
                         style={{
@@ -100,7 +101,6 @@ function AddHutForm(props) {
                                 <Form.Control type="number" min={0} placeholder="NumOfRooms" value={numBeds} onClick={() => setErr(false)} onChange={(event) => setNumBeds(event.target.value)} />
                             </FloatingLabel>
                             <Alert role="button" variant="light" style={{ backgroundColor: "#FFFFFF", border: "1px solid #ced4da", color: "#000000" }} onClick={() => setOpenArea(true)}>
-                                {/* <Button variant="l ight" syle={{backgroundColor:"#FFFFFF"}} fluid> */}
                                 <GeoFill className="me-3" />
                                 Position
                             </Alert>
