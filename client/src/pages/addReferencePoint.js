@@ -6,13 +6,11 @@ import { Button, Card, Col, Collapse, Container, Figure, Form, FormGroup, Image,
 import { useState,useEffect } from "react";
 import icons from "../lib/iconspoint";
 import api from '../lib/api';
-import ImageGallery from 'react-image-gallery';
 import getColor from '../lib/hikeColor';
 import Gallery from "../components/gallery";
 import { getDistance } from "geolib";
 import ServerReply from "../components/serverReply";
 import getMarkerForPoint from "../lib/markerPoint";
-const fileTypes = ["JPG", "PNG", "GIF"];
 
 
 function AddReferencePointMap(props){
@@ -125,7 +123,7 @@ function ReferencePoint(props){
             <div className="my-3 text-center">
                 <strong>{props.point.name}</strong>
             </div>
-            {props.waiting || props.imagesUrls.length==0?
+            {props.waiting?
                 <div className="my-3 text-center">
                     <Spinner animation="grow"/>
                 </div>
