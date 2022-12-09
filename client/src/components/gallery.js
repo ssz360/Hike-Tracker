@@ -4,8 +4,7 @@ import { Button, Container, Row ,Col} from "react-bootstrap";
 import RangeSlider from 'react-bootstrap-range-slider';
 
 function Gallery(props){
-    const [translate,setTranslate]=useState(25);
-
+    const [scrollPercentage,setScrollPercentage]=useState(0);
     const addFile = file => {
         //console.log("Files",files,"files.len",files.length);
         props.setImages([...props.images,file]);
@@ -28,18 +27,6 @@ function Gallery(props){
         });
         props.setImagesUrls([...arr]);
     }
-    const scrollEnd=()=>{
-        if(translate>(-125)){
-            setTranslate(translate-2);
-            setTimeout(()=>scrollEnd(),50);
-        }
-    }
-    const scrollStart=()=>{
-        if(translate<25){
-            setTranslate(translate+2);
-            setTimeout(()=>scrollStart(),50);
-        }
-    }
     const imageUpload=f=>{
         addFile(f.target.files[0]);
     }
@@ -47,12 +34,12 @@ function Gallery(props){
         <Container>
             <Row>
                 <Col xs={props.addImage?8:12}>
-        <div className="imggallerybody">
+        <div className="imggallerybody" onScroll={e=>setScrollPercentage((e.target.scrollLeft/e.target.scrollWidth)*100)}>
             <div id="imggallery">
                     {
                     props.imagesUrls.map(i=>
                     <div className="cardimages">
-                        <img src={i.url} className="image" draggable="false"/>
+                        <img src={i.url} style={{objectPosition:""+scrollPercentage+"% center"}} className="image" draggable="false"/>
                         {props.preview?
                             <div className="cardimagesoverlay">
                             <Button onClick={e=>{

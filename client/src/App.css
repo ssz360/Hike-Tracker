@@ -52,7 +52,9 @@
   overflow: hidden;
   -ms-overflow-style: none; /* for Internet Explorer, Edge */
   scrollbar-width: none; /* for Firefox */
-  overflow-x: scroll; 
+  overflow-x: scroll;
+  scroll-snap-align: center;
+  scroll-behavior: smooth;
 }
 
 .imggallerybody::-webkit-scrollbar {
@@ -89,6 +91,7 @@
 
 .cardimages:hover .cardimagesoverlay {
   display: block;
+  box-shadow: 0 0 1rem red;
 }
 
 .cardimages {
