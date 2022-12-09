@@ -136,9 +136,10 @@ function Hut(props) {
           </Row>
 
         </Col>
-        <Col sm={10} className="mt-4" style={{ overflowY: 'scroll', height: '93vh' }}>
+        <Col sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
+          {/* BUTTON */}
           {/* {console.log(props.user)} */}
-          {1 == 1 ? <Row className="mt-3">
+          {/* {1 == 1 ? <Row className="mt-3">
             <div className="d-grid gap-2">
               <Button className="rounded-pill" style={
                 {
@@ -154,7 +155,7 @@ function Hut(props) {
                 onMouseLeave={() => setIsHover(false)}
                 onClick={() => navigate("/localGuide/newHut")}><strong><PlusCircle size={"20px"} className="mb-1" /> Add new hut</strong> </Button>
             </div>
-          </Row> : <Row className="mt-3"/>}
+          </Row> : <Row className="mt-3"/>} */}
           <Row>
             {<DisplayHut displayedHuts={props.huts} />}
           </Row>

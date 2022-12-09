@@ -26,13 +26,28 @@ function Header(props) {
             </Navbar.Brand>
                 <Nav>
                     {props.user.type === "localGuide" && <>
-                        <Nav.Link as={Link} to="/localGuide/hikes" style={path==="/localGuide/hikes" ? {"fontWeight":"bold"} : null}>My hikes</Nav.Link>
-                        <Nav.Link as={Link} to="/localGuide/parking" style={path==="/localGuide/parking" ? {"fontWeight":"bold"} : null}>Parking</Nav.Link>
+                        <NavDropdown title={<>Hikes</>} className="px-4" style={path==="/localGuide/hikes" || path==="/hikes" || path === "/localGuide/newHike"? {"fontWeight":"bold"} : null}>
+                                    <NavDropdown.Item as={Link} to="/hikes">All hikes</NavDropdown.Item>
+                                    <NavDropdown.Divider />
+                                    <NavDropdown.Item as={Link} to="/localGuide/hikes">My hikes</NavDropdown.Item>
+                                    <NavDropdown.Divider />
+                                    <NavDropdown.Item as={Link} to="/localGuide/newHike">Add new hike</NavDropdown.Item>
+                        </NavDropdown>
+                        <NavDropdown title={<>Parkings</>} className="px-4" style={path==="/localGuide/parking" || path==="/localGuide/newParking" ? {"fontWeight":"bold"} : null}>
+                                    <NavDropdown.Item as={Link} to="/localGuide/parking">All parking lots</NavDropdown.Item>
+                                    <NavDropdown.Divider />
+                                    <NavDropdown.Item as={Link} to="/localGuide/newParking">Add new parking lot</NavDropdown.Item>
+                        </NavDropdown>
+                        <NavDropdown title={<>Huts</>} className="px-4" style={path==="/hut" || path==="/localGuide/newHut" ? {"fontWeight":"bold"} : null}>
+                                    <NavDropdown.Item as={Link} to="/hut" onClick={() => props.setDirty(true)}>All huts</NavDropdown.Item>
+                                    <NavDropdown.Divider />
+                                    <NavDropdown.Item as={Link} to="/localGuide/newHut">Add new hut</NavDropdown.Item>
+                        </NavDropdown>
+                    {/* <Nav.Link as={Link} to="/hut" style={path==="/hut" ? {"fontWeight":"bold"} : null} onClick={() => props.setDirty(true)}>Huts</Nav.Link> */}
                     </>}
-                    <Nav.Link as={Link} to="/hut" style={path==="/hut" ? {"fontWeight":"bold"} : null} onClick={() => props.setDirty(true)}>Huts</Nav.Link>
                 </Nav>
                 <Nav className="ms-auto">
-                    <NavDropdown title={<>Hi, {"username! "} {iconProfile}</>} className="px-4" align="end">
+                <NavDropdown title={<>Hi, {"username! "} {iconProfile}</>} className="px-4" align="end">
                         <NavDropdown.Item as={Link} to="/profile/dashboard">Profile</NavDropdown.Item>
                         <NavDropdown.Divider/>
                         <NavDropdown.Item as={Link} to="/" onClick={async e => {

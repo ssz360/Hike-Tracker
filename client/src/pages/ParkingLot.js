@@ -63,9 +63,9 @@ function ParkingLot() {
     }, []);
 
     return (<>
-        <Container fluid style={{ width: "85%", height: "93vh" }} >
-            <br></br>
-            <Row className="mt-3">
+        <Container fluid style={{ width: "85%", height: "93vh"}} >
+            {/* <br></br>
+            <Row className="mt-3" fluid>
                 <div className="d-grid gap-2 ">
                     <Button className="rounded-pill" style={
                         {
@@ -79,10 +79,10 @@ function ParkingLot() {
                         onMouseLeave={() => setIsHover(false)}
                         onClick={() => navigate("/localGuide/newParking")}><strong><PlusCircle size={"20px"} className="mb-1" /> Add new parking lot</strong> </Button>
                 </div>
-            </Row>
+            </Row> */}
 
 
-            <Row>
+            <Row fluid style={{overflowY:'scroll', height: '93vh'}}>
                 {parkings.map((p, i) => (<ParkingLotRow p={p} i={i} key={i} />))}
             </Row>
         </Container>
