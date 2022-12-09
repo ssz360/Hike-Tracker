@@ -48,9 +48,7 @@ function Gallery(props){
             <Row>
                 <Col xs={props.addImage?8:12}>
         <div className="imggallerybody">
-            <div id="imggallery" style={{transform:"translate("+translate+"%,0%)"}} onMouseMove={e=>{
-                    if(props.imagesUrls.length>1 && translate-e.movementX<25 && translate-e.movementX>(-125))    setTranslate(translate-e.movementX);
-                }}>
+            <div id="imggallery">
                     {
                     props.imagesUrls.map(i=>
                     <div className="cardimages">
@@ -73,17 +71,6 @@ function Gallery(props){
                     </div>)}
                 </div>
             </div>
-            {props.imagesUrls.length>0?
-                <RangeSlider
-                    variant="info"
-                    size="sm"
-                    value={-translate+25}
-                    onChange={changeEvent => setTranslate(-changeEvent.target.value+25)}
-                    min={0} max={150}
-                />
-                :
-                <></>
-            }
             </Col>
             {props.addImage?
             <Col xs={4}>
