@@ -1,5 +1,6 @@
 import { Row, Col, Form, FloatingLabel, Button, Alert, Container } from 'react-bootstrap';
 import { PointMap } from '../components';
+import services from '../lib/services';
 import { Upload, GeoFill, XCircle, ArrowLeft } from 'react-bootstrap-icons'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +18,7 @@ function AddHutForm(props) {
     const [done, setDone] = useState(false);
     const [waiting, setWaiting] = useState(false);
     const navigate = useNavigate();
-
+    
     const handleSubmit = (event) => {
         event.preventDefault();
         try {

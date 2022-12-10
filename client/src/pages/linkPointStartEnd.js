@@ -7,6 +7,7 @@ import Hike from "../lib/hike";
 
 
 function LinkPointStartEnd(props){
+    console.log("IN LINKPOINTSTARTEND WITH",props.hike);
     const [selectedPoint,setSelectedPoint]=useState(-1);
     const [submit,setSubmit]=useState(false);
     const [bounds,setBounds]=useState([[0,0],[0.1,0.1]]);
@@ -37,7 +38,7 @@ function LinkPointStartEnd(props){
             console.log("Linkable start points",linkableStartPoints);
             console.log("Linkable end points",linkableEndPoints);
             setLinkableStartPoints([...linkableStartPoints]);
-                setLinkableEndPoints([...linkableEndPoints]);
+            setLinkableEndPoints([...linkableEndPoints]);
         } catch (error) {
             console.log("Error in linkpoint",error);
         }

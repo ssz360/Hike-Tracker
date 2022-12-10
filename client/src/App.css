@@ -44,3 +44,93 @@
     transform: rotate(360deg);
   }
 }
+
+.imggallerybody {
+  height: 100%;
+  width: 100%;
+  margin: 0rem;
+  overflow: hidden;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-x: scroll;
+  scroll-snap-align: center;
+  scroll-behavior: smooth;
+}
+
+.imggallerybody::-webkit-scrollbar {
+  width: 0 !important;
+}
+
+#imggallery {
+  display: flex;
+  gap: 4vmin;
+}
+
+#imggallery > .cardimages > .image {
+  width: 14vmin;
+  height: 20vmin;
+  object-fit: cover;
+  object-position: center;
+}
+
+.addimage > .image {
+  width: 14vmin;
+  height: 20vmin;
+  object-fit: cover;
+  object-position: center;
+}
+
+
+.addimage:hover .image {
+  filter: brightness(50%);
+}
+
+.cardimages:hover .image {
+  filter: brightness(50%);
+}
+
+.cardimages:hover .cardimagesoverlay {
+  display: block;
+  box-shadow: 0 0 1rem red;
+}
+
+.cardimages {
+  position: relative;
+}
+
+.cardimages .cardimagesoverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #f1f1f1;
+  width: 100%;
+  height: 100%;
+  transition: .5s ease;
+  display: none;
+  color: white;
+  text-align: center;
+}
+
+.imageuploader {
+  position: absolute;
+  top:0;
+  left:0;
+  color: #f1f1f1;
+  width: 14vmin;
+  height: 20vmin;
+  opacity: 0;
+  transition: .5s ease;
+  color: white;
+}
+
+.cardoverlayimageremove {
+  width: 100%
+}
+
+.cardoverlayimageremove > .bi {
+  fill: red;
+}
+
+.cardoverlayimageremove:hover > .bi{
+  fill: white;
+}

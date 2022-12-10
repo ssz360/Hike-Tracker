@@ -27,7 +27,7 @@ getHutsListWithFilters = async (name, country, numberOfGuests, numberOfBedrooms,
     
     const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint AND UPPER(P.Name) LIKE UPPER(?) AND UPPER(Country) LIKE UPPER(?) AND UPPER(TypeOfPoint) = UPPER(?) AND NumberOfGuests LIKE ? AND NumberOfBedrooms LIKE ? AND UPPER(GeographicalArea) LIKE UPPER(?)'
 
-    db.all(sql, [thisName, thisCountry, "Hut", thisNumberOfGuests, thisNumberOfBedrooms, thisGeographicalArea], (err, row) => {
+    db.all(sql, [thisName, thisCountry, "hut", thisNumberOfGuests, thisNumberOfBedrooms, thisGeographicalArea], (err, row) => {
         if (err) {
             reject(err);
             return;
@@ -46,7 +46,7 @@ function insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate) 
             return;
         }
 
-        insertPoint(name, coordinate[0],coordinate[1], country, "Hut").then(pointId => {
+        insertPoint(name, coordinate[0],coordinate[1], country, "hut").then(pointId => {
 
             let query = `INSERT INTO HUTS (Country ,NumberOfGuests,NumberOfBedrooms,IDPoint) VALUES(?,?,?,?);`;
             

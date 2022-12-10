@@ -3,6 +3,7 @@ import { Row, Col, Form, FloatingLabel, Alert, InputGroup, Container, Button } f
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { PointMap } from '../components';
+import services from '../lib/services';
 import { GeoFill, Upload, XCircle, ArrowLeft } from 'react-bootstrap-icons'
 import ServerReply from "./serverReply";
 
@@ -82,6 +83,12 @@ function AddParkingLot({ setParkings }) {
             setError(error);
             setTimeout(() => setError(false), 3000);
         }
+    }
+
+    
+    const setCoordinateAndGetAddress = (coordinate) => {
+        setCoord(coordinate);
+        services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setGeographicalArea(`${x.address.city}, ${x.address.county}, ${x.address.country}`.replace('undefined,','')));
     }
 
     return (<>

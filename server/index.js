@@ -5,10 +5,20 @@ const hikes = require('./services/hikes');
 const parkings = require('./dao/parkings');
 const multer = require('multer');
 const huts = require('./dao/huts');
+const uuid = require('uuid');
+const path = require('path');
 const app = express();
 const port = 3001;
 const upload = multer();
-
+const storageEngine = multer.diskStorage({
+    destination: "./public/images",
+    filename: (req, file, cb) => {
+    cb(null, uuid.v4()+path.extname(file.originalname) );
+    },
+});
+const uploadImages=multer({
+    storage: storageEngine,
+});
 // AUTHENTICATION CONTROL
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -115,10 +125,10 @@ app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
     }
 })
 
-app.post('/api/newHike', isLoggedIn, upload.single('file'), async (req, res) => {
+app.post('/api/newHike', upload.single('file'), async (req, res) => {
     try {
         console.log("In new HIKE",req.body);
-        await hikes.newHike(req.body["name"], req.user, req.body["description"], req.body["difficulty"], req.file.buffer.toString());
+        //await hikes.newHike(req.body["name"], req.user, req.body["description"], req.body["difficulty"], req.file.buffer.toString());
         return res.status(201).end();
     } catch (error) {
         //console.log("Error in index new hike",error);
@@ -256,12 +266,12 @@ app.post('/api/updateStartEndPoint', isLoggedIn,async (req, res) => {
 
 app.post('/api/pointsInBounds',isLoggedIn, async(req,res)=>{
     try {
-        console.log("In get points in bounds with ",req.body);
+        //console.log("In get points in bounds with ",req.body);
         const ret=await points.getPointsInBounds(req.body.bounds[1][0],req.body.bounds[0][0],
             req.body.bounds[1][1],req.body.bounds[0][1],
             req.body.startPointCoordinates[0],req.body.startPointCoordinates[1],
             req.body.endPointCoordinates[0],req.body.endPointCoordinates[1]);
-        console.log("Returning",ret);
+        //console.log("Returning",ret);
         res.status(201).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message)
@@ -299,7 +309,7 @@ app.delete('/api/hikes/linkHut', isLoggedIn, async(req,res)=>{
 
 app.get('/api/hikes/:hikeId/linkableStartPoints',isLoggedIn,async(req,res)=>{
     try {
-        console.log("In get points in bounds with ",req.body);
+        console.log("In get points linkable as starting ones with ",req.params.hikeId);
         const hike=await hikesdao.getHike(parseInt(req.params.hikeId));
         const ret=await points.linkableStartPoints(hike.startPoint.coordinates[0],hike.startPoint.coordinates[1],hike.startPoint.id,hike.endPoint.id);
         console.log("Returning",ret);
@@ -311,7 +321,7 @@ app.get('/api/hikes/:hikeId/linkableStartPoints',isLoggedIn,async(req,res)=>{
 
 app.get('/api/hikes/:hikeId/linkableEndPoints',isLoggedIn,async(req,res)=>{
     try {
-        console.log("In get points in bounds with ",req.body);
+        console.log("In get points linkable as end ones with ",req.params.hikeId);
         const hike=await hikesdao.getHike(parseInt(req.params.hikeId));
         const ret=await points.linkableEndPoints(hike.endPoint.coordinates[0],hike.endPoint.coordinates[1],hike.startPoint.id,hike.endPoint.id);
         console.log("Returning",ret);
@@ -324,14 +334,39 @@ app.get('/api/hikes/:hikeId/linkableEndPoints',isLoggedIn,async(req,res)=>{
 
 app.post('/api/hikesinbounds',isLoggedIn,async (req,res)=>{
     try {
-        console.log("In get points in bounds with ",req.body);
+        console.log("In get  hikes   in bounds");
         const ret=await hikesdao.hikesInBounds(req.body.bounds[0][0],req.body.bounds[0][1],req.body.bounds[1][0],req.body.bounds[1][1]);
-        console.log("Returning",ret);
+        console.log("Returning",ret.length);
         res.status(201).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message)
     }
 })
+
+app.post('/api/hikes/:hikeId/referencePoint',uploadImages.array('images'),async (req,res)=>{
+    try {
+        console.log("IN REFERENCE POINT WITH",req.body, "AND FILES",req.files);
+        const pointId=await points.insertPoint(req.body.name,req.body.latitude,req.body.longitude,"ITALY","referencePoint");
+        await points.linkPointToHike(parseInt(req.params.hikeId),pointId);
+        for(const i of req.files){
+            await points.insertImageForPoint(pointId,i);
+        }
+        return res.status(201).json();
+    } catch (error) {
+        res.status(error.status).json(error.message);
+    }
+})
+
+app.get('/api/point/:pointId/images',async (req,res)=>{
+    try {
+        const ret=await points.getImages(parseInt(req.params.pointId));
+        return res.status(200).json(ret);
+    } catch (error) {
+        res.status(error.status).json(error.message);
+    }
+})
+
+app.use(express.static('public'));
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
