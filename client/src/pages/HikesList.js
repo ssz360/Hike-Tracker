@@ -77,7 +77,7 @@ function HikesList(props) {
                 delay={{ show: 250, hide: 400 }}
                 overlay={<Tooltip> Your preferences</Tooltip>}
               >
-                <BookmarkHeartFill oclassName="ml-4" role="button" size={"20px"} />
+                <BookmarkHeartFill className="ml-4" role="button" size={"20px"} />
               </OverlayTrigger>
             </div>
           </div>
