@@ -3,7 +3,7 @@ import { Alert, Button, Container, Form, Spinner, Row, FloatingLabel, Col } from
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import ServerReply from "./serverReply";
-import {Upload, XCircle, ArrowLeft} from 'react-bootstrap-icons'
+import {CheckCircle, XCircle, ArrowLeft} from 'react-bootstrap-icons'
 function AddHikeForm(props) {
     const [error, setError] = useState();
     const [success, setSuccess] = useState(false);
@@ -94,7 +94,7 @@ function AddHikeForm(props) {
                                 <Form.Group className="mb-3">
                                     <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new hike"} successMessage={"New hike added correctly!"} />
                                     <div className="d-flex flex-row-reverse">
-                                        <Upload role="button" className="me-3"onClick={e => {
+                                        <CheckCircle role="button" className="me-3"onClick={e => {
                                             e.preventDefault();
                                             e.stopPropagation();
                                             submitHandler();

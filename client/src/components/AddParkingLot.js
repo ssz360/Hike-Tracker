@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { PointMap } from '../components';
 import services from '../lib/services';
-import { GeoFill, Upload, XCircle, ArrowLeft } from 'react-bootstrap-icons'
+import { GeoFill, CheckCircle, XCircle, ArrowLeft } from 'react-bootstrap-icons'
 import ServerReply from "./serverReply";
 
 function AddParkingLot({ setParkings }) {
@@ -138,7 +138,7 @@ function AddParkingLot({ setParkings }) {
                             
                             {/* ICONS */}
                             <div className="d-flex flex-row-reverse">
-                                <Upload role="button" className="me-3" onClick={e => {
+                                <CheckCircle role="button" className="me-3" onClick={e => {
                                     if (!waiting) {
                                         e.preventDefault();
                                         e.stopPropagation();
