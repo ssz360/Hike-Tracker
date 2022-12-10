@@ -1,5 +1,6 @@
 import { Row, Col, Form, FloatingLabel, Button, Alert, Container } from 'react-bootstrap';
 import { PointMap } from '../components';
+import services from '../lib/services';
 import { Upload, GeoFill, XCircle, ArrowLeft } from 'react-bootstrap-icons'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,8 +18,7 @@ function AddHutForm(props) {
     const [done, setDone] = useState(false);
     const [waiting, setWaiting] = useState(false);
     const navigate = useNavigate();
-
-
+    
     const handleSubmit = (event) => {
         event.preventDefault();
         try {
@@ -32,6 +32,7 @@ function AddHutForm(props) {
             }
             else {
                 setErr(message);
+                setTimeout(() => setErr(false), 3000);
             }
         } catch {
             setWaiting(false);
@@ -57,7 +58,7 @@ function AddHutForm(props) {
             backgroundSize: 'cover',
             minHeight: "100%"
         }}>
-            <Container fluid className="mt-5">
+            <Container fluid >
                 <div className="d-flex align-items-center justify-content-center text-center not-found-container">
                     <h3 className="mt-3"
                         style={{
@@ -101,7 +102,6 @@ function AddHutForm(props) {
                                 <Form.Control type="number" min={0} placeholder="NumOfRooms" value={numBeds} onClick={() => setErr(false)} onChange={(event) => setNumBeds(event.target.value)} />
                             </FloatingLabel>
                             <Alert role="button" variant="light" style={{ backgroundColor: "#FFFFFF", border: "1px solid #ced4da", color: "#000000" }} onClick={() => setOpenArea(true)}>
-                                {/* <Button variant="l ight" syle={{backgroundColor:"#FFFFFF"}} fluid> */}
                                 <GeoFill className="me-3" />
                                 Position
                             </Alert>

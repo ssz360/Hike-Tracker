@@ -365,7 +365,37 @@ const getElevation=async (lat,lng)=>{
     if(res.ok) return ret.results[0].elevation;
     else throw ret;
 }
+//'/api/hikes/:hikeId/referencePoint'
+
+const addReferencePoint=async (hike,name,pointCoord,description,images)=>{
+    const data=new FormData();
+    data.append('name',name);
+    data.append('description',description);
+    data.append('latitude',pointCoord[0]);
+    data.append('longitude',pointCoord[1]);
+    images.forEach(i=>data.append('images',i));
+    console.log("Adding a new reference point with formdata",data,"hike",hike,"name",name,"coords",pointCoord,"desc",description,"images",images);
+    const res=await fetch(APIBASE+'hikes/'+hike+'/referencePoint',{
+        method:'POST',
+        credentials:"include",
+        body: data
+    });
+    if(res.ok) return;
+    else{
+        const ret=await res.json();
+        throw ret;
+    }
+}
+
+const getImagesPoint=async pointId=>{
+    const res=await fetch(APIBASE+'point/'+pointId+'/images',{
+        credentials:"include"
+    });
+    const ret=await res.json();
+    if(res.ok) return ret.map(i=>({name:i.name,url:'http://localhost:3001/images/'+i.path}));
+    else throw ret;
+}
 
 
-const api={login, logout, getPointsInBounds,linkStartArrival, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters, linkHut, getHutsInBounds, getHikesInBounds, getLinkableHuts, getLinkableStartPoints, getLinkableEndPoints, getElevation};
+const api={login, logout, getPointsInBounds,linkStartArrival, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters, linkHut, getHutsInBounds, getHikesInBounds, getLinkableHuts, getLinkableStartPoints, getLinkableEndPoints, getElevation, addReferencePoint, getImagesPoint};
 export default api;

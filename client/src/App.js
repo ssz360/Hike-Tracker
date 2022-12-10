@@ -70,9 +70,11 @@ function App() {
           setHuts(hut);
           setDirty(false);
         })
-        .catch(err => setMessage(err.error))
+        .catch(err => setMessage(err.error));
+      api.isLogged().then((usr) => setUser(usr)).catch(err => setMessage(err))
     }
   }, [logged, dirty])
+
   const updateStartEndPoint = (initialHike, point, type) => {
     //console.log("IN UPDATE START END POINT WITH INITIAL HIKE",initialHike);
     let hike = initialHike;
@@ -130,14 +132,16 @@ function App() {
     }
   }
 
- async function newHut(name, country, numberOfGuests, numberOfBedrooms, coordinate){
-  try {
-    //console.log(name, country, numberOfGuests, numberOfBedrooms, coordinate);
-    await api.insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate);
-  } catch (error) {
-    throw error;
+  async function newHut(name, country, numberOfGuests, numberOfBedrooms, coordinate) {
+    try {
+      //console.log(name, country, numberOfGuests, numberOfBedrooms, coordinate);
+    //here call api.elevation with coordinate to get elevation
+      await api.insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate);
+    } catch (error) {
+      throw error;
+    }
   }
-}
+
   const setAllHikesShow=async()=>{
     const newHikes=[...hikes];
     newHikes.forEach(h=>{
@@ -153,7 +157,7 @@ function App() {
           <Route path='/' element={<HomePage />} />
           <Route path='hikes' element={<HikesList logged={logged} hikes={hikes.filter(h => h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering} />} />              
           <Route path='/localGuide/*' element={<LocalGuide refreshHikes={refreshHikes} updateStartEndPoint={updateStartEndPoint} hikes={user !== undefined ? hikes.filter(h => h.author === user.username) : []} user={user} newHut={newHut} />}></Route>
-          <Route path='/hut' element={<Hut huts={huts} filteringHut={filteringHut} user={user} />} />
+          <Route path='/hut' element={<Hut huts={huts} setHuts={setHuts} filteringHut={filteringHut} user={user} />} />
           <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser} />} />
           <Route path='/signup' element={<SignUp setLogged={setLogged} />} />
           <Route path='/checkemail' element={<CheckEmail />} />

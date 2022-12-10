@@ -21,7 +21,7 @@ function Login(props) {
             backgroundSize: 'cover',
             height: '100vh'
         }}>
-          <Container fluid className="mt-5" style={{overflowY: "auto"}}>          
+          <Container fluid style={{overflowY: "auto"}}>          
             <Row>
             <div className="d-flex align-items-center justify-content-center text-center not-found-container">
                 <h3 className="mt-3" 

@@ -10,13 +10,13 @@ function LocalGuideHikes(props) {
   const navigate = useNavigate();
   return (
     <>
-      <Container fluid className="mt-5" style={{ width: "85%" }} >
-      <br></br>
+      <Container fluid style={{ width: "85%"}} >
+      {/* <br></br>
       <Row id="top" className="mt-3" >
         <div className="d-grid gap-2">
             <Button className="rounded-pill" style={
               {
-                width: "15%",
+                width: "fit-content",
                 height: "45px",
                 borderColor: "white",
                 backgroundColor: !isHover ? '#006666' : '#009999'
@@ -26,19 +26,19 @@ function LocalGuideHikes(props) {
             onMouseLeave={ () => setIsHover(false) }
             onClick = {() => navigate("/localGuide/newHike")}><strong><PlusCircle size={"20px"} className="mb-1"/> Add new hike</strong> </Button>
         </div>
-        </Row>
-        <Row className="mt-2">
+        </Row> */}
+        <Row className="mt-1  " style={{height:'93vh', overflowY: 'scroll'}}>
           {
             props.hikes.map(hike => <LocalGuideHikeRow key={hike.id} hike={hike} />)
           }
         </Row>
 
-        <Row className="mt-4">
+        {/* <Row className="mt-4">
            <div className="d-grid gap-2">
           <a href="#top"><ArrowUpCircleFill size={"30px"}/></a>
           </div>
-        </Row>
-        <br></br>
+        </Row> */}
+        {/* <br></br> */}
         
       </Container>
     </>

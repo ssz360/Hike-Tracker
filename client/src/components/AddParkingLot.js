@@ -3,6 +3,7 @@ import { Row, Col, Form, FloatingLabel, Alert, InputGroup, Container, Button } f
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { PointMap } from '../components';
+import services from '../lib/services';
 import { GeoFill, Upload, XCircle, ArrowLeft } from 'react-bootstrap-icons'
 import ServerReply from "./serverReply";
 
@@ -85,10 +86,10 @@ function AddParkingLot({ setParkings }) {
     }
 
     
-    // const setCoordinateAndGetAddress = (coordinate) => {
-    //     setCoord(coordinate);
-    //     services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setGeographicalArea(`${x.address.city}, ${x.address.county}, ${x.address.country}`.replace('undefined,','')));
-    // }
+    const setCoordinateAndGetAddress = (coordinate) => {
+        setCoord(coordinate);
+        services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setGeographicalArea(`${x.address.city}, ${x.address.county}, ${x.address.country}`.replace('undefined,','')));
+    }
 
     return (<>
         <div style={{
@@ -97,7 +98,7 @@ function AddParkingLot({ setParkings }) {
             backgroundImage: "url(/images/DSC_0089.jpg)",
             minHeight: "100%"
         }}>
-            <Container fluid className="mt-5">
+            <Container fluid >
                 <div className="d-flex align-items-center justify-content-center text-center not-found-container">
                     <h3 className="mt-3"
                         style={{

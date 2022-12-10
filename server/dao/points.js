@@ -101,5 +101,27 @@ const linkableHuts= async id =>new Promise((resolve, reject) => {
 });
 
 
-const points = { getParkingsList, insertPoint, getPointById, getPointsInBounds, linkableHuts, linkableStartPoints, linkableEndPoints , linkPointToHike, unlinkPointFromHike }
+const insertImageForPoint=async (pointId,image)=>new Promise((resolve,reject)=>{
+    const sql="INSERT INTO POINTSIMAGES(pointId,path,name) VALUES(?,?,?)";
+    db.run(sql,[pointId,image.filename,image.originalname],err=>{
+        if(err){
+            console.log("ERROR IN INSERT NEW IMAGE",err," FOR POINT",pointId,"WITH IMAGE",image);
+            reject({status:503,message:err});
+        }
+        else resolve();
+    })
+})
+
+const getImages=async pointId=>new Promise((resolve,reject)=>{
+    const sql="SELECT path,name FROM POINTSIMAGES WHERE pointId=?";
+    db.all(sql,[pointId],(err,rows)=>{
+        if(err){
+            console.log("ERROR IN GET NEW IMAGES",err,pointId);
+            reject({status:503,message:err});
+        }
+        else resolve(rows);
+    })
+})
+
+const points = { getParkingsList, insertPoint, getPointById, getPointsInBounds, linkableHuts, linkableStartPoints, linkableEndPoints , linkPointToHike, unlinkPointFromHike, insertImageForPoint, getImages}
 module.exports = points;
