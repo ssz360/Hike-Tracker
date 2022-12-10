@@ -30,6 +30,7 @@ const tokens = require("./tokens");
 const ref = require("./referencePoints");
 const pointsdao = require('./dao/points');
 const points = require('./services/points');
+const preferences = require('./dao/preferences');
 
 app.use(express.json());
 passport.use(new LocalStrategy((username, password, callback) => {
@@ -375,7 +376,73 @@ app.get('/api/point/:pointId/images',async (req,res)=>{
     }
 })
 
+// return value:
+
+// {"userId":"1","length":5,"ascent":500,"time":4}
+
+app.get('/api/preferences', isLoggedIn, async (req, res) => {
+    try {
+        const ret =     await preferences.getUserPreferences(req.user.username);
+        if (!ret) {
+            res.status(404).end();
+            return;
+        }
+        res.status(200).json({ userId: ret.IDUser, length: ret.LENGTH, ascent: ret.ASCENT, time: ret.TIME });
+    } catch (error) {
+        res.status(error.status ?? 500).json(error.message)
+    }
+})
+
+// expected data:
+
+// The body:
+
+// {
+//     "length": 5,
+//     "ascent": 500,
+//     "time": 4
+// }
+
+app.post('/api/preferences', isLoggedIn, async (req, res) => {
+    try {
+        const obj = req.body;
+        const ret = await preferences.addUpdateReference({
+            IDUser: req.user.username,
+            length: obj.length,
+            ascent: obj.ascent,
+            time: obj.time
+        });
+        res.status(201).json(ret);
+    } catch (error) {
+        res.status(error.status ?? 500).json(error.message)
+    }
+})
+
 app.use(express.static('public'));
+// req.body: { user: { username: string }}
+// res.body: { hikeList: Array<Hike> }
+
+// app.get("/api/hikes/byUserPreference", isLoggedIn, async (req, res) => {
+// 	try {
+// 		const userPref = await preferences.getUserPreferences(parseInt(req.user.username)).catch(err => {
+// 			throw err;
+// 		});
+// 		// console.log("userPref", userPref);
+// 		await hikesdao
+// 			.getHikesListWithFilters(undefined, userPref.length, undefined, userPref.time, undefined, userPref.ascent)
+// 			.then(
+// 				hikeList => {
+// 					// console.log("hikeList.length", hikeList.length);=> {
+// 					return res.status(200).json(hikeList);
+// 				},
+// 				err => {
+// 					throw err;
+// 				}
+// 			);
+// 	} catch (err) {
+// 		res.status(err.status).json(err.message);
+// 	}
+// });
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)

@@ -2,9 +2,11 @@ import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container, OverlayT
 import { useEffect, useState } from 'react';
 import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
-import MultiRangeSlider from '../components/MultiRangeSlider';
+// import MultiRangeSlider from '../components/MultiRangeSlider';
+import MultiRangeSliderHooked from '../components/MultiRangeSliderHooked'
 import { ChevronCompactDown, ChevronCompactUp, BookmarkHeartFill, Search, XLg } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router-dom'
+import api from '../lib/api'
 
 function HikesList(props) {
   //console.log("Rerendering hikeslist with",props.hikes);
@@ -81,7 +83,19 @@ function HikesList(props) {
                 delay={{ show: 250, hide: 400 }}
                 overlay={<Tooltip> Your preferences</Tooltip>}
               >
-                <BookmarkHeartFill className="ml-4" role="button" size={"20px"} />
+                <BookmarkHeartFill className="ms-4" role="button" size={"20px"}
+                  onClick={async (event) => {
+                    event.preventDefault();
+                    await api.getUserPerformance(props.user.username)
+                      .then(usrPref => {
+                        setLenMin(0);
+                        setLenMax(usrPref.length);
+                        setAscMin(0);
+                        setAscMax(usrPref.ascent);
+                        setTimeMin(0);
+                        setTimeMax(usrPref.time);
+                      }, err => {console.log(err)});
+                  }} />
               </OverlayTrigger>
             </div>
           </div>
@@ -111,10 +125,17 @@ function HikesList(props) {
               <div className="d-grid gap-2" style={{ display: 'block', width: '100%', height: '100%', position: 'relative' }}>
                 <strong>Length</strong>
                 <InputGroup className="mb-3">
-                  <MultiRangeSlider
+                  {/* <MultiRangeSlider
                     min={0}
                     max={40}
-                    onChange={({ min, max }) => { setLenMin(min); setLenMax(max); }} />
+                    onChange={({ min, max }) => { setLenMin(min); setLenMax(max); }} /> */}
+                    <MultiRangeSliderHooked
+                    defaultMin = {0}
+                    defaultMax = {40}
+                  min={lenMin}
+                  max={lenMax}
+                  setMin={setLenMin}
+                  setMax={setLenMax}/>
                 </InputGroup>
               </div>
             </div>
@@ -125,10 +146,17 @@ function HikesList(props) {
             <div className="d-grid gap-2">
               <strong>Ascent</strong>
               <InputGroup className="mb-3">
-                <MultiRangeSlider
+                {/* <MultiRangeSlider
                   min={0}
                   max={4000}
-                  onChange={({ min, max }) => { setAscMin(min); setAscMax(max); }} />
+                  onChange={({ min, max }) => { setAscMin(min); setAscMax(max); }} /> */}
+                  <MultiRangeSliderHooked
+                  defaultMin = {0}
+                  defaultMax = {4000}
+                  min={ascMin}
+                  max={ascMax}
+                  setMin={setAscMin}
+                  setMax={setAscMax}/>
               </InputGroup>
             </div>
           </div>
@@ -138,10 +166,17 @@ function HikesList(props) {
             <div className="d-grid gap-2">
               <strong>Time Expected</strong>
               <InputGroup className="mb-3">
-                <MultiRangeSlider
+                {/* <MultiRangeSlider
                   min={0}
                   max={15}
-                  onChange={({ min, max }) => { setTimeMin(min); setTimeMax(max); }} />
+                  onChange={({ min, max }) => { setTimeMin(min); setTimeMax(max); }} /> */}
+                  <MultiRangeSliderHooked
+                  defaultMin = {0}
+                  defaultMax = {24}
+                  min={timeMin}
+                  max={timeMax}
+                  setMin={setTimeMin}
+                  setMax={setTimeMax}/>
               </InputGroup>
             </div>
           </div>

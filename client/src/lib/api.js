@@ -202,16 +202,14 @@ const getHikeMap=async id=>{
     else throw ret;
 }
 
-const getHikesByPerformance = async (username) => {
-    // TODO: finish after HT-10
-    return await getHikesList();
-}
-
-const getUserPerformance = async (username) => {
-    // TODO: finish after HT-10
-    const user = await isLogged();
-    return {...user, altitude: 2000, duration: 5000, time: 5}
-}
+const getUserPerformance = async () => {
+	const response = await fetch(APIBASE + "preferences", {
+		credentials: "include"
+	});
+	const res = await response.json();
+	if (response.ok) return res;
+	else throw res;
+};
 
 const isLogged=async ()=>{
     const res=await fetch(APIBASE+'logged',{
@@ -397,5 +395,31 @@ const getImagesPoint=async pointId=>{
 }
 
 
-const api={login, logout, getPointsInBounds,linkStartArrival, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters, linkHut, getHutsInBounds, getHikesInBounds, getLinkableHuts, getLinkableStartPoints, getLinkableEndPoints, getElevation, addReferencePoint, getImagesPoint};
+const api = {
+	login,
+	logout,
+	getPointsInBounds,
+	linkStartArrival,
+	register,
+	getParkings,
+	addParking,
+	insertHut,
+	getHikesList,
+	getHikersHikesList,
+	getUserPerformance,
+	addHike,
+	getHikesListWithFilters,
+	getHikeMap,
+	isLogged,
+	getHutsListWithFilters,
+	linkHut,
+	getHutsInBounds,
+	getHikesInBounds,
+	getLinkableHuts,
+	getLinkableStartPoints,
+	getLinkableEndPoints,
+	getElevation,
+	addReferencePoint,
+	getImagesPoint
+};
 export default api;

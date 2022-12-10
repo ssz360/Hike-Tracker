@@ -155,7 +155,7 @@ function App() {
         {path !== '/' && <Header logged={logged} setLogged={setLogged} user={user} setUser={setUser} setDirty={setDirty} />}
         <Routes>
           <Route path='/' element={<HomePage />} />
-          <Route path='hikes' element={<HikesList logged={logged} hikes={hikes.filter(h => h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering} />} />              
+          <Route path='hikes' element={<HikesList user={user} logged={logged} hikes={hikes.filter(h => h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering} />} />              
           <Route path='/localGuide/*' element={<LocalGuide refreshHikes={refreshHikes} updateStartEndPoint={updateStartEndPoint} hikes={user !== undefined ? hikes.filter(h => h.author === user.username) : []} user={user} newHut={newHut} />}></Route>
           <Route path='/hut' element={<Hut huts={huts} setHuts={setHuts} filteringHut={filteringHut} user={user} />} />
           <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser} />} />
