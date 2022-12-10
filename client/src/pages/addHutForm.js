@@ -1,7 +1,7 @@
 import { Row, Col, Form, FloatingLabel, Button, Alert, Container } from 'react-bootstrap';
 import { PointMap } from '../components';
 import services from '../lib/services';
-import { Upload, GeoFill, XCircle, ArrowLeft } from 'react-bootstrap-icons'
+import { CheckCircle, GeoFill, XCircle, ArrowLeft } from 'react-bootstrap-icons'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ServerReply from "../components/serverReply";
@@ -111,7 +111,7 @@ function AddHutForm(props) {
                             
                             {/* BUTTONS */}
                             <div className="d-flex flex-row-reverse">
-                                <Upload role="button" className="me-3" onClick={(handleSubmit)} type="submit" size="20px" />
+                                <CheckCircle role="button" className="me-3" onClick={(handleSubmit)} type="submit" size="20px" />
                                 <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
                                 <ArrowLeft role="button" className="me-3" onClick={() => navigate("/hut")}  size="20px" />
                             </div>
