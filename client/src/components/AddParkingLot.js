@@ -88,7 +88,7 @@ function AddParkingLot({ setParkings }) {
     
     const setCoordinateAndGetAddress = (coordinate) => {
         setCoord(coordinate);
-        services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setGeographicalArea(`${x.address.city}, ${x.address.county}, ${x.address.country}`.replace('undefined,','')));
+        services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setGeographicalArea(`${x.address.city}, ${x.address.state}, ${x.address.country}`.replace('undefined,','')));
     }
 
     return (<>
@@ -112,7 +112,7 @@ function AddParkingLot({ setParkings }) {
                 <Row>
                     <div className="d-flex align-items-center justify-content-center not-found-container mt-4"
                         style={{ opacity: "90%" }}>
-                        {openArea && <PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoord} coord={coord} />}
+                        {openArea && <PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoordinateAndGetAddress} coord={coord} />}
                         <Form className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: "40%" }}>
                             <FloatingLabel className="mb-3" controlId="floatingInput" label="Parking name">
                                 <Form.Control type="text" value={name} onChange={ev => setName(ev.target.value)} placeholder="Name" />
@@ -123,14 +123,14 @@ function AddParkingLot({ setParkings }) {
                             <FloatingLabel className="mb-3" controlId="floatingInput" label="Total slots">
                                 <Form.Control type="number" data-test="total-cost" value={totalSlots} onChange={ev => setTotalSlots(ev.target.value)} min={0} placeholder="Total slots" />
                             </FloatingLabel>
-                            <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical area">
-                                <Form.Control type="text" data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} placeholder="Geographical Area" />
-                            </FloatingLabel>
                             <Alert role="button" variant="light" style={{ backgroundColor: "#FFFFFF", border: "1px solid #ced4da", color: "#000000" }} onClick={() => setOpenArea(true)}>
                                 <GeoFill className="me-3" />
                                 Position
                             </Alert>
 
+                            <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical area">
+                                <Form.Control disabled={true} type="text" data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} placeholder="Geographical Area" />
+                            </FloatingLabel>
 
 
                             {/* ERROR HANDLING */}
