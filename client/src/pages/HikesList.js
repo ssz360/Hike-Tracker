@@ -129,13 +129,13 @@ function HikesList(props) {
                     min={0}
                     max={40}
                     onChange={({ min, max }) => { setLenMin(min); setLenMax(max); }} /> */}
-                    <MultiRangeSliderHooked
-                    defaultMin = {0}
-                    defaultMax = {40}
-                  min={lenMin}
-                  max={lenMax}
-                  setMin={setLenMin}
-                  setMax={setLenMax}/>
+                  <MultiRangeSliderHooked
+                    defaultMin={0}
+                    defaultMax={40}
+                    min={lenMin}
+                    max={lenMax}
+                    setMin={setLenMin}
+                    setMax={setLenMax} />
                 </InputGroup>
               </div>
             </div>
@@ -150,13 +150,13 @@ function HikesList(props) {
                   min={0}
                   max={4000}
                   onChange={({ min, max }) => { setAscMin(min); setAscMax(max); }} /> */}
-                  <MultiRangeSliderHooked
-                  defaultMin = {0}
-                  defaultMax = {4000}
+                <MultiRangeSliderHooked
+                  defaultMin={0}
+                  defaultMax={4000}
                   min={ascMin}
                   max={ascMax}
                   setMin={setAscMin}
-                  setMax={setAscMax}/>
+                  setMax={setAscMax} />
               </InputGroup>
             </div>
           </div>
@@ -170,13 +170,13 @@ function HikesList(props) {
                   min={0}
                   max={15}
                   onChange={({ min, max }) => { setTimeMin(min); setTimeMax(max); }} /> */}
-                  <MultiRangeSliderHooked
-                  defaultMin = {0}
-                  defaultMax = {24}
+                <MultiRangeSliderHooked
+                  defaultMin={0}
+                  defaultMax={24}
                   min={timeMin}
                   max={timeMax}
                   setMin={setTimeMin}
-                  setMax={setTimeMax}/>
+                  setMax={setTimeMax} />
               </InputGroup>
             </div>
           </div>
