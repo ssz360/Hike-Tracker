@@ -40,20 +40,20 @@ function HikesList(props) {
 
   }
 
-  const resetFields = () =>{
-     setCenter();
-     setRadius(0);
-     setLenMin(null);
-     setLenMax(null);
-     setDif(null);
-     setAscMin(null);
-     setAscMax(null);
-     setTimeMin(null);
-     setTimeMax(null);
-     setOpenArea(false);
-     setSearchHover(false);
-     setClearHover(false);
-    
+  const resetFields = () => {
+    setCenter();
+    setRadius(0);
+    setLenMin(null);
+    setLenMax(null);
+    setDif(null);
+    setAscMin(null);
+    setAscMax(null);
+    setTimeMin(null);
+    setTimeMax(null);
+    setOpenArea(false);
+    setSearchHover(false);
+    setClearHover(false);
+
   }
 
 
@@ -164,20 +164,20 @@ function HikesList(props) {
 
           {/***** Clear filters *****/}
           <Row>
-              <Form>
-                <div className="d-grid gap-2">
-                    <Button className='rounded-pill mt-4'
-                      // onClick={() => window.location.reload(false)}
-                      onClick={resetFields}
-                      style={{
-                        backgroundColor: !clearHover ? '#800000' : '#cc0000',
-                        borderColor: '#e0e3e5',
-                        height: '70%',
-                      }}
-                      onMouseEnter={() => setClearHover(true)}
-                      onMouseLeave={() => setClearHover(false)}><strong>Clear filters</strong> <XLg className='mb-1' size={'18px'} /></Button>
-                </div>
-              </Form>
+            <Form>
+              <div className="d-grid gap-2">
+                <Button className='rounded-pill mt-4'
+                  // onClick={() => window.location.reload(false)}
+                  onClick={resetFields}
+                  style={{
+                    backgroundColor: !clearHover ? '#800000' : '#cc0000',
+                    borderColor: '#e0e3e5',
+                    height: '70%',
+                  }}
+                  onMouseEnter={() => setClearHover(true)}
+                  onMouseLeave={() => setClearHover(false)}><strong>Clear filters</strong> <XLg className='mb-1' size={'18px'} /></Button>
+              </div>
+            </Form>
           </Row>
         </Col>
         {/***** Hikes List *****/}
@@ -239,7 +239,8 @@ function HikeRow(props) {
         </Card.Text>
       </Card.Body>
     </Card>
-    </Col></>);
+    </Col>
+    </>);
 }
 
 export default HikesList;
