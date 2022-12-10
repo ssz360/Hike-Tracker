@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Polyline, useMap,useMapEvents , Marker,Popup,T
 import { Container, Row, Col, Card, Alert, Button, OverlayTrigger, Modal, Form ,Table, Popover} from 'react-bootstrap';
 import { useEffect,useState } from 'react';
 import Hike from '../lib/hike';
+import globalVariables from "../lib/globalVariables";
 
 function GlobalMap(props){
     const [hikes,setHikes]=useState([]);
@@ -25,7 +26,7 @@ function GlobalMap(props){
                 <Row>
                     <Col>
                         <MapContainer center={[ 44.601004142314196, 7.139863958582282 ]} zoom={10} style={{ height: '50vh', width: '200wh' }} scrollWheelZoom={true}>
-                            <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                            <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles}/>
                             { hikes.map(h=>
                                 <Polyline key={h.id} pathOptions={limeOptions} positions={h.coordinates}>
                                     <Popup>Hike {h.name}</Popup>

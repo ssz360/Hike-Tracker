@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, useMap,useMapEvents,Circle } from 'react-leafl
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
 import { getDistance } from 'geolib';
+import globalVariables from "../lib/globalVariables";
 
 const KMFROLAT=110574;
 
@@ -152,7 +153,7 @@ function AreaMap(props){
                 <Modal.Header closeButton>Select the desired area</Modal.Header>
                 <Modal.Body>
                     <MapContainer whenReady={m=>props.center===undefined?m.target.locate({setView:true}):m} center={props.center!==undefined?props.center:[0,0]} zoom={13} style={{ height: "50vh", width:"auto" }} scrollWheelZoom={true}>
-                        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles}/>
                         {props.drag?
                             <CenterMapDrag center={props.center} radius={props.radius} setCenter={props.setCenter} setRadius={props.setRadius} />
                         :
