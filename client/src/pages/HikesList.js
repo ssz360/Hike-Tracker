@@ -63,6 +63,10 @@ function HikesList(props) {
       && dif === null && ascMin === null && ascMax === null && timeMin === null && timeMax === null) props.setAllHikesShow();
   }, [])
 
+  function goToTop() {
+    document.getElementById('hikes-container').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
 
   return (
     <Container fluid style={{ height: "93vh" }}>
@@ -181,22 +185,15 @@ function HikesList(props) {
           </Row>
         </Col>
         {/***** Hikes List *****/}
-        <Col sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
+        <Col  id="hikes-container" sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
           <Row>
             {<Display logged={props.logged} displayedHikes={props.hikes} />}
           </Row>
         </Col>
 
-        {/***** Button to go up to carousel ******/}
-        <div className="d-flex flex-row-reverse">
-          <Row className="mb-5 mt-3">
-            <Col xs={12}>
-              <a href="#first-row" className='go-top-btn' color='#009999'>{icon}</a>
-            </Col>
-          </Row>
-        </div>
-
       </Row>
+      {/***** Button to go up to carousel ******/}
+      <a onClick={() => goToTop()} href="#first-row" className='go-top-btn' color='#009999'>{icon}</a>
     </Container>
   )
 
