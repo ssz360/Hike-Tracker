@@ -9,14 +9,18 @@ import getColor from '../lib/hikeColor';
 import globalVariables from "../lib/globalVariables";
 
 function GetPointAndNewHikes(props){
+    const [dragging,setDragging]=useState(false);
     const mapev=useMapEvents({
+
+        dragstart: () =>setDragging(true),
         dragend: () =>{
             const bounds=mapev.getBounds();
             //console.log("Bounds in dragend are now ",bounds);
             props.getHikes([[bounds._northEast.lat,bounds._northEast.lng],[bounds._southWest.lat,bounds._southWest.lng]]);
+            setDragging(false);
         },
         click: e =>{
-            props.setCoors([e.latlng.lat,e.latlng.lng]);
+            if(!dragging)   props.setCoors([e.latlng.lat,e.latlng.lng]);
         },
         zoomend: () =>{
             const bounds=mapev.getBounds();
@@ -48,7 +52,7 @@ function PointMap(props){
                 <Modal.Body>
                     <MapContainer whenReady={m=>m.target.locate({setView:true})} center={[0,0]} zoom={13} style={{ height: "50vh", minHeight: "100%" }} scrollWheelZoom={true}>
                         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles}/>
-                        <GetPointAndNewHikes setCoors={props.setCoord} setHikes={setHikes}/>
+                        <GetPointAndNewHikes setCoors={props.setCoord} getHikes={getHikes} setHikes={setHikes}/>
                         {props.coord!==undefined?
                             <Marker icon={customMarkerIcon} position={props.coord}/>
                             :

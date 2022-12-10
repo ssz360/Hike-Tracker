@@ -11,14 +11,14 @@ const getHikeMoreData = async (item) => {
                 reject(err);
                 return;
             }
-            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:r.GeographicalArea,coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
+            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:points.getGeoArea(r),coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
         })
     })
 
     const start=await points.getPointById(item.StartPoint);
     const end=await points.getPointById(item.EndPoint);
-    item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:start.GeographicalArea,coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
-    item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:end.GeographicalArea,coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
+    item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:points.getGeoArea(start),coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
+    item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:points.getGeoArea(end),coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
     //console.log("Got more data for row",item);
     const linkedPoints = await getLinkedPoints(item.IDHike);
     item.referencePoints=linkedPoints.filter(p=>p.typeOfPoint=="referencePoint" || p.typeOfPoint=="hikePoint");
@@ -71,7 +71,8 @@ const newHike = async (name, author, len,expectedTime, ascent, desc, difficulty,
                         reject({ status: 503, message: { errId } });
                     }
                     const hikeId=rowId.max;
-                    const proms=[points.linkPointToHike(hikeId,startPoint),points.linkPointToHike(hikeId,endPoint)];
+                    const proms=[points.linkPointToHike(hikeId,startPoint)];
+                    if(startPoint!==endPoint) proms.push(points.linkPointToHike(hikeId,endPoint));
                     let i=0;
                     //console.log("\t\tCoordinates",coordinates);
                     for (const c of coordinates){
@@ -145,7 +146,7 @@ const getHikesMoreData = async (row) => {
                 reject(err);
                 return;
             }
-            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:r.GeographicalArea,coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
+            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:points.getGeoArea(r),coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
         })
     })
 
@@ -153,8 +154,8 @@ const getHikesMoreData = async (row) => {
         //console.log("Getting more data for row",item);
         const start=await points.getPointById(item.StartPoint);
         const end=await points.getPointById(item.EndPoint);
-        item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:start.GeographicalArea,coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
-        item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:end.GeographicalArea,coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
+        item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:points.getGeoArea(start),coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
+        item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:points.getGeoArea(end),coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
         console.log("Got more data for row",item);
         const linkedPoints = await getLinkedPoints(item.IDHike);
         item.referencePoints=linkedPoints.filter(p=>p.typeOfPoint=="referencePoint" || p.typeOfPoint=="hikePoint");
