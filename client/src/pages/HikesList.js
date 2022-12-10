@@ -63,6 +63,10 @@ function HikesList(props) {
       && dif === null && ascMin === null && ascMax === null && timeMin === null && timeMax === null) props.setAllHikesShow();
   }, [])
 
+  function goToTop() {
+    document.getElementById('hikes-container').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
 
   return (
     <Container fluid style={{ height: "93vh" }}>
@@ -77,7 +81,7 @@ function HikesList(props) {
                 delay={{ show: 250, hide: 400 }}
                 overlay={<Tooltip> Your preferences</Tooltip>}
               >
-                <BookmarkHeartFill oclassName="ml-4" role="button" size={"20px"} />
+                <BookmarkHeartFill className="ml-4" role="button" size={"20px"} />
               </OverlayTrigger>
             </div>
           </div>
@@ -181,12 +185,15 @@ function HikesList(props) {
           </Row>
         </Col>
         {/***** Hikes List *****/}
-        <Col sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
+        <Col  id="hikes-container" sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
           <Row>
             {<Display logged={props.logged} displayedHikes={props.hikes} />}
           </Row>
         </Col>
+
       </Row>
+      {/***** Button to go up to carousel ******/}
+      <a onClick={() => goToTop()} href="#first-row" className='go-top-btn' color='#009999'>{icon}</a>
     </Container>
   )
 
@@ -202,40 +209,56 @@ function HikeRow(props) {
   const auth = props.hike.author.substring(0, props.hike.author.indexOf('@'));
   const [open, setOpen] = useState(false);
   return (
-    <><Col xs={12} sm={6} md={4} className="mt-2"><Card className="shadow mt-3">
+    <><Col xs={12} sm={8} md={6} lg={4} className="mt-2"><Card className="shadow mt-3 hikes-card">
       <Card.Header>
-        <h4>{props.hike.name}</h4>
-        <div className='text-secondary fst-italic'>{auth}</div>
+        {props.logged && <HikeMap hike={props.hike} />}
+        <div className='m-3'>
+          <h4>{props.hike.name}</h4>
+        </div>
       </Card.Header>
       <Card.Body>
-        {props.logged && <HikeMap hike={props.hike} />}
-        <Card.Text><strong>Length: </strong><span className='test-length'>{Math.ceil(props.hike.len)}</span> km<br></br>
-          <strong>Difficulty: </strong><span className='test-difficulty'>{props.hike.difficulty}</span> <br></br>
-          <strong>Ascent: </strong><span className='test-ascent'>{Math.ceil(props.hike.ascent)}</span> m<br></br>
-          <strong>Expected Time: </strong><span className='test-time'>{Math.ceil(props.hike.expectedTime)}</span> h
-        </Card.Text>
-        <Card.Text >{!open ? (
-          <div className="d-flex flex-row-reverse">
+        <Card.Text>
 
-            < ChevronCompactDown role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
-              onClick={() => setOpen(!open)}
-              aria-controls="example-collapse-text"
-              aria-expanded={open} />
-          </div>)
-          :
-          (<div className="d-flex flex-row-reverse">
-            < ChevronCompactUp role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
-              onClick={() => setOpen(!open)}
-              aria-controls="example-collapse-text"
-              aria-expanded={open} />
-          </div>)}
-          <Collapse in={open}>
-            <div id="example-collapse-text">
-              <Card className="bg-light text-dark">
-                <Card.Body><strong>Description: </strong>{props.hike.description}</Card.Body>
-              </Card>
-            </div>
-          </Collapse>
+          <Row>
+            <Col>
+              <strong>Length: </strong><div className='hike-desc'><span className='test-length'>{Math.ceil(props.hike.len)}</span> km<br></br></div>
+              <strong>Difficulty: </strong><div className='hike-desc'><span className='test-difficulty'>{props.hike.difficulty}</span> <br></br></div>
+            </Col>
+            <Col>
+              <strong>Ascent: </strong><div className='hike-desc'><span className='test-ascent'>{Math.ceil(props.hike.ascent)}</span> m<br></br></div>
+              <strong>Expected Time: </strong><div className='hike-desc'><span className='test-time'>{Math.ceil(props.hike.expectedTime)}</span> h</div>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={10}>
+              <div className='text-secondary fst-italic card-author'><small>Author:</small> {auth}</div>
+            </Col>
+            <Col md={2}>
+              {!open ? (
+                <div className="hike-expandable">
+
+                  < ChevronCompactDown role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
+                    onClick={() => setOpen(!open)}
+                    aria-controls="example-collapse-text"
+                    aria-expanded={open} />
+                </div>)
+                :
+                (<div className="hike-expandable">
+                  < ChevronCompactUp role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
+                    onClick={() => setOpen(!open)}
+                    aria-controls="example-collapse-text"
+                    aria-expanded={open} />
+                </div>)}
+            </Col>
+          </Row>
+
+        </Card.Text>
+        <Collapse in={open}>
+          <div id="hike-desc-text">
+            <strong>Description: </strong>{props.hike.description}
+          </div>
+        </Collapse>
+        <Card.Text >
         </Card.Text>
       </Card.Body>
     </Card>

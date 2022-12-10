@@ -51,6 +51,11 @@ function AddHutForm(props) {
         setCoord();
     }
 
+    const setCoordinateAndGetCountry = (coordinate) => {
+        setCoord(coordinate);
+        services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setCountry(`${x.address.country}`.replace('undefined','')));
+    }
+
     return (<>
         <div style={{
             backgroundImage: "url(/images/pexels-arianna-tavaglione-5771589.jpg)",
@@ -75,7 +80,7 @@ function AddHutForm(props) {
                             opacity: "90%"
                         }}>
                         {/* MAP */}
-                        {openArea ? (<PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoord} coord={coord} />) : <></>}
+                        {openArea ? (<PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoordinateAndGetCountry} coord={coord} />) : <></>}
 
 
                         {/* FORM */}
@@ -84,11 +89,6 @@ function AddHutForm(props) {
                             {/* Hut name */}
                             <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
                                 <Form.Control type="text" placeholder="Name" value={name} onClick={() => setErr(false)} onChange={(event) => setName(event.target.value)} />
-                            </FloatingLabel>
-
-                            {/* Country */}
-                            <FloatingLabel controlId="floatingInput" label="Country" className="mb-3">
-                                <Form.Control type="text" placeholder="Country" value={country} onClick={() => setErr(false)} onChange={(event) => setCountry(event.target.value)} />
                             </FloatingLabel>
 
                             {/* Number of guests */}
@@ -105,6 +105,13 @@ function AddHutForm(props) {
                                 <GeoFill className="me-3" />
                                 Position
                             </Alert>
+
+                            {/* Country */}
+                            <FloatingLabel controlId="floatingInput" label="Country" className="mb-3">
+                                <Form.Control disabled={true} type="text" placeholder="Country" value={country} onClick={() => setErr(false)} onChange={(event) => setCountry(event.target.value)} />
+                            </FloatingLabel>
+
+
                             {/* ERROR HANDLING */}
                             <ServerReply error={err} success={done} waiting={waiting} errorMessage={"Error while adding a new hut"} successMessage={"New hut added correctly!"} />
 

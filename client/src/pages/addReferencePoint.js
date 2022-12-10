@@ -11,7 +11,7 @@ import Gallery from "../components/gallery";
 import { getDistance } from "geolib";
 import ServerReply from "../components/serverReply";
 import getMarkerForPoint from "../lib/markerPoint";
-
+import globalVariables from "../lib/globalVariables"
 
 function AddReferencePointMap(props){
     const [bounds,setBounds]=useState([[0,0],[0.1,0.1]]);
@@ -48,7 +48,7 @@ function AddReferencePointMap(props){
             {bounds[0][0]===0?
                 <Spinner animation="grow"/>
                 :<MapContainer bounds={bounds} style={{ height: "60vh", width: "auto" }} scrollWheelZoom={true}>
-                    <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                    <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles}/>
                     {props.pointCoord!==undefined?
                         <Marker icon={customMarkerIcon} eventHandlers={{
                             click: e => props.setPointCoord()

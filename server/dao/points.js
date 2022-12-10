@@ -7,7 +7,7 @@ getParkingsList = async () => new Promise((resolve, reject) => {
             reject(err);
             return;
         }
-        const hikes = row.map((p) => ({ IDPoint: p.IDPoint, Name: p.Name, Coordinates: [p.Latitude,p.Longitude], GeographicalArea: p.GeographicalArea }))
+        const hikes = row.map((p) => ({ IDPoint: p.IDPoint, Name: p.Name, Coordinates: [p.Latitude,p.Longitude], GeographicalArea: getGeoArea(p) }))
         resolve(hikes);
     });
 });
@@ -34,7 +34,7 @@ const unlinkPointFromHike=(hikeId,pointId)=>new Promise((resolve,reject)=>{
     })
 })
 
-function insertPoint(name, latitude, longitude, GeographicalArea, TypeOfPoint) {
+function insertPoint(name, latitude, longitude, altitude, GeographicalArea, TypeOfPoint, description) {
     return new Promise((res, rej) => {
         console.log("In insert point with name",name,"lat",latitude,"long",longitude,"geoarea",GeographicalArea,"type",TypeOfPoint)
         if (!name || !latitude || !longitude || !GeographicalArea || !TypeOfPoint) {
@@ -42,9 +42,9 @@ function insertPoint(name, latitude, longitude, GeographicalArea, TypeOfPoint) {
             return;
         }
 
-        let query = `INSERT INTO POINTS (name, Latitude, Longitude, GeographicalArea, TypeOfPoint) VALUES(?,?,?,?,?);`;
+        let query = `INSERT INTO POINTS (name, Latitude, Longitude, Altitude, Province, Region, Country, TypeOfPoint, Description) VALUES(?,?,?,?,?,?,?,?,?);`;
 
-        db.run(query, [name, latitude, longitude, GeographicalArea, TypeOfPoint], function (err) {
+        db.run(query, [name, latitude, longitude, altitude, GeographicalArea.province, GeographicalArea.region, GeographicalArea.country, TypeOfPoint, description], function (err) {
             if (err) {
                 rej(err);
                 return;
@@ -64,12 +64,19 @@ const getPointById = (id) => new Promise((resolve, reject) => {
         resolve(row);
     })
 });
-
+const getGeoArea= p=>{
+    let ret=p.Province;
+    if(p.Province!=="" && (p.Region!=="" || p.Country!=="")) ret+=", ";
+    ret+=p.Region;
+    if(p.Region!=="" && p.Country!=="") ret+=", ";
+    ret+=p.Country;
+    return ret;
+}
 const getPointsInBounds= async (minLat,maxLat,minLon,maxLon,startLat,startLon,endLat,endLon) =>new Promise((resolve, reject) => {
     let sql = "SELECT * FROM POINTS WHERE Latitude>=? AND Latitude<=? AND Longitude>=? AND Longitude<=? AND NOT((Latitude=? AND Longitude=?) OR (Latitude=? AND Longitude=?))";
     db.all(sql, [minLat,maxLat,minLon,maxLon,startLat,startLon,endLat,endLon], (err, rows) => {
         if (err)    reject({status:503,message:"Internal error"});
-        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: p.GeographicalArea, typeOfPoint: p.TypeOfPoint})));
+        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint})));
     })
 });
 
@@ -77,7 +84,7 @@ const linkableStartPoints= async (startLat,startLon,startId,endId) =>new Promise
     const sql = "SELECT * FROM POINTS WHERE (TypeOfPoint='hut' OR TypeOfPoint='parking') AND 2 * 6371 * sqrt(pow(sin((radians(?) - radians(Latitude)) / 2), 2)+ cos(radians(Latitude))* cos(radians(?))* pow(sin((radians(?) - radians(Longitude)) / 2), 2))<=5 AND NOT IDPoint=?";
     db.all(sql, [startLat,startLat,startLon,startId], (err, rows) => {
         if (err)    reject({status:503,message:"Internal error"});
-        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: p.GeographicalArea, typeOfPoint: p.TypeOfPoint})));
+        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint})));
     })
 });
 
@@ -85,7 +92,7 @@ const linkableEndPoints= async (endLat,endLon,startId,endId) =>new Promise((reso
     const sql = "SELECT * FROM POINTS WHERE (TypeOfPoint='hut' OR TypeOfPoint='parking') AND 2 * 6371 * sqrt(pow(sin((radians(?) - radians(Latitude)) / 2), 2)+ cos(radians(Latitude))* cos(radians(?))* pow(sin((radians(?) - radians(Longitude)) / 2), 2))<=5 AND NOT IDPoint=?";
     db.all(sql, [endLat,endLat,endLon,endId], (err, rows) => {
         if (err)    reject({status:503,message:"Internal error"});
-        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: p.GeographicalArea, typeOfPoint: p.TypeOfPoint})));
+        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint})));
     })
 });
 
@@ -96,7 +103,7 @@ const linkableHuts= async id =>new Promise((resolve, reject) => {
             console.log("Error in linkable huts",err);
             reject({status:503,message:"Internal error"});
         }
-        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: p.GeographicalArea, typeOfPoint: p.TypeOfPoint})));
+        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint})));
     })
 });
 
@@ -123,5 +130,5 @@ const getImages=async pointId=>new Promise((resolve,reject)=>{
     })
 })
 
-const points = { getParkingsList, insertPoint, getPointById, getPointsInBounds, linkableHuts, linkableStartPoints, linkableEndPoints , linkPointToHike, unlinkPointFromHike, insertImageForPoint, getImages}
+const points = { getParkingsList, insertPoint, getPointById, getPointsInBounds, linkableHuts, linkableStartPoints, linkableEndPoints , linkPointToHike, unlinkPointFromHike, insertImageForPoint, getImages, getGeoArea}
 module.exports = points;

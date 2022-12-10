@@ -45,6 +45,38 @@
   }
 }
 
+
+.hikes-card .card-header {
+  padding: 0;
+}
+
+.hike-desc{
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.card-author {
+  margin: 10px;
+}
+
+.hike-expandable{
+  height: 100%;
+  line-height: 45px;
+}
+
+.go-top-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9999;
+}
+
+
+.custom-modal-body {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 10px 10px 0 0;
+}
 .imggallerybody {
   height: 100%;
   width: 100%;
@@ -133,4 +165,8 @@
 
 .cardoverlayimageremove:hover > .bi{
   fill: white;
+}
+
+.dropdown-menu.show {
+  z-index: 9999;
 }
