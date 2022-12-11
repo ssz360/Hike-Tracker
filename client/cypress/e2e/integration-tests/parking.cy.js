@@ -8,7 +8,7 @@ describe('validate if all the required data are inserted', () => {
 
         cy.get('[name="username"]').type('davidwallace@gmail.com');
         cy.get('[name="password"]').type('123abcABC!');
-        cy.contains("Submit").click();
+        cy.get("button[type='submit']").click();
         cy.visit('/localGuide/newParking');
     });
     Cypress.on('uncaught:exception', (err, runnable) => {
