@@ -9,6 +9,8 @@ function Dashboard() {
     const [username,setUsername] = useState("");
     const [role,setRole] = useState("");
     const [name,setName] = useState("");
+    const [surname,setSurname] = useState("");
+    const [phoneNumber,setPhoneNumber] = useState("");
 
     useEffect(() => {
         const getUser = async () => {
@@ -17,6 +19,8 @@ function Dashboard() {
             setUsername(res.username.substring(0,res.username.indexOf('@')));
             setRole(res.type);
             setName(res.name);
+            setSurname(res.surname);
+            setPhoneNumber(res.phonenumber);
         }
         getUser();
     },[]);
@@ -45,12 +49,11 @@ function Dashboard() {
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label><b>Surname</b></Form.Label>
-                <Form.Control disabled type="text" value="MyFullName"/>
+                <Form.Control disabled type="text" value={surname}/>
             </Form.Group>
             <Form.Group className="mb-3" controlId="InputName">
                 <Form.Label><b>Phone number</b></Form.Label>
-                <Form.Control disabled type="text" value="MyPasswordInClear"/>
-                <Link style={{"font-size":"80%"}}>Change password</Link>
+                <Form.Control disabled type="text" value={phoneNumber}/>
             </Form.Group>
         </Form>
     </>);

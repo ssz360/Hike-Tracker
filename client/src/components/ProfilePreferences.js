@@ -11,6 +11,7 @@ function Preferences() {
     const [ascMax, setAscMax] = useState(0);
     const [timeMin, setTimeMin] = useState();
     const [timeMax, setTimeMax] = useState(0);
+    const [saved, setSaved] = useState(false);
 
     useEffect(() => {
         const getPreferences = async () => {
@@ -18,9 +19,14 @@ function Preferences() {
             setLenMax(prefs.length);
             setAscMax(prefs.ascent);
             setTimeMax(prefs.time);
+            setSaved(true);
         }
         getPreferences();
     },[]);
+
+    useEffect(() => {
+        setSaved(false);
+    },[lenMax,ascMax,timeMax]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -30,6 +36,7 @@ function Preferences() {
             "time": timeMax
         };
         await api.addPreferences(prefs);
+        setSaved(true);
     }
     
     return(<>
@@ -88,7 +95,7 @@ function Preferences() {
         </Card>
         <Row>
             <Col>
-                <Button variant="success" onClick={handleSubmit}>Save</Button>
+                <Button variant="success" onClick={handleSubmit} disabled={saved}>{saved ? "Saved!" : "Save"}</Button>
             </Col>
         </Row>        
     </>);

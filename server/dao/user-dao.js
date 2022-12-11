@@ -57,7 +57,7 @@ exports.login = async (username, password) => {
 									username: row.Username,
 									type: row.Type,
 									name: row.Name,
-									surname: row.Surame,
+									surname: row.Surname,
 									phonenumber: row.PhoneNumber
 								});
 						}
