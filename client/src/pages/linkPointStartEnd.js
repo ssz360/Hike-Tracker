@@ -59,7 +59,7 @@ function LinkPointStartEnd(props){
                             <HikeMapLink hike={props.hike} height={"70vh"} linkableStartPoints={linkableStartPoints} linkableEndPoints={linkableEndPoints} selectedPoint={selectedPoint} setSelectedPoint={setSelectedPoint} setBounds={setBounds} bounds={bounds}/>
                         </Col>
                         <Col xs={12} md={4}>
-                            <SelectPointStartEnd hike={props.hike} linkPoint={linkPoint} startPoint={props.hike.startPoint} endPoint={props.hike.endPoint} linkableStart={[...linkableStartPoints,props.hike.referencePoints.find(p=>p.name==="Default start point of hike "+props.hike.name)].map(p=>p.id).includes(selectedPoint)} linkableEnd={[...linkableEndPoints,props.hike.referencePoints.find(p=>p.name==="Default arrival point of hike "+props.hike.name)].map(p=>p.id).includes(selectedPoint)} point={[...linkableStartPoints,...linkableEndPoints,...props.hike.referencePoints,...props.hike.huts,props.hike.startPoint,props.hike.endPoint].find(p=>p.id===selectedPoint)} setSubmit={setSubmit}/>
+                            <SelectPointStartEnd hike={props.hike} linkPoint={linkPoint} startPoint={props.hike.startPoint} endPoint={props.hike.endPoint} linkableStart={[...linkableStartPoints].map(p=>p.id).includes(selectedPoint)} linkableEnd={[...linkableEndPoints].map(p=>p.id).includes(selectedPoint)} point={[...linkableStartPoints,...linkableEndPoints,...props.hike.referencePoints,...props.hike.huts,props.hike.startPoint,props.hike.endPoint].find(p=>p.id===selectedPoint)} setSubmit={setSubmit}/>
                         </Col>
                     </Row>
                 </Container>
