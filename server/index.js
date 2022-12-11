@@ -12,12 +12,14 @@ const port = 3001;
 const upload = multer();
 const storageEngine = multer.diskStorage({
     destination: "./public/images",
+    limits: { fileSize: 8000000 },
     filename: (req, file, cb) => {
     cb(null, uuid.v4()+path.extname(file.originalname) );
     },
 });
 const uploadImages=multer({
     storage: storageEngine,
+    limits: { fileSize: 8000000 }
 });
 // AUTHENTICATION CONTROL
 const passport = require('passport');

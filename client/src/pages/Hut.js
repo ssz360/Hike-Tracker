@@ -186,7 +186,7 @@ const validateInfo = (name, country, numberOfBedrooms, coordinate, setMessage) =
     setMessage("Invalid hut name.");
     return false;
   }
-  if (!country.match(/^[a-zA-Z]+[a-zA-Z]+$/)) {
+  if (!country.match(/^[a-zA-Z]{0,9}[a-zA-Z]{0,9}$/)) {
     setMessage("Invalid country name.");
     return false;
   }
