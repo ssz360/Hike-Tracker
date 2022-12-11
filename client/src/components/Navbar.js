@@ -27,7 +27,7 @@ function Header(props) {
                     {" HikeTracker"}
                 </Navbar.Brand>
                 <Nav>
-                    {props.user.type === "localGuide" && <>
+                    {props.user.type === "localGuide" ? <>
                         <NavDropdown title={"Hikes"} className="px-4" style={path==="/localGuide/hikes" || path==="/hikes" || path === "/localGuide/newHike"? {"fontWeight":"bold"} : null}>
                             <NavDropdown.Item as={Link} to="/hikes">All hikes</NavDropdown.Item>
                             <NavDropdown.Item as={Link} to="/localGuide/hikes">My hikes</NavDropdown.Item>
@@ -42,7 +42,10 @@ function Header(props) {
                             <NavDropdown.Item as={Link} to="/localGuide/newHut">Add new hut</NavDropdown.Item>
                         </NavDropdown>
                     {/* <Nav.Link as={Link} to="/hut" style={path==="/hut" ? {"fontWeight":"bold"} : null} onClick={() => props.setDirty(true)}>Huts</Nav.Link> */}
-                    </>}
+                    </>
+                    :
+                    <Nav.Link as={Link} style={path==="/hut"? {"fontWeight":"bold"} : null} to="/hut" className="px-4" onClick={() => props.setDirty(true)}>Huts</Nav.Link>
+                    }
                 </Nav>
                 <Nav className="ms-auto">
                     <NavDropdown title={<>Hi, {props.user.username.substring(0,props.user.username.indexOf('@'))}! {iconProfile}</>} className="px-4" align="end">

@@ -76,6 +76,7 @@ function HikesList(props) {
         <Col sm={2} style={{ height: "93vh", backgroundColor: "#e0e3e5" }}>
 
           {openArea && (<AreaMap center={center} setCenter={setCenter} radius={radius} setRadius={setRadius} drag={false} openArea={openArea} setOpenArea={setOpenArea} />)}
+          {props.logged &&
           <div className="mt-4">
             <div className="d-grid gap-2">
               <OverlayTrigger
@@ -99,6 +100,7 @@ function HikesList(props) {
               </OverlayTrigger>
             </div>
           </div>
+          }
           {/***** Area filter *****/}
           <div className="mt-4">
             <div className="d-grid gap-2">

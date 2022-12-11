@@ -71,8 +71,8 @@ function HomePage(props) {
           }}
             onMouseEnter={() => setIsHover(true)}
             onMouseLeave={() => setIsHover(false)}>
-            {!isHover ? <>Click to sign up</> :
-              <>Click to sign up {right_arr}</>
+            {!isHover ? <div class="box"><h5 className="v-c">Click to sign up</h5></div> :
+              <div class="box"><h5 className="v-c">Click to sign up {right_arr}</h5></div>
             }</a></p>
         </Carousel.Caption>
       </Carousel.Item>
@@ -94,12 +94,18 @@ function HomePage(props) {
             fontFamily: "Montserrat,Helvetica,Arial,Lucida,sans-serif",
             fontWeight: "800",
             fontSize: "49px"
-          }}><strong>PROVA PROVA</strong></h1>
-          <p style={{
+          }}><strong>ALREADY REGISTERED?</strong></h1>
+          <p><a href="/login" style={{
             fontFamily: "Montserrat,Helvetica,Arial,Lucida,sans-serif",
             fontWeight: "750",
-            fontSize: "18px"
-          }}>Inventarsi qualcosa di bello</p>
+            fontSize: "18px",
+            color: !isHover ? "white" : "#009999"
+          }}
+            onMouseEnter={() => setIsHover(true)}
+            onMouseLeave={() => setIsHover(false)}>
+            {!isHover ? <div class="box"><h5 className="v-c">Click to login!</h5></div> :
+              <div class="box"><h5 className="v-c">Click to login! {right_arr}</h5></div>
+            }</a></p>
         </Carousel.Caption>
       </Carousel.Item>
     </Carousel>

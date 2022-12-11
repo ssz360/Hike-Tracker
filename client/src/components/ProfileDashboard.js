@@ -3,6 +3,8 @@ import { Row, Col, Form, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import api from '../lib/api';
 
+const types={'localGuide':'Local guide','hiker':'Hiker','hutWorker':'Hut worker','friend':'Friend'};
+
 function Dashboard() {
     // const [user,setUser] = useState();
     const [username,setUsername] = useState("");
@@ -16,7 +18,7 @@ function Dashboard() {
             const res = await api.isLogged();
             // setUser(res);
             setUsername(res.username.substring(0,res.username.indexOf('@')));
-            setRole(res.type);
+            setRole(types[res.type]);
             setName(res.name);
             setSurname(res.surname);
             setPhoneNumber(res.phonenumber);
