@@ -21,7 +21,7 @@ describe('filtering huts apis', () => {
     
     it('Rifugio filters',done=>{
         const filters={ name:"Rifugio", country:null,
-         numberOfGuests:null, numberOfBedrooms:null, 
+         numberOfBedrooms:null, 
          coordinate:null, geographicalArea:null }
         agent.post('/api/huts/list').send(filters).then(res=>{
             res.should.have.status(200);
@@ -41,7 +41,7 @@ describe('filtering huts apis', () => {
         agent.post('/api/huts').send(hut).then(res=>{
             console.log("Res status",res.status);
             const filters={ name:"first hut", country:null,
-         numberOfGuests:null, numberOfBedrooms:null, 
+          numberOfBedrooms:null, 
          coordinate:null, geographicalArea:null }
         agent.post('/api/huts/list').send(filters).then(res=>{
             console.log("Res.status",res.status);

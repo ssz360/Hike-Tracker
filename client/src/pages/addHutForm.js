@@ -10,31 +10,36 @@ function AddHutForm(props) {
     const [openArea, setOpenArea] = useState(false);
     const [name, setName] = useState("");
     const [country, setCountry] = useState("");
-    const [numGuests, setNumGuests] = useState("");
     const [numBeds, setNumBeds] = useState("");
+    const [description, setDescription] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
+    const [website, setWebsite] = useState("");
     const [coord, setCoord] = useState();
     const [message, setMessage] = useState("");
-    const [err, setErr] = useState(false);
+    const [err, setErr] = useState();
     const [done, setDone] = useState(false);
     const [waiting, setWaiting] = useState(false);
     const navigate = useNavigate();
-    
+    var emailValidator = require("node-email-validation");
+
     const handleSubmit = (event) => {
         event.preventDefault();
         try {
-            if (validateInfo(name, country, numGuests, numBeds, coord, setMessage)) {
+            if (validateInfo(name, numBeds, coord, phone, email, website, setErr, emailValidator)) {
                 setWaiting(true);
-                props.newHut(name, country, numGuests, numBeds, coord);
+                props.newHut(name, description, country, numBeds, coord, phone, email, website);
                 setWaiting(false);
                 setDone(true);
                 setTimeout(() => setDone(false), 3000);
                 resetFields();
             }
             else {
-                setErr(message);
+                //setErr(err);
                 setTimeout(() => setErr(false), 3000);
             }
-        } catch {
+        } catch(err) {
+            console.log(err);
             setWaiting(false);
             setDone(false);
             setErr(err);
@@ -45,10 +50,13 @@ function AddHutForm(props) {
     
     const resetFields = () => {
         setName("");
+        setDescription("");
         setCountry("");
-        setNumGuests("");
         setNumBeds("");
         setCoord();
+        setPhone("");
+        setEmail("");
+        setWebsite("");
     }
 
     const setCoordinateAndGetCountry = (coordinate) => {
@@ -90,26 +98,39 @@ function AddHutForm(props) {
                             <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
                                 <Form.Control type="text" placeholder="Name" value={name} onClick={() => setErr(false)} onChange={(event) => setName(event.target.value)} />
                             </FloatingLabel>
-
-                            {/* Number of guests */}
-                            <FloatingLabel controlId="floatingInput" label="Number of guest" className="mb-3">
-                                <Form.Control type="number" min={0} placeholder="NumOfGuest"
-                                    value={numGuests} onClick={() => setErr(false)} onChange={(event) => setNumGuests(event.target.value)} />
+                            
+                            {/* Hut name */}
+                            <FloatingLabel controlId="floatingInput" label="Description" className="mb-3">
+                                <Form.Control as="textarea" placeholder="Name" value={description} onClick={() => setErr(false)} onChange={(event) => setDescription(event.target.value)} />
                             </FloatingLabel>
 
                             {/* Number of rooms */}
                             <FloatingLabel controlId="floatingInput" label="Number of bedrooms" className="mb-3">
                                 <Form.Control type="number" min={0} placeholder="NumOfRooms" value={numBeds} onClick={() => setErr(false)} onChange={(event) => setNumBeds(event.target.value)} />
                             </FloatingLabel>
+                            
+                            {/* Phone*/}
+                            <FloatingLabel controlId="floatingInput" label="Phone number" className="mb-3">
+                                <Form.Control type="text" placeholder="phone" value={phone} onClick={() => setErr(false)} onChange={(event) => setPhone(event.target.value)} />
+                            </FloatingLabel>
+                            
+                            {/* Email */}
+                            <FloatingLabel controlId="floatingInput" label="Email" className="mb-3">
+                                <Form.Control type="text" placeholder="email" value={email} onClick={() => setErr(false)} onChange={(event) => setEmail(event.target.value)} />
+                            </FloatingLabel>
+                            
+                            {/* Number of rooms */}
+                            <FloatingLabel controlId="floatingInput" label="Website" className="mb-3">
+                                <Form.Control type="text" placeholder="website" value={website} onClick={() => setErr(false)} onChange={(event) => setWebsite(event.target.value)} />
+                            </FloatingLabel>
+
+
                             <Alert role="button" variant="light" style={{ backgroundColor: "#FFFFFF", border: "1px solid #ced4da", color: "#000000" }} onClick={() => setOpenArea(true)}>
                                 <GeoFill className="me-3" />
                                 Position
                             </Alert>
 
-                            {/* Country */}
-                            <FloatingLabel controlId="floatingInput" label="Country" className="mb-3">
-                                <Form.Control disabled={true} type="text" placeholder="Country" value={country} onClick={() => setErr(false)} onChange={(event) => setCountry(event.target.value)} />
-                            </FloatingLabel>
+                            
 
 
                             {/* ERROR HANDLING */}
@@ -120,7 +141,7 @@ function AddHutForm(props) {
                             <div className="d-flex flex-row-reverse">
                                 <CheckCircle role="button" className="me-3" onClick={(handleSubmit)} type="submit" size="20px" />
                                 <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
-                                <ArrowLeft role="button" className="me-3" onClick={() => navigate("/hut")}  size="20px" />
+                                {/* <ArrowLeft role="button" className="me-3" onClick={() => navigate("/hut")}  size="20px" /> */}
                             </div>
                         </Form>
                     </div>
@@ -130,22 +151,50 @@ function AddHutForm(props) {
     </>);
 }
 
-const validateInfo = (name, country, numberOfGuests, numberOfBedrooms, coordinate, setMessage) => {
-    if ([name, country, numberOfGuests, numberOfBedrooms, coordinate, setMessage].some(t => t.length === 0)) {
-        setMessage("All fields should be filled");
+function isValidUrl(string) {
+    try {
+      new URL(string);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+const validateInfo = (name, numberOfBedrooms, coordinate, phone, email, website, setErr, emailValidator) => {
+
+    if ([name, numberOfBedrooms, coordinate, phone, email].some(t => t === "" || t === undefined)) {
+        setErr("All fields should be filled");
         return false;
     }
     if (name.match(/^\s+$/)) {
-        setMessage("Invalid hut name.");
+        console.log("Hut name")
+        setErr("Invalid hut name.");
         return false;
     }
-    if (!country.match(/^[a-zA-Z]+[a-zA-Z]+$/)) {
-        setMessage("Invalid country name.");
+    
+    if (!emailValidator.is_email_valid(email)) {
+        console.log("Email")
+        setErr('Email is incorrect.')
         return false;
+
+    }
+
+    if(!isValidUrl(website) && website!==""){
+        console.log("Website")
+        setErr("Invalid website.")
+        return false;
+
+    }
+    
+    if (!phone.match(/^[0-9]+$/)) {
+        console.log("Phone")
+        setErr('Phone number is incorrect')
+        return false;
+
     }
     /*
     if (!(coordinate.split(",").length === 2 && coordinate.split(",").every(t => t.match(/^([0-9]*[.])?[0-9]+$/)))) {
-        setMessage("The coordinates should be two numbers separated by comma");
+        setErr("The coordinates should be two numbers separated by comma");
         return false;
     }*/
 

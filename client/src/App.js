@@ -121,9 +121,9 @@ function App() {
     }
   }
 
-  async function filteringHut(name, country, numberOfGuests, numberOfBedrooms) {
+  async function filteringHut(name, country, numberOfBedrooms) {
     try {
-      const newList = logged ? await api.getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, null, null) :
+      const newList = logged ? await api.getHutsListWithFilters(name, country, numberOfBedrooms, null) :
         console.log("Error! User not authorized");
       setHuts(newList);
     } catch (error) {
@@ -132,11 +132,11 @@ function App() {
     }
   }
 
-  async function newHut(name, country, numberOfGuests, numberOfBedrooms, coordinate) {
+  async function newHut(name, description, country, numBeds, coord, phone, email, website) {
     try {
       //console.log(name, country, numberOfGuests, numberOfBedrooms, coordinate);
     //here call api.elevation with coordinate to get elevation
-      await api.insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate);
+      await api.insertHut(name, description, country, numBeds, coord, phone, email, website);
     } catch (error) {
       throw error;
     }

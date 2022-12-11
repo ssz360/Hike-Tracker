@@ -73,24 +73,12 @@ function Hut(props) {
             </div>
           </div>
 
-          {/***** N° of guest filter *****/}
-          <div className="mt-2">
-            <div className="d-grid gap-2">
-              <Form>
-                <Form.Group className="mb-3" controlId="InputGuests">
-                  <Form.Label><strong>N° of guest</strong></Form.Label>
-                  <Form.Control type="number" min={0} step={1} onChange={(event) => setFilterGuests(event.target.value)} />
-                </Form.Group>
-              </Form>
-            </div>
-          </div>
-
           {/***** N° of bedrooms filter *****/}
           <div className="mt-2">
             <div className="d-grid gap-2">
               <Form>
                 <Form.Group className="mb-3" controlId="InputBeds">
-                  <Form.Label><strong>N° of bedrooms</strong></Form.Label>
+                  <Form.Label><strong>N° of beds</strong></Form.Label>
                   <Form.Control type="number" min={0} step={1} onChange={(event) => setFilterBeds(event.target.value)} />
                 </Form.Group>
               </Form>
@@ -176,16 +164,19 @@ function HutRow(props) {
       </Card.Header>
       <Card.Body>
         <Card.Text><strong>Country: </strong>{props.hut.country}<br></br>
-          <strong>Number of Guests: </strong>{props.hut.numberOfGuests} <br></br>
-          <strong>Number of Bedrooms: </strong>{props.hut.numberOfBedrooms}
+          <strong>Number of Bedrooms: </strong>{props.hut.numberOfBedrooms}<br></br>
+          <strong>Phone: </strong>{props.hut.phone}<br></br>
+          <strong>Email: </strong>{props.hut.email}<br></br>
+          <strong>Website: </strong><a href={props.hut.website}>{props.hut.website}</a>
+
         </Card.Text>
       </Card.Body>
     </Card>
     </Col></>);
 }
 
-const validateInfo = (name, country, numberOfGuests, numberOfBedrooms, coordinate, setMessage) => {
-  if ([name, country, numberOfGuests, numberOfBedrooms, coordinate, setMessage].some(t => t.length === 0)) {
+const validateInfo = (name, country, numberOfBedrooms, coordinate, setMessage) => {
+  if ([name, country, numberOfBedrooms, coordinate, setMessage].some(t => t.length === 0)) {
     setMessage("All fields should to be filled");
     return false;
   }

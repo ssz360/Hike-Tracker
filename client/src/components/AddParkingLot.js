@@ -128,9 +128,9 @@ function AddParkingLot({ setParkings }) {
                                 Position
                             </Alert>
 
-                            <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical area">
+                            {/* <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical area">
                                 <Form.Control disabled={true} type="text" data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} placeholder="Geographical Area" />
-                            </FloatingLabel>
+                            </FloatingLabel> */}
 
 
                             {/* ERROR HANDLING */}

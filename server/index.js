@@ -154,12 +154,17 @@ app.post('/api/newHike', upload.single('file'), async (req, res) => {
 
 app.post('/api/huts', async (req, res) => {
     try{
-        const { name, country, numberOfGuests, numberOfBedrooms, coordinate } = req.body;
+        const { name, description, numberOfBedrooms, coordinate, phone, email, website } = req.body;
+        console.log("1 " + name + " " + description + " "+ numberOfBedrooms + " " + coordinate + " " + phone + " " + email + " " + website);
         const geopos=await points.getGeoAreaPoint(coordinate[0],coordinate[1]);
+        console.log("2 GEOPOS");
         const altitude=await points.getAltitudePoint(coordinate[0],coordinate[1]);
-        const ret=await huts.insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate, geopos,altitude);
+        console.log("3 ALTITUDE");
+        const ret=await huts.insertHut(name, description, numberOfBedrooms, coordinate, geopos,altitude, phone, email, website);
+        console.log("4 HUT INSERITO");
         return res.status(201).json(ret);
     }catch(error){
+        console.log(error);
         res.status(error.status).json(error.message);
     }
 });
@@ -192,8 +197,8 @@ app.post('/api/huts', async (req, res) => {
 //  }
 // ]
 app.post('/api/huts/list', async (req, res) => {
-    const { name, country, numberOfGuests, numberOfBedrooms, coordinate, geographicalArea } = req.body;
-    huts.getHutsListWithFilters(name, country, numberOfGuests, numberOfBedrooms, coordinate, geographicalArea)
+    const { name, country, numberOfBedrooms, geographicalArea } = req.body;
+    huts.getHutsListWithFilters(name, country, numberOfBedrooms, geographicalArea)
         .then(huts => res.json(huts))
         .catch(err => res.status(500).json('Error looking for hut: \r\n' + err));
 });
