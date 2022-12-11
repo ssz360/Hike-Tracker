@@ -219,7 +219,7 @@ app.post('/api/parking', async (req, res) => {
 
 app.get('/api/logged', isLoggedIn, async (req, res) => {
 
-    res.json({ username: req.user.username, type: req.user.type });
+    res.json({ username: req.user.username, type: req.user.type, name: req.user.name, surname: req.user.surname, phonenumber: req.user.phonenumber });
 })
 // DESCRIPTION ===========================================================================================================
 // Link point to hikes
@@ -329,9 +329,9 @@ app.post('/api/hikesinbounds', isLoggedIn, async (req, res) => {
 
 app.get('/api/preferences', isLoggedIn, async (req, res) => {
     try {
-        const ret =     await preferences.getUserPreferences(parseInt(req.user.username));
+        const ret = await preferences.getUserPreferences(req.user.username);
         if (!ret) {
-            res.status(200).json();
+            res.status(404).json();
             return;
         }
         res.status(200).json({ userId: ret.IDUser, length: ret.LENGTH, ascent: ret.ASCENT, time: ret.TIME });

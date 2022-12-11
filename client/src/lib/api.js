@@ -76,6 +76,38 @@ async function addParking(pk) {
   else throw pk;
 };
 
+async function getPreferences() {
+    const response = await fetch(APIBASE+'preferences',{credentials:"include"});
+    if(response.ok) {
+        const prefs = await response.json();
+        return prefs;
+    }
+    else if(response.status===404) {
+        console.log("404 non trovato")
+        const prefs = {
+            "length": 40,
+            "ascent": 4000,
+            "time": 15
+        };
+        return prefs;
+    }
+    else {
+        const prefs = await response.json();
+        throw prefs;
+    };
+};
+
+async function addPreferences(prefs) {
+  const response = await fetch(APIBASE+'preferences',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    credentials:"include",
+    body:JSON.stringify(prefs)
+  });
+  if(response.ok) return;
+  else throw prefs;
+};
+
 async function insertHut(name, country, numberOfGuests, numberOfBedrooms, coordinate) {
     return new Promise((resolve, reject) => {
         const thisURL = "huts";
@@ -327,5 +359,26 @@ const getLinkableHuts=async id=>{
     else    throw ret;
 }
 
-const api={login, logout, getPointsInBounds,linkStartArrival, register, getParkings, addParking,insertHut,getHikesList,getHikersHikesList,addHike,getHikesListWithFilters,getHikeMap,isLogged,getHutsListWithFilters, linkHut, getHutsInBounds, getHikesInBounds, getLinkableHuts};
+const api={
+    login,
+    logout,
+    getPointsInBounds,
+    linkStartArrival,
+    register,
+    getParkings,
+    addParking,
+    getPreferences,
+    addPreferences,
+    insertHut,
+    getHikesList,
+    getHikersHikesList,
+    addHike,
+    getHikesListWithFilters,
+    getHikeMap,
+    isLogged,
+    getHutsListWithFilters,
+    linkHut,
+    getHutsInBounds,
+    getHikesInBounds,
+    getLinkableHuts};
 export default api;

@@ -1,84 +1,96 @@
 import { useState, useEffect } from 'react';
-import { Form, Row, Col, InputGroup, Card, Button } from 'react-bootstrap';
+import { Form, Row, Col, InputGroup, Card, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { } from 'react-router-dom';
 import api from '../lib/api';
 import { MultiRangeSlider } from './';
 
 function Preferences() {
     const [lenMin, setLenMin] = useState();
-    const [lenMax, setLenMax] = useState();
+    const [lenMax, setLenMax] = useState(0);
     const [ascMin, setAscMin] = useState();
-    const [ascMax, setAscMax] = useState();
+    const [ascMax, setAscMax] = useState(0);
     const [timeMin, setTimeMin] = useState();
-    const [timeMax, setTimeMax] = useState();
+    const [timeMax, setTimeMax] = useState(0);
 
     useEffect(() => {
+        const getPreferences = async () => {
+            const prefs = await api.getPreferences();
+            setLenMax(prefs.length);
+            setAscMax(prefs.ascent);
+            setTimeMax(prefs.time);
+        }
+        getPreferences();
     },[]);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const prefs = {
+            "length": lenMax,
+            "ascent": ascMax,
+            "time": timeMax
+        };
+        await api.addPreferences(prefs);
+    }
     
     return(<>
         <Card className="p-3 pe-4 mb-4">
             <Row className="mb-3">
-                <strong>Preferred length</strong>
+                <Col><strong>Preferred length</strong>: {lenMax}</Col>
             </Row>
             <Row className="mb-4">
                 <InputGroup className="mb-4">
-                    <MultiRangeSlider
+                    {/* <MultiRangeSlider
                         min={0}
                         max={40}
                         onChange={({ min, max }) => {setLenMin(min); setLenMax(max);}}
-                    />
+                    /> */}
+                    <Form.Label>0</Form.Label>
+                    <Form.Label className="ms-auto">40</Form.Label>
+                    {/* <OverlayTrigger placement="top" overlay={<Tooltip>{lenMax}</Tooltip>}> */}
+                        <Form.Range min={0} max={40} value={lenMax} onChange={(val) => setLenMax(val.target.value)} title={lenMax}/>
+                    {/* </OverlayTrigger> */}
                 </InputGroup>
             </Row>
             <Row className="mb-3">
-                <strong>Preferred ascent</strong>
+                <Col><strong>Preferred ascent</strong>: {ascMax}</Col>
             </Row>
             <Row className="mb-4">
                 <InputGroup className="mb-4">
-                    <MultiRangeSlider
+                    {/* <MultiRangeSlider
                         min={0}
                         max={4000}
                         onChange={({ min, max }) => {setAscMin(min); setAscMax(max);}}
-                    />
+                    /> */}
+                    <Form.Label>0</Form.Label>
+                    <Form.Label className="ms-auto">4000</Form.Label>
+                    {/* <OverlayTrigger placement="top" overlay={<Tooltip>{ascMax}</Tooltip>}> */}
+                        <Form.Range min={0} max={4000} step={50} value={ascMax} onChange={(val) => setAscMax(val.target.value)} title={ascMax}/>
+                    {/* </OverlayTrigger> */}
                 </InputGroup>
             </Row>
             <Row className="mb-3">
-                <strong>Preferred time expected</strong>
+                <Col><strong>Preferred time expected</strong>: {timeMax}</Col>
             </Row>
             <Row className="mb-4">
                 <InputGroup className="mb-4">
-                    <MultiRangeSlider
+                    {/* <MultiRangeSlider
                         min={0}
                         max={15}
                         onChange={({ min, max }) => {setTimeMin(min); setTimeMax(max);}}
-                    />
+                    /> */}
+                    <Form.Label>0</Form.Label>
+                    <Form.Label className="ms-auto">15</Form.Label>
+                    {/* <OverlayTrigger placement="top" overlay={<Tooltip>{timeMax}</Tooltip>}> */}
+                        <Form.Range min={0} max={15} value={timeMax} onChange={(val) => setTimeMax(val.target.value)} title={timeMax}/>
+                    {/* </OverlayTrigger> */}
                 </InputGroup>
             </Row>
         </Card>
         <Row>
             <Col>
-                <Button variant="success">Save</Button>
+                <Button variant="success" onClick={handleSubmit}>Save</Button>
             </Col>
-        </Row>
-                            
-        <div className="mt-2">
-            <Row className="justify-content-md-center">
-                <Col xs={4}>
-                </Col>
-                <Col xs={4}>
-                </Col>
-            </Row>
-            <Row className="justify-content-md-center">
-                <Col xs={4}>
-                </Col>
-                <Col xs={4}> 
-                    <Form>
-                        <div className="d-grid gap-2">
-                        </div>
-                    </Form>
-                </Col>
-            </Row>
-        </div>
-        
+        </Row>        
     </>);
 }
 

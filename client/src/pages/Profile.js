@@ -17,7 +17,7 @@ function Sidebar() {
     );
 }
 
-function Profile() {
+function Profile(props) {
 
     useEffect(() => {
     },[]);
@@ -34,7 +34,7 @@ function Profile() {
             </Col>
             <Col md={6} className="mx-auto mb-4">
                 <Routes>
-                    <Route path="/dashboard" element={<ProfileDashboard/>}/>
+                    <Route path="/dashboard" element={<ProfileDashboard user={props.user}/>}/>
                     <Route path="/preferences" element={<ProfilePreferences/>}/>
                 </Routes>
             </Col>

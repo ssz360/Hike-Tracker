@@ -55,7 +55,10 @@ exports.login = async (username, password) => {
 							else
 								resolve({
 									username: row.Username,
-									type: row.Type
+									type: row.Type,
+									name: row.Name,
+									surname: row.Surame,
+									phonenumber: row.PhoneNumber
 								});
 						}
 					});

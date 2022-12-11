@@ -155,7 +155,7 @@ useEffect(() => {
         <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser}/>}/>
         <Route path='/signup' element={<SignUp setLogged={setLogged}/>}/>
         <Route path='/checkemail' element={<CheckEmail/>}/>
-        <Route path='/profile/*' element={<Profile/>}/>
+        <Route path='/profile/*' element={<Profile user={user}/>}/>
       </Routes>
     </Container>
   );

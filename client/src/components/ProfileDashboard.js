@@ -4,8 +4,21 @@ import { Link } from 'react-router-dom';
 import api from '../lib/api';
 
 function Dashboard() {
+    const [user,setUser] = useState();
+
+    const [username,setUsername] = useState("");
+    const [role,setRole] = useState("");
+    const [name,setName] = useState("");
 
     useEffect(() => {
+        const getUser = async () => {
+            const res = await api.isLogged();
+            setUser(res);
+            setUsername(res.username.substring(0,res.username.indexOf('@')));
+            setRole(res.type);
+            setName(res.name);
+        }
+        getUser();
     },[]);
     
     const iconProfile = (<p>
@@ -20,20 +33,24 @@ function Dashboard() {
         <Form className="my-2">
             <Form.Group className="mb-3" controlId="InputName">
                 <Form.Label><b>Username</b></Form.Label>
-                <Form.Control disabled type="text" value="MyUsername"/>
+                <Form.Control disabled type="text" value={username}/>
             </Form.Group>
             <Form.Group className="mb-3">
-                <Form.Label><b>Full name</b></Form.Label>
+                <Form.Label><b>Role</b></Form.Label>
+                <Form.Control disabled type="text" value={role}/>
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label><b>First name</b></Form.Label>
+                <Form.Control disabled type="text" value={name}/>
+            </Form.Group>
+            <Form.Group className="mb-3">
+                <Form.Label><b>Surname</b></Form.Label>
                 <Form.Control disabled type="text" value="MyFullName"/>
             </Form.Group>
             <Form.Group className="mb-3" controlId="InputName">
-                <Form.Label><b>Password</b></Form.Label>
+                <Form.Label><b>Phone number</b></Form.Label>
                 <Form.Control disabled type="text" value="MyPasswordInClear"/>
                 <Link style={{"font-size":"80%"}}>Change password</Link>
-            </Form.Group>
-            <Form.Group className="mb-3">
-                <Form.Label><b>I'm joking</b></Form.Label>
-                <Form.Control disabled type="text" value="ImJokingGuys"/>
             </Form.Group>
         </Form>
     </>);
