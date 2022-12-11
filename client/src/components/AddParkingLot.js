@@ -77,10 +77,10 @@ function AddParkingLot({ setParkings }) {
             // const pks = await api.getParkings();
             // setParkings(pks);
             resetFields();
-        } catch {
+        } catch(err) {
             setWaiting(false);
             setSuccess(false);
-            setError(error);
+            setError(err);
             setTimeout(() => setError(false), 3000);
         }
     }
