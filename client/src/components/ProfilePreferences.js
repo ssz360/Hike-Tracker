@@ -59,7 +59,7 @@ function Preferences() {
                     <Form.Label>0</Form.Label>
                     <Form.Label className="ms-auto">40</Form.Label>
                     {/* <OverlayTrigger placement="top" overlay={<Tooltip>{lenMax}</Tooltip>}> */}
-                        <Form.Range min={0} max={40} value={lenMax} onChange={(val) => setLenMax(val.target.value)} title={lenMax}/>
+                        <Form.Range data-test="length" min={0} max={40} value={lenMax} onChange={(val) => setLenMax(val.target.value)} title={lenMax}/>
                     {/* </OverlayTrigger> */}
                 </InputGroup>
             </Row>
@@ -76,7 +76,7 @@ function Preferences() {
                     <Form.Label>0</Form.Label>
                     <Form.Label className="ms-auto">4000</Form.Label>
                     {/* <OverlayTrigger placement="top" overlay={<Tooltip>{ascMax}</Tooltip>}> */}
-                        <Form.Range min={0} max={4000} step={50} value={ascMax} onChange={(val) => setAscMax(val.target.value)} title={ascMax}/>
+                        <Form.Range data-test="ascent" min={0} max={4000} step={50} value={ascMax} onChange={(val) => setAscMax(val.target.value)} title={ascMax}/>
                     {/* </OverlayTrigger> */}
                 </InputGroup>
             </Row>
@@ -93,14 +93,14 @@ function Preferences() {
                     <Form.Label>0</Form.Label>
                     <Form.Label className="ms-auto">15</Form.Label>
                     {/* <OverlayTrigger placement="top" overlay={<Tooltip>{timeMax}</Tooltip>}> */}
-                        <Form.Range min={0} max={15} value={timeMax} onChange={(val) => setTimeMax(val.target.value)} title={timeMax}/>
+                        <Form.Range data-test="time" min={0} max={15} value={timeMax} onChange={(val) => setTimeMax(val.target.value)} title={timeMax}/>
                     {/* </OverlayTrigger> */}
                 </InputGroup>
             </Row>
         </Card>
         <Row>
             <Col>
-                <Button variant="success" onClick={handleSubmit} disabled={saved}>{saved ? "Saved!" : "Save"}</Button>
+                <Button data-test="save-btn" variant="success" onClick={handleSubmit} disabled={saved}>{saved ? "Saved!" : "Save"}</Button>
             </Col>
         </Row>        
     </>);
