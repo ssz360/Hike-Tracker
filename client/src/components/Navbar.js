@@ -1,4 +1,4 @@
-import { Navbar, Nav, NavDropdown, Image, Col } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { BoxArrowRight } from 'react-bootstrap-icons';
 import api from '../lib/api';
@@ -45,7 +45,7 @@ function Header(props) {
                     </>}
                 </Nav>
                 <Nav className="ms-auto">
-                    <NavDropdown title={<>Hi, {"username! "} {iconProfile}</>} className="px-4" align="end">
+                    <NavDropdown title={<>Hi, {props.user.username.substring(0,props.user.username.indexOf('@'))}! {iconProfile}</>} className="px-4" align="end">
                         <NavDropdown.Item as={Link} to="/profile/dashboard">Profile</NavDropdown.Item>
                         <NavDropdown.Divider/>
                         <NavDropdown.Item as={Link} to="/" onClick={async e => {
