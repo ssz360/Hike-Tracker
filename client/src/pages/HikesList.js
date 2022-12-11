@@ -55,7 +55,7 @@ function HikesList(props) {
     setOpenArea(false);
     setSearchHover(false);
     setClearHover(false);
-
+    props.setAllHikesShow();
   }
 
 

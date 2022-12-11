@@ -198,6 +198,7 @@ app.post('/api/huts', async (req, res) => {
 // ]
 app.post('/api/huts/list', async (req, res) => {
     const { name, country, numberOfBedrooms, geographicalArea } = req.body;
+    console.log("IN server FILTERS WITH NAME",name,"COUNTRY",country,"NUMBEROFBEDS",numberOfBedrooms,"Geogr",geographicalArea);
     huts.getHutsListWithFilters(name, country, numberOfBedrooms, geographicalArea)
         .then(huts => res.json(huts))
         .catch(err => res.status(500).json('Error looking for hut: \r\n' + err));

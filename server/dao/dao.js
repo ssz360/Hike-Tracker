@@ -20,7 +20,7 @@ const initQueries = async () => {
 let restart;
 if (fs.existsSync(__dirname + "/hiketrackerdb.sqlite")) restart = true;
 else restart = false;
-const dataSql = fs.readFileSync(__dirname + "/initQueries.sql").toString();
+const dataSql = fs.readFileSync(__dirname + "/initQueriesFinal.sql").toString();
 const db = new sqlite.Database(__dirname + "/hiketrackerdb.sqlite", async e => {
 	if (e)	throw { status: 500, message: {status:500,message:"Failed to create the database"} };
 	else {

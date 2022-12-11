@@ -1,28 +1,48 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import api from "../lib/api";
 import icons from "../lib/iconspoint";
+import Gallery from "./gallery";
 
 
 function SelectedPoint(props){
     const isStart=props.point.id===props.startPoint.id;
     const isEnd=props.point.id===props.endPoint.id;
+    const [waiting,setWaiting]=useState(false);
+    const [imagesUrls,setImagesUrls]=useState([]);
+    useEffect(()=>{
+        const getImages=async()=>{
+            try {
+                setWaiting(true);
+                //console.log("GETTING IMAGES");
+                const imgs=await api.getImagesPoint(props.point.id);
+                //console.log("GOT IMGS",imgs);
+                setWaiting(false);
+                setImagesUrls([...imgs]);
+            } catch (error) {
+                setWaiting(false);
+                setImagesUrls([]);
+            }
+        }
+        getImages();
+    },[props.point])
     return(
         <>
             <div className="my-3 text-center">
-                {icons.iconsvgelement[props.point.typeOfPoint]}
+                <strong>{icons.iconsvgelement[props.point.typeOfPoint]}</strong>
             </div>
             <div className="my-3 text-center">
-                {props.point.name}
+                <strong>{props.point.name}</strong>
             </div>
             <div className="my-3 text-center">
-                {props.point.geographicalArea}
+                <strong>{props.point.geographicalArea}</strong>
             </div>
-            {isStart || isEnd?
+            {waiting?
                 <div className="my-3 text-center">
-                    {isStart?"This point is the starting point for this hike!":"This point is the arrival point for this hike!"}
+                    <Spinner animation="grow"/>
                 </div>
                 :
-                <></>
+                <Gallery preview={false} addImage={false} imagesUrls={imagesUrls}/>
             }
         </>
     )

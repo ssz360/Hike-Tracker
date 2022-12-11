@@ -123,6 +123,7 @@ function App() {
 
   async function filteringHut(name, country, numberOfBedrooms) {
     try {
+      console.log("IN FILTERING HUT WITH NAME",name,"coutnry",country,"num of beds",numberOfBedrooms);
       const newList = logged ? await api.getHutsListWithFilters(name, country, numberOfBedrooms, null) :
         console.log("Error! User not authorized");
       setHuts(newList);
