@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Form, Image } from 'react-bootstrap';
+import { Row, Col, Form, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import api from '../lib/api';
 
 function Dashboard() {
-    const [user,setUser] = useState();
-
+    // const [user,setUser] = useState();
     const [username,setUsername] = useState("");
     const [role,setRole] = useState("");
     const [name,setName] = useState("");
@@ -15,7 +14,7 @@ function Dashboard() {
     useEffect(() => {
         const getUser = async () => {
             const res = await api.isLogged();
-            setUser(res);
+            // setUser(res);
             setUsername(res.username.substring(0,res.username.indexOf('@')));
             setRole(res.type);
             setName(res.name);
@@ -26,13 +25,18 @@ function Dashboard() {
     },[]);
     
     const iconProfile = (<p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+        <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+            <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
         </svg>
     </p>);
 
     return(<>
+        <Row>
+            <Col>
+                <h1 className="my-4">Dashboard</h1>
+            </Col>
+        </Row>
         {iconProfile}
         <Form className="my-2">
             <Form.Group className="mb-3" controlId="InputName">

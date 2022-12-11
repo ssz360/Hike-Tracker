@@ -8,8 +8,9 @@ const getMarkerForPoint= (point,start,end,selected,selectable,selectedPoint,setS
     else{
         imgtype+=point.typeOfPoint;
         if(start)   imgtype+="Start";
-        else if(end)    imgtype+="End";
+        if(end)    imgtype+="End";
     }
+    console.log("Getting marker",imgtype);
     const customMarkerIcon = divIcon({
         html: icons.iconsvg[imgtype],
         iconSize: [30,30],

@@ -2,6 +2,43 @@ const db = require('./dao');
 const points = require('./points');
 const MAXDOUBLE = 4294967295;
 
+const getHikeMoreData = async (item) => {
+    const getLinkedPoints = (id) => new Promise(async (resolve, reject) => {
+        const linkedPointsSql = "SELECT * FROM LINKEDPOINTS AS R JOIN POINTS AS P ON P.IDPoint = R.IDPoint WHERE R.IDHike = ?";
+
+        db.all(linkedPointsSql, [id], (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:points.getGeoArea(r),coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
+        })
+    })
+
+    const start=await points.getPointById(item.StartPoint);
+    const end=await points.getPointById(item.EndPoint);
+    item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:points.getGeoArea(start),coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
+    item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:points.getGeoArea(end),coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
+    //console.log("Got more data for row",item);
+    const linkedPoints = await getLinkedPoints(item.IDHike);
+    item.referencePoints=linkedPoints.filter(p=>p.typeOfPoint=="referencePoint" || p.typeOfPoint=="hikePoint");
+    item.huts=linkedPoints.filter(p=>p.typeOfPoint==="hut");
+
+    return item;
+}
+
+
+const getHike=async id=>new Promise((resolve,reject)=>{
+    const sql="SELECT * FROM HIKES WHERE IDHike=?";
+    db.get(sql,[id],(err,row)=>{
+        if(err) throw {status:503,message:err};
+        else if(row===undefined) throw {status:404,message:"Hike not found!"};
+        else{
+            getHikeMoreData(row).then(res=>resolve(res)).catch(err=>reject(ret));
+        }
+    })
+})
+
 
 const insertHikePoint=async (hikeId,lat,lon,index)=>new Promise((resolve,reject)=>{
     const sql="INSERT INTO HIKESCOORDINATES(hikeId,indexCoor,latitude,longitude) VALUES(?,?,?,?)";
@@ -34,7 +71,8 @@ const newHike = async (name, author, len,expectedTime, ascent, desc, difficulty,
                         reject({ status: 503, message: { errId } });
                     }
                     const hikeId=rowId.max;
-                    const proms=[points.linkPointToHike(hikeId,startPoint),points.linkPointToHike(hikeId,endPoint)];
+                    const proms=[points.linkPointToHike(hikeId,startPoint)];
+                    if(startPoint!==endPoint) proms.push(points.linkPointToHike(hikeId,endPoint));
                     let i=0;
                     //console.log("\t\tCoordinates",coordinates);
                     for (const c of coordinates){
@@ -108,7 +146,7 @@ const getHikesMoreData = async (row) => {
                 reject(err);
                 return;
             }
-            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:r.GeographicalArea,coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
+            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:points.getGeoArea(r),coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
         })
     })
 
@@ -116,12 +154,12 @@ const getHikesMoreData = async (row) => {
         //console.log("Getting more data for row",item);
         const start=await points.getPointById(item.StartPoint);
         const end=await points.getPointById(item.EndPoint);
-        item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:start.GeographicalArea,coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
-        item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:end.GeographicalArea,coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
+        item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:points.getGeoArea(start),coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
+        item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:points.getGeoArea(end),coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
         console.log("Got more data for row",item);
         const linkedPoints = await getLinkedPoints(item.IDHike);
         item.referencePoints=linkedPoints.filter(p=>p.typeOfPoint=="referencePoint" || p.typeOfPoint=="hikePoint");
-        item.huts=linkedPoints.filter(p=>p.typeOfPoint==="Hut");
+        item.huts=linkedPoints.filter(p=>p.typeOfPoint==="hut");
     }
 
     return row;
@@ -279,7 +317,7 @@ const updateStartingArrivalPoint = async (hikeId, startPointId, endPointId) => n
 });
 
 const hikesInBounds=async (maxlat,maxlon,minlat,minlon)=>new Promise((resolve,reject)=>{
-    const hikessql = 'SELECT * FROM HIKESMAPDATA WHERE IDHike IN (SELECT idHike FROM HIKESCOORDINATES WHERE latitude<=? AND latitude>=? AND longitude<=? AND longitude>=?)';
+    const hikessql = 'SELECT * FROM HIKESMAPDATA WHERE EXISTS(SELECT HIKESCOORDINATES.hikeId FROM HIKESCOORDINATES WHERE HIKESCOORDINATES.hikeId=HIKESMAPDATA.IDHike AND HIKESCOORDINATES.latitude<=? AND HIKESCOORDINATES.latitude>=? AND HIKESCOORDINATES.longitude<=? AND HIKESCOORDINATES.longitude>=?)';
     db.all(hikessql, [maxlat,minlat,maxlon,minlon], (err, rows) => {
         //console.log("MAP RET",row,"err",err);
         if (err) {
@@ -290,12 +328,12 @@ const hikesInBounds=async (maxlat,maxlon,minlat,minlon)=>new Promise((resolve,re
         //else if (row === undefined) reject({ status: 404, message: "No hike associated to this id" });
         const proms=[];
         rows.forEach(r=>proms.push(getCoordinatesHike(r)));
-        Promise.all(proms).then(maps=>{console.log("At the end we got",maps);resolve(maps)}).catch(err=>reject(err));
+        Promise.all(proms).then(maps=>resolve(maps)).catch(err=>reject(err));
         
         //resolve({ id: row.IDHike, coordinates: JSON.parse(row.Coordinates), center: JSON.parse(row.Center), bounds: JSON.parse(row.Bounds) })
     });
 })
 
 
-const hikes = { getHikesList, getHikesListWithFilters, newHike, getHikeMap, addReferenceToHike, updateStartingArrivalPoint, hikesInBounds };
+const hikes = { getHike,getHikesList, getHikesListWithFilters, newHike, getHikeMap, addReferenceToHike, updateStartingArrivalPoint, hikesInBounds };
 module.exports = hikes;

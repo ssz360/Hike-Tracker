@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Container, Row, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import {Col } from 'react-bootstrap';
 import api from "../lib/api";
 
 function Login(props) {
@@ -13,15 +14,14 @@ function Login(props) {
     const [isHover, setIsHover] = useState(false);
 
     var emailValidator = require("node-email-validation");
-
     return (
         <div style={{ 
             backgroundImage: "url(./images/bg_login.jpg)",
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
-            minHeight: '92.2vh',
+            height: '100vh'
         }}>
-          <Container fluid>          
+          <Container fluid style={{overflowY: "auto"}}>          
             <Row>
             <div className="d-flex align-items-center justify-content-center text-center not-found-container">
                 <h3 className="mt-3" 
@@ -51,28 +51,28 @@ function Login(props) {
                         e.preventDefault();
                         e.stopPropagation();
 
-                        if (!emailValidator.is_email_valid(username)) {
-                            setError('Email has a wrong format')
-                        }
-                        else {
-                            try {
-                                const emp = await api.login(username, password);
-                                //console.log("emp is",emp);
-                                props.setUser(emp);
-                                props.setLogged(true);
-                                navigate('/');
-                            } catch (error) {
-                                setError("Error during login");
-                            }
-                        }
-                    }}>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
-                            <FloatingLabel controlId="floatingInput" label="Username" className="mb-3">
-                                <Form.Control type="text" placeholder="insert username" name="username" required value={username} onChange={e => setUsername(e.target.value)} />
-                            </FloatingLabel>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
+                                if (!emailValidator.is_email_valid(username)) {
+                                    setError('Email has a wrong format')
+                                }
+                                else {
+                                    try {
+                                        const emp = await api.login(username, password);
+                                        //console.log("emp is",emp);
+                                        props.setUser(emp);
+                                        props.setLogged(true);
+                                        navigate('/hikes');
+                                    } catch (error) {
+                                        setError("Error during login");
+                                    }
+                                }
+                            }}>
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <FloatingLabel controlId="floatingInput" label="Username" className="mb-3">
+                                    <Form.Control type="text" placeholder="insert username" name="username" required value={username} onChange={e => setUsername(e.target.value)} />
+                                </FloatingLabel>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
 
                                 <Form.Control type="password" placeholder="insert password" name="password" required onChange={p => setPassword(p.target.value)} />
                             </FloatingLabel>
@@ -81,7 +81,7 @@ function Login(props) {
                             <Button type="submit" className="rounded-pill"
                             style={{ 
                                 justifyContent: 'right',
-                                backgroundColor: !isHover ? '#009999' : '#00cccc',
+                                backgroundColor: !isHover ? '#006666' : '#009999',
                                 borderColor: "white",
                                 fontWeight: "670",
                                 height: "45px"

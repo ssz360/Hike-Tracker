@@ -11,8 +11,8 @@ function Sidebar() {
 
     return(
         <ListGroup variant="flush">
-            <ListGroup.Item action as={Link} to="/profile/dashboard" style={path==="/profile/dashboard" ? {"font-weight":"bold"} : null}>Dashboard</ListGroup.Item>
-            <ListGroup.Item action as={Link} to="/profile/preferences" style={path==="/profile/preferences" ? {"font-weight":"bold"} : null}>Preferences</ListGroup.Item>
+            <ListGroup.Item action as={Link} to="/profile/dashboard" style={path==="/profile/dashboard" ? {"fontWeight":"bold"} : null}>Dashboard</ListGroup.Item>
+            <ListGroup.Item action as={Link} to="/profile/preferences" style={path==="/profile/preferences" ? {"fontWeight":"bold"} : null}>Preferences</ListGroup.Item>
         </ListGroup>
     );
 }
@@ -23,18 +23,23 @@ function Profile(props) {
     },[]);
 
     return(<>
-        <Row className="px-0 mx-0">
+        {/* <Row className="px-0 mx-0 ">
             <Col>
                 <h1 className="mx-4 my-4">Profile settings</h1>
             </Col>
-        </Row>
+        </Row> */}
         <Row className="px-0 mx-0">
-            <Col xs={2} style={{background:"#eee"}} className="px-1 py-1">
+            <Col xs={2} style={{background:"#dde"}} className="px-1 py-1">
+                <Row>
+                    <Col>
+                        <h3 className="mx-2 my-4">Profile settings</h3>
+                    </Col>
+                </Row>
                 <Sidebar/>
             </Col>
             <Col md={6} className="mx-auto mb-4">
                 <Routes>
-                    <Route path="/dashboard" element={<ProfileDashboard user={props.user}/>}/>
+                    <Route path="/dashboard" element={<ProfileDashboard/>}/>
                     <Route path="/preferences" element={<ProfilePreferences/>}/>
                 </Routes>
             </Col>

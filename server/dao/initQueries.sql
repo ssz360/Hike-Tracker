@@ -36,21 +36,33 @@ CREATE TABLE IF NOT EXISTS POINTS (
   Name VARCHAR NOT NULL,
   Latitude REAL NOT NULL,
   Longitude REAL NOT NULL,
-  GeographicalArea VARCHAR NOT NULL,
+  Altitude REAL NOT NULL,
+  Description VARCHAR NOT NULL,
+  Province VARCHAR NOT NULL,
+  Region VARCHAR NOT NULL,
+  Country VARCHAR NOT NULL,
   TypeOfPoint VARCHAR NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS POINTSIMAGES (
+  pointId INTEGER NOT NULL,
+  path VARCHAR NOT NULL,
+  name VARCHAR NOT NULL,
+  PRIMARY KEY(pointId,path)
+);
+
+
 CREATE TABLE IF NOT EXISTS HUTS (
   IDPoint  INTEGER NOT NULL,
-  Country VARCHAR NOT NULL,
-  NumberOfGuests INTEGER NOT NULL, 
   NumberOfBedrooms INTEGER NOT NULL,
+  Phone INTEGER NOT NULL,
+  Email VARCHAR NOT NULL, 
+  Website VARCHAR,
   PRIMARY KEY(IDPoint)
 );
 
 CREATE TABLE IF NOT EXISTS PARKINGS (
   IDPoint  INTEGER NOT NULL,
-  Description VARCHAR NOT NULL,
   SlotsTot INTEGER NOT NULL, 
   SlotsFull INTEGER NOT NULL,
   PRIMARY KEY(IDPoint)
@@ -90,6 +102,6 @@ CREATE TABLE IF NOT EXISTS PREFERENCES (
 
 INSERT INTO USERS(Username, Type, Password, Salt,Name,Surname,PhoneNumber)
 VALUES
-  ('jonhutworker@gmail.com',  'localGuide',  '5cb69c67556b1e6d37972a42a644e34c07db6711003395b58c5365a5c521f12f','6ab29d4b3b4a39c3e39a81c2e33940e3',  'Jon',  'Black',  '1234567890'),
+('jonhutworker@gmail.com',  'localGuide',  '5cb69c67556b1e6d37972a42a644e34c07db6711003395b58c5365a5c521f12f','6ab29d4b3b4a39c3e39a81c2e33940e3',  'Jon',  'Black',  '1234567890'),
 ('davidwallace@gmail.com', 'localGuide',   '09112dbd6ec97c22d4b3ab3d9663fc17ac5d19cdb538b1a0c88801dfa5fb910d','c1df01421e0ee3b8bad0dffde4d0b283',  'David',  'Wallace',  '1234567890'),
 ('joelovehikes@gmail.com','hiker', 'f10a1ac3c830339dd6ef164df4c0efc29080b7bba7a29e3060772db59fce1a83' , '58c1096190832e329624c2ebd837ef77', 'Joe', 'Krafken', '38339900');

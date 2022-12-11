@@ -40,6 +40,11 @@ function Preferences() {
     }
     
     return(<>
+        <Row>
+            <Col>
+                <h1 className="my-4">Preferences</h1>
+            </Col>
+        </Row>
         <Card className="p-3 pe-4 mb-4">
             <Row className="mb-3">
                 <Col><strong>Preferred length</strong>: {lenMax}</Col>

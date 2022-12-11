@@ -7,6 +7,7 @@ import LocalGuideHikes from "./localGuideHikes";
 import ParkingLot from "./ParkingLot";
 import LocalGuideHikeUpdate from './localGuideHikeUpdate';
 import AddHutForm from "./addHutForm";
+import { AddParkingLot } from "../components";
 
 /*function LocalGuide(props){
     const [newHike,setNewHike]=useState(false);
@@ -23,13 +24,13 @@ import AddHutForm from "./addHutForm";
     const [hikeDesc,setHikeDesc]=useState('');
     const [hikeFile,setHikeFile]=useState();
     const [hikeFileName,setHikeFileName]=useState('');
-    const iconArrowUp = (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-up" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/>
-        <path fill-rule="evenodd" d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+    const iconArrowUp = (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-double-up" viewBox="0 0 16 16">
+        <path fillRule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/>
+        <path fillRule="evenodd" d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
     </svg>);
-    const iconArrowDown = (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-        <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+    const iconArrowDown = (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-double-down" viewBox="0 0 16 16">
+        <path fillRule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+        <path fillRule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
     </svg>);
 
     return(
@@ -126,11 +127,12 @@ function LocalGuide(props){
     const [hikeFileName,setHikeFileName]=useState('');*/
     return(
         <Routes>
-            <Route path="/hikes" element={<LocalGuideHikes hikes={props.hikes}/>}/>
+            <Route path="/hikes" element={<LocalGuideHikes hikes={props.hikes} user={props.user}/>}/>
             <Route path="/hikes/:hikeid/*" element={<LocalGuideHikeUpdate hikes={props.hikes} refreshHikes={props.refreshHikes} updateStartEndPoint={props.updateStartEndPoint}/>}/>
             <Route path="/newHike" element={<AddHikeForm refreshHikes={props.refreshHikes}/>}/>
             <Route path="/newHut" element={<AddHutForm newHut={props.newHut}/>}/>
-            <Route path="/newParking" element={<ParkingLot/>}/>
+            <Route path="/newParking" element={<AddParkingLot/>}/>
+            <Route path="/parking" element={<ParkingLot/>}/>
         </Routes>
     )
 }

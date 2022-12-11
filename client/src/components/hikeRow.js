@@ -2,6 +2,9 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Polyline, useMap, Marker,Popup } from 'react-leaflet'
 import { Container, Row, Col, Card, Alert, Button, OverlayTrigger, Modal, Form ,Table} from 'react-bootstrap';
 import { useEffect,useState } from 'react';
+import globalVariables from "../lib/globalVariables";
+
+
 function HikeRow(props){
     const limeOptions = { color: 'red' }
     const [map,setMap] = useState(false);
@@ -43,7 +46,7 @@ function HikeRow(props){
   [Math.max(...props.hike.coordinates.map(c=>c[0])), Math.max(...props.hike.coordinates.map(c=>c[1]))],
   [Math.min(...props.hike.coordinates.map(c=>c[0])), Math.min(...props.hike.coordinates.map(c=>c[1]))],
 ]} style={{ height: '50vh'}} scrollWheelZoom={true}>
-                    <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
+                    <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles}/>
                     <Polyline pathOptions={limeOptions} positions={props.hike.coordinates} />
                 </MapContainer>
             </Modal.Body>
