@@ -77,6 +77,11 @@ function LocalGuideHikeRow(props) {
               color: !isHoverPin ? "black" : "#009999"}} 
               onMouseEnter={ () => setHoverPin(true) }
               onMouseLeave={ () => setHoverPin(false) }
+              onClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigate("/localGuide/hikes/" + props.hike.id + "/addReferencePoint");
+              }}
             /> 
           </OverlayTrigger>
 
