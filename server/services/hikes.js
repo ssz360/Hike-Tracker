@@ -1,26 +1,21 @@
 const hikesdao=require('../dao/hikes');
-const usersdao=require('../dao/users');
 const gpxParser = require('gpxparser');
 const pointsdao=require('../dao/points');
 const points=require('./points');
-const newHike=async (name,user,desc,difficulty,file)=>{
+const newHike=async (body,user,file)=>{
     try {
-        //const typeUser=await usersdao.getUserType(user);
-        //console.log("In new hike services");
-        //console.log("User",user.username,"type",user.type);
         if(user.type!=="localGuide")    throw {status:401,message:"This type of user can't describe a new hike"};
-        const gpx = new gpxParser();gpx.parse(file);
-        if(gpx.tracks[0]===undefined) throw {status:244,message:"The gpx file provided is not a valid one"}
+        if(typeof(body.name)!=="string" || typeof(body.description)!=="string" || typeof(body.difficulty)!=="string") throw {status:422,message:"Bad parameters"};
+        const gpx = new gpxParser();gpx.parse(file.buffer.toString());
+        if(gpx.tracks[0]===undefined) throw {status:422,message:"The gpx file provided is not a valid one"}
         const coors=[];
         gpx.tracks[0].points.forEach(p =>coors.push([p["lat"],p["lon"]]));
-        //console.log("Points are",gpx.tracks[0].points);
         const lats=coors.map(p=>p[0]);const lons=coors.map(p=>p[1]);
         const centerlat=(Math.max(...lats)+Math.min(...lats))/2;
         const centerlon=(Math.max(...lons)+Math.min(...lons))/2;
         const len=gpx.tracks[0].distance["total"];
         const ascent=gpx.tracks[0].elevation["max"]-gpx.tracks[0].elevation["min"];
         const geopos=await points.getGeoAreaPoint(coors[0][0],coors[0][1]);
-        console.log("Got position", geopos);
         let startPoint,endPoint;
         if(coors[0][0]===coors[coors.length-1][0] && coors[0][1]===coors[coors.length-1][1]){
             startPoint=await pointsdao.insertPoint("Point of hike "+name,coors[0][0],coors[0][1],gpx.tracks[0].points[0]["ele"],geopos,"hikePoint","Default starting and arrival point of hike "+name);
@@ -29,16 +24,50 @@ const newHike=async (name,user,desc,difficulty,file)=>{
         else{
             startPoint=await pointsdao.insertPoint("Point of hike "+name,coors[0][0],coors[0][1],gpx.tracks[0].points[0]["ele"],geopos,"hikePoint","Default starting point of hike "+name);
             const geoposend=await points.getGeoAreaPoint(coors[coors.length-1][0],coors[coors.length-1][1]);
-            console.log("Got position end", geopos);
             endPoint=await pointsdao.insertPoint("Point of hike "+name,coors[coors.length-1][0],coors[coors.length-1][1],gpx.tracks[0].points[coors.length-1]["ele"],geoposend,"hikePoint","Default arrival point of hike "+name);
         }
-        console.log("Finished putting points, start",startPoint,", end",endPoint);
-        await hikesdao.newHike(name,user.username,len/1000,(len/1000)/2,ascent,desc,difficulty.toUpperCase(),startPoint,endPoint,coors,centerlat,centerlon,Math.max(...lats),Math.max(...lons),Math.min(...lats),Math.min(...lons));
+        await hikesdao.newHike(body.name,user.username,len/1000,(len/1000)/2,ascent,body.description,body.difficulty.toUpperCase(),startPoint,endPoint,coors,centerlat,centerlon,Math.max(...lats),Math.max(...lons),Math.min(...lats),Math.min(...lons));
     } catch (error) {
-        console.log("Error in services newhike",error);
         throw {status:error.status,message:error.message};
     }
 }
 
-const hikes={newHike};
+const hikesInBounds=async (maxLat,maxLng,minLat,minLng)=>{
+    try {
+        if(!isFinite(maxLat) || !isFinite(maxLng) || !isFinite(minLat) || !isFinite(minLng)) throw {status:422,message:"Bad parameters"};
+        const ret=await hikesdao.hikesInBounds(parseFloat(maxLat),parseFloat(maxLng),parseFloat(minLat),parseFloat(minLng));
+        return ret;
+    } catch (error) {
+        throw {status:error.status,message:error.message};
+    }
+}
+
+const addReferencePoint=async (hikeId,files,body,user)=>{
+    try {
+        console.log("In add ref point with hikeid",hikeId,"FILES",files,"body",body,"user",user);
+        if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link points to a hike"};
+        else if(!isFinite(hikeId) || !isFinite(body.latitude) || !isFinite(body.longitude) || typeof(body.name)!=="string" || typeof(body.description)!=="string") throw {status:422,message:"Bad parameters"};
+        const geoData=await points.getGeoAndLatitude(body.latitude,body.longitude);
+        const pointId=await pointsdao.insertPoint(body.name,parseFloat(body.latitude),parseFloat(body.longitude),geoData.altitude,geoData.geopos,"referencePoint",body.description);
+        await pointsdao.linkPointToHike(parseInt(hikeId),pointId);
+        for(const i of files){
+            await pointsdao.insertImageForPoint(pointId,i);
+        }
+    } catch (error) {
+        console.log("Error in add ref points",error);
+        throw {status:error.status,message:error.message};
+    }
+}
+
+const getMap=async id=>{
+    try {
+        if(!isFinite(id)) throw {status:422,message:"Id should be an integer"};
+        const ret = await hikesdao.getHikeMap(parseInt(id));
+        return ret;
+    } catch (error) {
+        throw {status:error.status,message:error.message};
+    }
+}
+
+const hikes={newHike,hikesInBounds,addReferencePoint,getMap};
 module.exports= hikes;
