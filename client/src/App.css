@@ -165,6 +165,18 @@
   fill: white;
 }
 
+.cardoverlayimagezoom > .bi {
+  fill: cyan;
+}
+
+.cardoverlayimagezoom:hover > .bi{
+  fill: white;
+}
+
+.cardoverlayimagezoom {
+  width: 100%
+}
+
 .dropdown-menu.show {
   z-index: 9999;
 }
