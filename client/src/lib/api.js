@@ -266,7 +266,7 @@ async function getHutsListWithFilters(name, country, numberOfBedrooms, geographi
                 if (response.ok) {
                     response.json().then(ret=>{
                         const arr=[];ret.forEach(h=>arr.push(new Hut(h.IDPoint, h.Name, h.Coordinates, h.GeographicalArea,
-                            h.Country, h.NumberOfBedrooms, h.Phone, h.Email, h.Website )));
+                            h.Country, h.NumberOfBedrooms, h.Phone, h.Email, h.Website, h.Description )));
                         resolve(arr);
                     });
                 } else {
