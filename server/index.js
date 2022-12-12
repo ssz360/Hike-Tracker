@@ -325,9 +325,10 @@ app.post('/api/linkableStartPoints', async (req, res) => {
 
 app.get('/api/hikes/:hikeId/linkableStartPoints',async(req,res)=>{
     try {
-        console.log("In get points linkable as starting ones with ",req.params.hikeId);
+        //console.log("In get points linkable as starting ones with ",req.params.hikeId);
         const hike=await hikesdao.getHike(parseInt(req.params.hikeId));
-        const ret=await pointsdao.linkableStartPoints(hike.startPoint.coordinates[0],hike.startPoint.coordinates[1],hike.startPoint.id,hike.name);
+        //console.log("Hike",hike);
+        const ret=await pointsdao.linkableStartPoints(hike.startPoint.coordinates[0],hike.startPoint.coordinates[1],hike.startPoint.id,hike.Name);
         console.log("Returning starting points",ret);
         res.status(200).json(ret);
     } catch (error) {
@@ -337,9 +338,10 @@ app.get('/api/hikes/:hikeId/linkableStartPoints',async(req,res)=>{
 
 app.get('/api/hikes/:hikeId/linkableEndPoints',async(req,res)=>{
     try {
-        console.log("In get points linkable as end ones with ",req.params.hikeId);
+        //console.log("In get points linkable as end ones with ",req.params.hikeId);
         const hike=await hikesdao.getHike(parseInt(req.params.hikeId));
-        const ret=await pointsdao.linkableEndPoints(hike.endPoint.coordinates[0],hike.endPoint.coordinates[1],hike.endPoint.id,hike.name);
+        //console.log("Hike",hike);
+        const ret=await pointsdao.linkableEndPoints(hike.endPoint.coordinates[0],hike.endPoint.coordinates[1],hike.endPoint.id,hike.Name);
         console.log("Returning ending points",ret);
         res.status(200).json(ret);
     } catch (error) {

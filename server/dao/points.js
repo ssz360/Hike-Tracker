@@ -82,6 +82,7 @@ const getPointsInBounds= async (minLat,maxLat,minLon,maxLon,startLat,startLon,en
 });
 
 const linkableStartPoints= async (startLat,startLon,startId,hikeName) =>new Promise((resolve, reject) => {
+    //console.log("Name of hike",hikeName);
     const sql = "SELECT * FROM POINTS WHERE (TypeOfPoint='hut' OR TypeOfPoint='parking' OR Description=? OR Description=?) AND 2 * 6371 * sqrt(pow(sin((radians(?) - radians(Latitude)) / 2), 2)+ cos(radians(Latitude))* cos(radians(?))* pow(sin((radians(?) - radians(Longitude)) / 2), 2))<=5 AND NOT IDPoint=?";
     db.all(sql, ["Default starting point of hike "+hikeName,"Default starting and arrival point of hike "+hikeName,startLat,startLat,startLon,startId], (err, rows) => {
         if (err)    reject({status:503,message:"Internal error"});
@@ -91,6 +92,7 @@ const linkableStartPoints= async (startLat,startLon,startId,hikeName) =>new Prom
 });
 
 const linkableEndPoints= async (endLat,endLon,endId,hikeName) =>new Promise((resolve, reject) => {
+    //console.log("Name of hike",hikeName);
     const sql = "SELECT * FROM POINTS WHERE (TypeOfPoint='hut' OR TypeOfPoint='parking' OR Description=? OR Description=?) AND 2 * 6371 * sqrt(pow(sin((radians(?) - radians(Latitude)) / 2), 2)+ cos(radians(Latitude))* cos(radians(?))* pow(sin((radians(?) - radians(Longitude)) / 2), 2))<=5 AND NOT IDPoint=?";
     db.all(sql, ["Default arrival point of hike "+hikeName,"Default starting and arrival point of hike "+hikeName,endLat,endLat,endLon,endId], (err, rows) => {
         if (err)    reject({status:503,message:"Internal error"});
