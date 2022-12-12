@@ -101,7 +101,7 @@ function AddHutForm(props) {
                             
                             {/* Hut name */}
                             <FloatingLabel controlId="floatingInput" label="Description" className="mb-3">
-                                <Form.Control as="textarea" placeholder="Name" value={description} onClick={() => setErr(false)} onChange={(event) => setDescription(event.target.value)} />
+                                <Form.Control as="textarea" placeholder="Name" value={description} onClick={() => setErr(false)} onChange={(event) => setDescription(event.target.value)} style={{ height: "120px" }} />
                             </FloatingLabel>
 
                             {/* Number of rooms */}
