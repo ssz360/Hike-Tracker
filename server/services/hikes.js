@@ -15,16 +15,16 @@ const newHike=async (body,user,file)=>{
         const centerlon=(Math.max(...lons)+Math.min(...lons))/2;
         const len=gpx.tracks[0].distance["total"];
         const ascent=gpx.tracks[0].elevation["max"]-gpx.tracks[0].elevation["min"];
-        const geopos=await points.getGeoAreaPoint(coors[0][0],coors[0][1]);
+        const geopos=await points.getGeoAreaPoint(coors[0][0],coors[0][1],true);
         let startPoint,endPoint;
         if(coors[0][0]===coors[coors.length-1][0] && coors[0][1]===coors[coors.length-1][1]){
-            startPoint=await pointsdao.insertPoint("Point of hike "+name,coors[0][0],coors[0][1],gpx.tracks[0].points[0]["ele"],geopos,"hikePoint","Default starting and arrival point of hike "+name);
+            startPoint=await pointsdao.insertPoint("Point of hike "+body.name,coors[0][0],coors[0][1],gpx.tracks[0].points[0]["ele"],geopos,"hikePoint","Default starting and arrival point of hike "+body.name);
             endPoint=startPoint;
         }
         else{
-            startPoint=await pointsdao.insertPoint("Point of hike "+name,coors[0][0],coors[0][1],gpx.tracks[0].points[0]["ele"],geopos,"hikePoint","Default starting point of hike "+name);
-            const geoposend=await points.getGeoAreaPoint(coors[coors.length-1][0],coors[coors.length-1][1]);
-            endPoint=await pointsdao.insertPoint("Point of hike "+name,coors[coors.length-1][0],coors[coors.length-1][1],gpx.tracks[0].points[coors.length-1]["ele"],geoposend,"hikePoint","Default arrival point of hike "+name);
+            startPoint=await pointsdao.insertPoint("Point of hike "+body.name,coors[0][0],coors[0][1],gpx.tracks[0].points[0]["ele"],geopos,"hikePoint","Default starting point of hike "+body.name);
+            const geoposend=await points.getGeoAreaPoint(coors[coors.length-1][0],coors[coors.length-1][1],true);
+            endPoint=await pointsdao.insertPoint("Point of hike "+body.name,coors[coors.length-1][0],coors[coors.length-1][1],gpx.tracks[0].points[coors.length-1]["ele"],geoposend,"hikePoint","Default arrival point of hike "+body.name);
         }
         await hikesdao.newHike(body.name,user.username,len/1000,(len/1000)/2,ascent,body.description,body.difficulty.toUpperCase(),startPoint,endPoint,coors,centerlat,centerlon,Math.max(...lats),Math.max(...lons),Math.min(...lats),Math.min(...lons));
     } catch (error) {
@@ -47,6 +47,8 @@ const addReferencePoint=async (hikeId,files,body,user)=>{
         console.log("In add ref point with hikeid",hikeId,"FILES",files,"body",body,"user",user);
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link points to a hike"};
         else if(!isFinite(hikeId) || !isFinite(body.latitude) || !isFinite(body.longitude) || typeof(body.name)!=="string" || typeof(body.description)!=="string") throw {status:422,message:"Bad parameters"};
+        const hike=await hikesdao.getHike(parseInt(hikeId));
+        if(user.username!==hike.author) throw {status:401,message:"This local guide doesn't have the rigths to update this hike reference points"};
         const geoData=await points.getGeoAndLatitude(body.latitude,body.longitude);
         const pointId=await pointsdao.insertPoint(body.name,parseFloat(body.latitude),parseFloat(body.longitude),geoData.altitude,geoData.geopos,"referencePoint",body.description);
         await pointsdao.linkPointToHike(parseInt(hikeId),pointId);

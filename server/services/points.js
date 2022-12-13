@@ -4,7 +4,6 @@ const pointsdao=require('../dao/points');
 const OSMELAPI='https://api.open-elevation.com/api/v1/lookup?';
 
 const getGeoAreaPoint=async(lat,lng,errs)=>{
-    console.log("Getting geo area point for",lat,lng,errs);
     if(errs) checkLatitudeLongitude(lat,lng);
     const res=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=en`);
     const ret=await res.json();
@@ -20,12 +19,9 @@ const getGeoAreaPoint=async(lat,lng,errs)=>{
 }
 
 const getAltitudePoint=async(lat,lng,errs)=>{
-    console.log("Getting altitude point for",lat,lng,errs);
     if(errs)   checkLatitudeLongitude(lat,lng);
     const res=await fetch(OSMELAPI+'locations='+lat+','+lng);
-    console.log("Got response and have res.status",res.status,"CALLING ",OSMELAPI+'locations='+lat+','+lng);
     const ret=await res.json();
-    console.log("Reply is ",ret);
     if(res.ok){
         if(ret.error) throw {status:422,message:ret.error};
         else if(ret.results) return ret.results[0].elevation;
@@ -36,9 +32,9 @@ const getAltitudePoint=async(lat,lng,errs)=>{
 
 const checkLatitudeLongitude=(lat,lng)=>{
     if(!isFinite(lat) || !isFinite(lng)) throw {status:422,message:"Bad parameters"};
-    if((lat<-90 || lat>90) && (lng<-180 || lng>180)) throw {status:422,message:"Invalid coordinates, latitude should be between -90 and 90 degrees and longitude should be between -180 and 180 degrees"};
-    else if(lat<-90 || lat>90) throw {status:422,message:"Invalid latitude, it should be between -90 and 90 degrees"}
-    else if(lng<-180 || lng>180) throw {status:422,message:"Invalid longitude, it should be between -180 and 180 degrees"}
+    if(lat<-90 || lat>90 || lng<-180 || lng>180) throw {status:422,message:"Invalid coordinates, latitude should be between -90 and 90 degrees and longitude should be between -180 and 180 degrees"};
+    //else if(lat<-90 || lat>90) throw {status:422,message:"Invalid latitude, it should be between -90 and 90 degrees"}
+    //else if(lng<-180 || lng>180) throw {status:422,message:"Invalid longitude, it should be between -180 and 180 degrees"}
 }
 
 
@@ -48,7 +44,6 @@ const getGeoAndLatitude=async (lat,lng)=>{
         const res={altitude:undefined,geopos:undefined};
         res.altitude=await getAltitudePoint(lat,lng,false);
         res.geopos=await getGeoAreaPoint(lat,lng,false);
-        console.log("Got geo and latitude now response is",res);
         return res;
     } catch (error) {
         throw error;
@@ -63,7 +58,6 @@ const linkableEndPoints=async (hikeId,user)=>{
         const ret=await pointsdao.linkableEndPoints(hike.endPoint.coordinates[0],hike.endPoint.coordinates[1],hike.endPoint.id,hike.Name);
         return ret;
     } catch (error) {
-        console.log("Error in arrival points",error);
         throw {status:error.status,message:error.message};
     }
 }
@@ -76,7 +70,6 @@ const linkableStartPoints=async (hikeId,user)=>{
         const ret=await pointsdao.linkableStartPoints(hike.startPoint.coordinates[0],hike.startPoint.coordinates[1],hike.startPoint.id,hike.Name);
         return ret;
     } catch (error) {
-        console.log("Error in linkable starting points",error);
         throw {status:error.status,message:error.message};
     }
 }
@@ -87,7 +80,6 @@ const getImages=async pointId=>{
         const ret=await pointsdao.getImages(parseInt(pointId));
         return ret;
     } catch (error) {
-        console.log("Error @ get images",error);
         throw {status:error.status,message:error.message};
     }
 }
@@ -96,6 +88,11 @@ const linkHut=async (user,body)=>{
     try {
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link a hut to a hike"};
         else if(!isFinite(body.hikeId) || !isFinite(body.hutId)) throw {status:422,message:"Bad parameters in the body, hike id and hut id should be numbers"};
+        const hike=await hikesdao.getHike(parseInt(body.hikeId));
+        if(user.username!==hike.author) throw {status:401,message:"This local guide doesn't have the rigths to update this hike"};
+        const linkable=await linkableHuts(body.hikeId,user);
+        if(!linkable.some(h=>h.id===body.hutId)) throw {status:422,message:"This hut is not linkable to this hike"};
+        else if(hike.huts.some(h=>h.id===body.hutId)) throw {status:422,message:"This hut is already linked to this hike"};
         await pointsdao.linkPointToHike(parseInt(body.hikeId),parseInt(body.hutId));
     } catch (error) {
         throw {status:error.status,message:error.message};   
@@ -107,6 +104,9 @@ const unlinkHut=async (user,body)=>{
     try {
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't unlink a hut to a hike"};
         else if(!isFinite(body.hikeId) || !isFinite(body.hutId)) throw {status:422,message:"Bad parameters in the body, hike id and hut id should be numbers"};
+        const hike=await hikesdao.getHike(parseInt(body.hikeId));
+        if(user.username!==hike.author) throw {status:401,message:"This local guide doesn't have the rigths to update this hike"};
+        if(!hike.huts.some(h=>h.id===body.hutId)) throw {status:422,message:"This hut is not already linked to this hike"};
         await pointsdao.unlinkPointFromHike(parseInt(body.hikeId),parseInt(body.hutId));
     } catch (error) {
         throw {status:error.status,message:error.message};   
@@ -121,7 +121,6 @@ const linkableHuts=async (hikeId,user)=>{
         const ret=await pointsdao.linkableHuts(parseInt(hikeId));
         return ret;
     } catch (error) {
-        console.log("Error in linkable huts",error);
         throw {status:error.status,message:error.message};
     }
 }
@@ -129,4 +128,3 @@ const linkableHuts=async (hikeId,user)=>{
 const points={getGeoAreaPoint,getAltitudePoint,linkableEndPoints,linkableStartPoints,getImages,getGeoAndLatitude,linkHut,unlinkHut,linkableHuts};
 
 module.exports=points;
-
