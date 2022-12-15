@@ -44,11 +44,13 @@ const hikesInBounds=async (maxLat,maxLng,minLat,minLng)=>{
 
 const addReferencePoint=async (hikeId,files,body,user)=>{
     try {
-        console.log("In add ref point with hikeid",hikeId,"FILES",files,"body",body,"user",user);
+        //console.log("In add ref point with hikeid",hikeId,"FILES",files,"body",body,"user",user);
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link points to a hike"};
         else if(!isFinite(hikeId) || !isFinite(body.latitude) || !isFinite(body.longitude) || typeof(body.name)!=="string" || typeof(body.description)!=="string") throw {status:422,message:"Bad parameters"};
         const hike=await hikesdao.getHike(parseInt(hikeId));
         if(user.username!==hike.author) throw {status:401,message:"This local guide doesn't have the rigths to update this hike reference points"};
+        const hikeMap=await hikesdao.getHikeMap(parseInt(hikeId));
+        if(!hikeMap.coordinates.some(p=>p[0]===body.latitude && p[1]===body.longitude)) throw {status:422,message:"These coordinates are not part of the hike track"};
         const geoData=await points.getGeoAndLatitude(body.latitude,body.longitude);
         const pointId=await pointsdao.insertPoint(body.name,parseFloat(body.latitude),parseFloat(body.longitude),geoData.altitude,geoData.geopos,"referencePoint",body.description);
         await pointsdao.linkPointToHike(parseInt(hikeId),pointId);
@@ -56,7 +58,7 @@ const addReferencePoint=async (hikeId,files,body,user)=>{
             await pointsdao.insertImageForPoint(pointId,i);
         }
     } catch (error) {
-        console.log("Error in add ref points",error);
+        //console.log("Error in add ref points",error);
         throw {status:error.status,message:error.message};
     }
 }
