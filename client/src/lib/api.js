@@ -279,7 +279,7 @@ async function getHutsListWithFilters(name, country, numberOfBedrooms, geographi
     });
 }
 
-const getPointsInBounds=async (bounds,startPoint,endPoint)=>{
+/*const getPointsInBounds=async (bounds,startPoint,endPoint)=>{
     const res=await fetch(APIBASE+'pointsInBounds',{
         credentials:"include",
         method:'POST',
@@ -292,7 +292,7 @@ const getPointsInBounds=async (bounds,startPoint,endPoint)=>{
     //console.log("Received points",points);
     if(res.ok) return points.map(p=>new Point(p.id,p.name,p.coordinates,p.geographicalArea,p.typeOfPoint));
     else throw res.status;
-}
+}*/
 
 const getHutsInBounds=async (bounds,startPoint,endPoint)=>{
     const res=await fetch(APIBASE+'hutsInBounds',{
@@ -345,14 +345,7 @@ const linkHut=async (hikeId,hutId,link)=>{
 }
 
 const getHikesInBounds=async bounds=>{
-    const res=await fetch(APIBASE+'hikesinbounds',{
-        credentials:"include",
-        method:'POST',
-        headers:{
-            "Content-type": "application/json"
-        },
-        body:JSON.stringify({bounds:bounds})
-    });
+    const res=await fetch(APIBASE+'hikes/bounds/'+bounds[0][0]+"/"+bounds[0][1]+"/"+bounds[1][0]+"/"+bounds[1][1],{credentials:"include"});
     const ret=await res.json();
     //console.log("\t\tRECEIVED FROM GET HIKES IN BOUNDS ",ret);
     if(res.ok) return ret.map(h=>({id:h.id,coordinates:h.coordinates}));
@@ -428,7 +421,6 @@ const getImagesPoint=async pointId=>{
 const api = {
 	login,
 	logout,
-	getPointsInBounds,
 	linkStartArrival,
 	register,
 	getParkings,

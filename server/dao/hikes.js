@@ -34,7 +34,7 @@ const getHike=async id=>new Promise((resolve,reject)=>{
         if(err) throw {status:503,message:err};
         else if(row===undefined) throw {status:404,message:"Hike not found!"};
         else{
-            getHikeMoreData(row).then(res=>resolve(res)).catch(err=>reject(ret));
+            getHikeMoreData(row).then(h=>resolve({ id: h.IDHike, name: h.Name, author: h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts:h.huts, description: h.Description, center: [h.CenterLat,h.CenterLon] })).catch(ret=>reject({status:ret.status,message:ret.message}));
         }
     })
 })
@@ -128,10 +128,10 @@ const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, ex
             return;
         }
 
-        console.log("Before adding points rows were ",row);
+        //console.log("Before adding points rows were ",row);
         row = await getHikesMoreData(row);
         const result = row.map((h) => ({ id: h.IDHike, name: h.Name, author: h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts:h.huts, description: h.Description, center: [h.CenterLat,h.CenterLon] }));
-        console.log("Returning hikes",result);
+        //console.log("Returning hikes",result);
         resolve(result);
     });
 
@@ -156,7 +156,7 @@ const getHikesMoreData = async (row) => {
         const end=await points.getPointById(item.EndPoint);
         item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:points.getGeoArea(start),coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
         item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:points.getGeoArea(end),coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
-        console.log("Got more data for row",item);
+        //console.log("Got more data for row",item);
         const linkedPoints = await getLinkedPoints(item.IDHike);
         item.referencePoints=linkedPoints.filter(p=>p.typeOfPoint=="referencePoint" || p.typeOfPoint=="hikePoint");
         item.huts=linkedPoints.filter(p=>p.typeOfPoint==="hut");

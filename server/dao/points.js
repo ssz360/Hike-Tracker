@@ -65,7 +65,7 @@ const getPointById = (id) => new Promise((resolve, reject) => {
     })
 });
 const getGeoArea= p=>{
-    console.log("IN geo get area with",p);
+    //console.log("IN geo get area with",p);
     let ret=p.Province;
     if(p.Province!=="" && (p.Region!=="" || p.Country!=="")) ret+=", ";
     ret+=p.Region;
