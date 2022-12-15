@@ -12,9 +12,9 @@ sections:
 
 ### Macro statistics
 
-- Number of stories committed vs done 
-- Total points committed vs done 
-- Nr of hours planned vs spent (as a team)
+- Number of stories committed vs done 3 vs 3 
+- Total points committed vs done 10 vs 10
+- Nr of hours planned vs spent (as a team) 75.5 vs 72
 
 **Remember**  a story is done ONLY if it fits the Definition of Done:
  
@@ -53,8 +53,8 @@ sections:
 - Unit Testing:
   - Total hours estimated 6
   - Total hours spent 5
-  - Nr of automated unit test cases 95
-  - Coverage (if available)
+  - Nr of automated unit test cases 86
+  - Coverage (if available) 60%
 - E2E testing:
   - Total hours estimated 6
   - Total hours spent 4
