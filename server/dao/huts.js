@@ -33,7 +33,7 @@ getHutsListWithFilters = async (name, country, numberOfBedrooms, geographicalAre
             reject(err);
             return;
         }
-        const huts = row.map((h) => ({ IDPoint: h.IDPoint, Name: h.Name, Coordinates: [h.Latitude,h.Longitude], GeographicalArea: getGeoArea(h) , Country: h.Country, NumberOfBedrooms: h.NumberOfBedrooms, Phone: h.Phone, Email:h.Email, Website: h.Website  }))
+        const huts = row.map((h) => ({ IDPoint: h.IDPoint, Description: h.Description, Name: h.Name, Coordinates: [h.Latitude,h.Longitude], GeographicalArea: getGeoArea(h) , Country: h.Country, NumberOfBedrooms: h.NumberOfBedrooms, Phone: h.Phone, Email:h.Email, Website: h.Website  }))
         console.log("Returning huts",huts);
         resolve(huts);
     });

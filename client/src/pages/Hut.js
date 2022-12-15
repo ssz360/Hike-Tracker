@@ -1,8 +1,8 @@
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, Collapse } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Search, PlusLg } from 'react-bootstrap-icons';
-import { PlusCircle, XLg } from 'react-bootstrap-icons';
+import { PlusCircle, XLg, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons';
 import api from '../lib/api';
 
 function Hut(props) {
@@ -14,7 +14,6 @@ function Hut(props) {
   const [isHover, setIsHover] = useState(false);
   const [searchHover, setSearchHover] = useState(false);
   const [clearHover, setClearHover] = useState(false);
-
   useEffect(() => {
     const getHuts = async () => {
         const huts = await api.getHutsListWithFilters(null, null, null, null, null, null);
@@ -160,6 +159,8 @@ function DisplayHut(props) {
 }
 
 function HutRow(props) {
+  const [open, setOpen] = useState(false);
+
   return (
     <><Col xs={4} className="mt-2"><Card className="shadow mt-3">
       <Card.Header><h4>{props.hut.name}</h4>
@@ -172,6 +173,30 @@ function HutRow(props) {
           <strong>Website: </strong><a href={props.hut.website}>{props.hut.website}</a>
 
         </Card.Text>
+        <Card.Text >{!open ? (
+                        <div className="d-flex flex-row-reverse">
+
+                            < ChevronCompactDown role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
+                                onClick={() => setOpen(!open)}
+                                aria-controls="example-collapse-text"
+                                aria-expanded={open} />
+                        </div>)
+                        :
+                        (<div className="d-flex flex-row-reverse">
+                            < ChevronCompactUp role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
+                                onClick={() => setOpen(!open)}
+                                aria-controls="example-collapse-text"
+                                aria-expanded={open} />
+                        </div>)}
+                        {/* Text in expanded selection */}
+                        <Collapse in={open}>
+                            <div id="example-collapse-text">
+                                <Card className="bg-light text-dark">
+                                    <Card.Body><strong>Description: </strong>{props.hut.description}</Card.Body>
+                                </Card>
+                            </div>
+                        </Collapse>
+                    </Card.Text>
       </Card.Body>
     </Card>
     </Col></>);

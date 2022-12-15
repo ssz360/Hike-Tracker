@@ -15,17 +15,13 @@ exports.getParkingsList = async () => new Promise((resolve, reject) => {
 
 exports.addParking = async (pk) => {
     try {
-        console.log("IN ADD PARKING WITH ",pk);
-        const geopos=await points.getGeoAreaPoint(pk.coordinates[0],pk.coordinates[1]);
-        console.log("Got geopos as",geopos);
-        const altitude=await points.getAltitudePoint(pk.coordinates[0],pk.coordinates[1]);
-        console.log("Got altitude as",altitude);
+        const geodata=await points.getGeoAndLatitude(pk.coordinates[0],pk.coordinates[1]);
         return new Promise((resolve, reject) => {
 
 
             const sql = 'INSERT INTO PARKINGS(IDPoint,SlotsTot,SlotsFull) VALUES(?,?,?)';
     
-            insertPoint(pk.name, pk.coordinates[0],pk.coordinates[1], altitude, geopos, 'parking',pk.desc).then(pointId => {
+            insertPoint(pk.name, pk.coordinates[0],pk.coordinates[1], geodata.altitude, geodata.geopos, 'parking',pk.desc).then(pointId => {
                 db.run(sql, [pointId, pk.slots, 0], function (err) {
                     if (err) {
                         reject(err);
