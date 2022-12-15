@@ -35,7 +35,7 @@ function HikeMap(props) {
     return (
         <>
             {show ?
-                <Modal show={show} size="lg" className="my-5" onHide={e => setShow(false)}>
+                <Modal show={show} size="lg" className="my-1" onHide={e => setShow(false)}>
                     <Modal.Body className="custom-modal-body">
                         {selectedPoint > 0 ?
                             <Container fluid>
@@ -64,7 +64,7 @@ function HikeMap(props) {
                             </MapContainer>
                         }
                     </Modal.Body>
-                    <Modal.Header closeButton>This is the map for hike {props.hike.name}</Modal.Header>
+                    <Modal.Header closeButton><strong>This is the map for hike {props.hike.name}</strong></Modal.Header>
                     <Modal.Body>
                         <h5>Description:</h5>
                         {props.hike.description}

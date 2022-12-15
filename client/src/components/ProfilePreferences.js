@@ -125,7 +125,7 @@ function Preferences() {
         </Card>
         <Row>
             <Col>
-                <Button variant="success" onClick={handleSubmit} disabled={saved}>{saved ? "Saved!" : "Save"}</Button>
+                <Button data-test="save-btn" variant="success" onClick={handleSubmit} disabled={saved}>{saved ? "Saved!" : "Save"}</Button>
             </Col>
         </Row>        
     </>);

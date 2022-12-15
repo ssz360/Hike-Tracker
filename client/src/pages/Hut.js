@@ -29,18 +29,20 @@ function Hut(props) {
     event.preventDefault();
     props.filteringHut(filterName !== '' ? filterName : null,
       filterCountry !== '' ? filterCountry : null,
-      filterGuests !== '' ? filterGuests : null,
       filterBeds !== '' ? filterBeds : null);
   }
 
-  const resetFields = () => {
-    setFilterName(null);
-    setFilterCountry(null);
-    setFilterGuests(null);
-    setFilterBeds(null);
+  const resetFields = async () => {
+    console.log("In reset fields");
+    setFilterName("");
+    setFilterCountry("");
+    setFilterGuests("");
+    setFilterBeds("");
     setIsHover(false);
     setSearchHover(false);
     setClearHover(false);
+    const huts = await api.getHutsListWithFilters(null, null, null, null, null, null);
+        props.setHuts(huts);
   }
 
   return (<>
@@ -55,7 +57,7 @@ function Hut(props) {
               <Form>
                 <Form.Group className="mb-3" controlId="InputName">
                   <Form.Label><strong>Name</strong></Form.Label>
-                  <Form.Control type="text" placeholder="Name" onChange={(event) => setFilterName(event.target.value)} />
+                  <Form.Control type="text" placeholder="Name" value={filterName} onChange={(event) => setFilterName(event.target.value)} />
                 </Form.Group>
               </Form>
             </div>
@@ -67,7 +69,7 @@ function Hut(props) {
               <Form>
                 <Form.Group className="mb-3" controlId="InputCountry">
                   <Form.Label><strong>Country</strong></Form.Label>
-                  <Form.Control type="text" placeholder="Country" onChange={(event) => setFilterCountry(event.target.value)} />
+                  <Form.Control type="text" placeholder="Country" value={filterCountry} onChange={(event) => setFilterCountry(event.target.value)} />
                 </Form.Group>
               </Form>
             </div>
@@ -78,8 +80,8 @@ function Hut(props) {
             <div className="d-grid gap-2">
               <Form>
                 <Form.Group className="mb-3" controlId="InputBeds">
-                  <Form.Label><strong>N° of beds</strong></Form.Label>
-                  <Form.Control type="number" min={0} step={1} onChange={(event) => setFilterBeds(event.target.value)} />
+                  <Form.Label><strong>Min n° of beds</strong></Form.Label>
+                  <Form.Control type="number" min={0} step={1} value={filterBeds} onChange={(event) => setFilterBeds(event.target.value)} />
                 </Form.Group>
               </Form>
             </div>
@@ -184,7 +186,7 @@ const validateInfo = (name, country, numberOfBedrooms, coordinate, setMessage) =
     setMessage("Invalid hut name.");
     return false;
   }
-  if (!country.match(/^[a-zA-Z]+[a-zA-Z]+$/)) {
+  if (!country.match(/^[a-zA-Z]{0,9}[a-zA-Z]{0,9}$/)) {
     setMessage("Invalid country name.");
     return false;
   }

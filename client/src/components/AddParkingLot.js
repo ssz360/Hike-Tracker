@@ -77,10 +77,10 @@ function AddParkingLot({ setParkings }) {
             // const pks = await api.getParkings();
             // setParkings(pks);
             resetFields();
-        } catch {
+        } catch(err) {
             setWaiting(false);
             setSuccess(false);
-            setError(error);
+            setError(err);
             setTimeout(() => setError(false), 3000);
         }
     }
@@ -146,7 +146,6 @@ function AddParkingLot({ setParkings }) {
                                     }
                                 }} type="submit" size="20px" />
                                 <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
-                                <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/parking")} size="20px" />
                             </div>
                         </Form>
                     </div>

@@ -12,12 +12,14 @@ const port = 3001;
 const upload = multer();
 const storageEngine = multer.diskStorage({
     destination: "./public/images",
+    limits: { fileSize: 8000000 },
     filename: (req, file, cb) => {
     cb(null, uuid.v4()+path.extname(file.originalname) );
     },
 });
 const uploadImages=multer({
     storage: storageEngine,
+    limits: { fileSize: 8000000 }
 });
 // AUTHENTICATION CONTROL
 const passport = require('passport');
@@ -198,6 +200,7 @@ app.post('/api/huts', async (req, res) => {
 // ]
 app.post('/api/huts/list', async (req, res) => {
     const { name, country, numberOfBedrooms, geographicalArea } = req.body;
+    console.log("IN server FILTERS WITH NAME",name,"COUNTRY",country,"NUMBEROFBEDS",numberOfBedrooms,"Geogr",geographicalArea);
     huts.getHutsListWithFilters(name, country, numberOfBedrooms, geographicalArea)
         .then(huts => res.json(huts))
         .catch(err => res.status(500).json('Error looking for hut: \r\n' + err));
@@ -322,9 +325,10 @@ app.post('/api/linkableStartPoints', async (req, res) => {
 
 app.get('/api/hikes/:hikeId/linkableStartPoints',async(req,res)=>{
     try {
-        console.log("In get points linkable as starting ones with ",req.params.hikeId);
+        //console.log("In get points linkable as starting ones with ",req.params.hikeId);
         const hike=await hikesdao.getHike(parseInt(req.params.hikeId));
-        const ret=await pointsdao.linkableStartPoints(hike.startPoint.coordinates[0],hike.startPoint.coordinates[1],hike.startPoint.id,hike.name);
+        //console.log("Hike",hike);
+        const ret=await pointsdao.linkableStartPoints(hike.startPoint.coordinates[0],hike.startPoint.coordinates[1],hike.startPoint.id,hike.Name);
         console.log("Returning starting points",ret);
         res.status(200).json(ret);
     } catch (error) {
@@ -334,9 +338,10 @@ app.get('/api/hikes/:hikeId/linkableStartPoints',async(req,res)=>{
 
 app.get('/api/hikes/:hikeId/linkableEndPoints',async(req,res)=>{
     try {
-        console.log("In get points linkable as end ones with ",req.params.hikeId);
+        //console.log("In get points linkable as end ones with ",req.params.hikeId);
         const hike=await hikesdao.getHike(parseInt(req.params.hikeId));
-        const ret=await pointsdao.linkableEndPoints(hike.endPoint.coordinates[0],hike.endPoint.coordinates[1],hike.endPoint.id,hike.name);
+        //console.log("Hike",hike);
+        const ret=await pointsdao.linkableEndPoints(hike.endPoint.coordinates[0],hike.endPoint.coordinates[1],hike.endPoint.id,hike.Name);
         console.log("Returning ending points",ret);
         res.status(200).json(ret);
     } catch (error) {

@@ -139,7 +139,6 @@
   height: 100%;
   transition: .5s ease;
   display: none;
-  color: white;
   text-align: center;
 }
 
@@ -152,7 +151,6 @@
   height: 20vmin;
   opacity: 0;
   transition: .5s ease;
-  color: white;
 }
 
 .cardoverlayimageremove {
@@ -165,6 +163,18 @@
 
 .cardoverlayimageremove:hover > .bi{
   fill: white;
+}
+
+.cardoverlayimagezoom > .bi {
+  fill: cyan;
+}
+
+.cardoverlayimagezoom:hover > .bi{
+  fill: white;
+}
+
+.cardoverlayimagezoom {
+  width: 100%
 }
 
 .dropdown-menu.show {

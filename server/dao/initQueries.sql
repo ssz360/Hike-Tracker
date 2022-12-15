@@ -100,8 +100,16 @@ CREATE TABLE IF NOT EXISTS PREFERENCES (
 
 
 
+
+
 INSERT INTO USERS(Username, Type, Password, Salt,Name,Surname,PhoneNumber)
 VALUES
 ('jonhutworker@gmail.com',  'localGuide',  '5cb69c67556b1e6d37972a42a644e34c07db6711003395b58c5365a5c521f12f','6ab29d4b3b4a39c3e39a81c2e33940e3',  'Jon',  'Black',  '1234567890'),
 ('davidwallace@gmail.com', 'localGuide',   '09112dbd6ec97c22d4b3ab3d9663fc17ac5d19cdb538b1a0c88801dfa5fb910d','c1df01421e0ee3b8bad0dffde4d0b283',  'David',  'Wallace',  '1234567890'),
+('johnlaroccia@gmail.com', 'localGuide', '421a530fba46900d33d759148b2c08a2fb134c5e003cf7cdc10fc558c38977ad', '1b5cdc6f2003a8e6073809c99d2c785a', 'John' , 'Rock' , '1234567890'),
 ('joelovehikes@gmail.com','hiker', 'f10a1ac3c830339dd6ef164df4c0efc29080b7bba7a29e3060772db59fce1a83' , '58c1096190832e329624c2ebd837ef77', 'Joe', 'Krafken', '38339900');
+
+
+
+
+

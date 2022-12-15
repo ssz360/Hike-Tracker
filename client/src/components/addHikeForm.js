@@ -89,7 +89,7 @@ function AddHikeForm(props) {
 
                                 <Form.Group controlId="formFile" className="mb-3" onChange={e => { setFileName(e.target.value); setFile(e.target.files[0]); }}>
                                     <Form.Label > <strong>Track file</strong></Form.Label>
-                                    <Form.Control type="file" value={fileName} />
+                                    <Form.Control type="file" accept=".gpx" value={fileName} />
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new hike"} successMessage={"New hike added correctly!"} />
@@ -110,7 +110,6 @@ function AddHikeForm(props) {
                                             setError();
                                             setSuccess();
                                         }} size="20px" />
-                                        <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/hikes")}  size="20px" />
                                     </div>
                                 </Form.Group>
                             </Form>
