@@ -231,7 +231,7 @@ describe('geographical area',()=>{
 describe('linkable huts',()=>{
 
     test('linkable huts to rocciamelone',async ()=>{
-        const ret=await points.linkableHuts(ROCCIAMELONE.id,DAVIDWALLACE);
+        const ret=await points.linkableHuts(DAVIDWALLACE,ROCCIAMELONE.id);
         expect(ret.length).equal(1);
         expect(ret[0].name).equal("Rocciamelone");
         expect(ret[0].id).equal(3);
@@ -240,7 +240,7 @@ describe('linkable huts',()=>{
 
     test('linkable huts without being a local guide',async()=>{
         try {
-            await points.linkableHuts(ROCCIAMELONE.id,JOEHIKER);
+            await points.linkableHuts(JOEHIKER,ROCCIAMELONE.id);
         } catch (error) {
             expect(error.status).equal(401);
             expect(error.message).equal("This type of user can't link huts to a hike");
@@ -250,20 +250,20 @@ describe('linkable huts',()=>{
 
 describe('linkable starting/arrival points',()=>{
     test('linkable starting points to rocciamelone',async()=>{
-        const ret=await points.linkableStartPoints(ROCCIAMELONE.id,DAVIDWALLACE);
+        const ret=await points.linkableStartPoints(DAVIDWALLACE,ROCCIAMELONE.id);
         expect(ret.length).equal(1);
         expect(ret[0].name).equal("Rocciamelone");
     })
 
     test('linkable arrival points to rocciamelone',async()=>{
-        const ret=await points.linkableStartPoints(ROCCIAMELONE.id,DAVIDWALLACE);
+        const ret=await points.linkableStartPoints(DAVIDWALLACE,ROCCIAMELONE.id);
         expect(ret.length).equal(1);
         expect(ret[0].name).equal("Rocciamelone");
     })
 
     test('linkable starting points to rocciamelone without being a local guide',async()=>{
         try {
-            await points.linkableStartPoints(ROCCIAMELONE.id,JOEHIKER);
+            await points.linkableStartPoints(JOEHIKER,ROCCIAMELONE.id);
         } catch (error) {
             expect(error.status).equal(401);
             expect(error.message).equal("This type of user can't link points to a hike");
@@ -272,10 +272,116 @@ describe('linkable starting/arrival points',()=>{
 
     test('linkable arrival points to rocciamelone without being a local guide',async()=>{
         try {
-            await points.linkableEndPoints(ROCCIAMELONE.id,JOEHIKER);
+            await points.linkableEndPoints(JOEHIKER,ROCCIAMELONE.id);
         } catch (error) {
             expect(error.status).equal(401);
             expect(error.message).equal("This type of user can't link points to a hike");
+        }
+    })
+
+    test('link starting point',async()=>{
+        hikesdao.updateStartingArrivalPoint=jest.fn();
+        hikesdao.updateStartingArrivalPoint.mockReturnValue();
+        await points.linkStart(DAVIDWALLACE,ROCCIAMELONE.id,{pointId:3});
+        expect(hikesdao.updateStartingArrivalPoint.mock.calls[0][0]).equal(ROCCIAMELONE.id);
+        expect(hikesdao.updateStartingArrivalPoint.mock.calls[0][1]).equal(3);
+        expect(hikesdao.updateStartingArrivalPoint.mock.calls[0][2]===undefined).equal(true);
+    })
+
+    test('link starting point not linkable',async()=>{
+        try{
+            hikesdao.updateStartingArrivalPoint=jest.fn();
+            hikesdao.updateStartingArrivalPoint.mockReturnValue();
+            await points.linkStart(DAVIDWALLACE,ROCCIAMELONE.id,{pointId:99});
+        }catch(error){
+            expect(error.status).equal(422);
+            expect(error.message).equal("This point is not linkable as a start point for this hike");
+        }
+    })
+
+    test('link starting point without being the author',async()=>{
+        try{
+            hikesdao.updateStartingArrivalPoint=jest.fn();
+            hikesdao.updateStartingArrivalPoint.mockReturnValue();
+            await points.linkStart(JOHNLAROCCIA,ROCCIAMELONE.id,{pointId:99});
+        }catch(error){
+            expect(error.status).equal(401);
+            expect(error.message).equal("This local guide doesn't have the rigths to update this hike");
+        }
+    })
+
+    test('link starting point without being a local guide',async()=>{
+        try{
+            hikesdao.updateStartingArrivalPoint=jest.fn();
+            hikesdao.updateStartingArrivalPoint.mockReturnValue();
+            await points.linkStart(JOEHIKER,ROCCIAMELONE.id,{pointId:99});
+        }catch(error){
+            expect(error.status).equal(401);
+            expect(error.message).equal("This type of user can't update the starting point of a hike");
+        }
+    })
+
+    test('link starting point with a bad parameter',async()=>{
+        try{
+            hikesdao.updateStartingArrivalPoint=jest.fn();
+            hikesdao.updateStartingArrivalPoint.mockReturnValue();
+            await points.linkStart(DAVIDWALLACE,ROCCIAMELONE.id,{pointId:"wow"});
+        }catch(error){
+            expect(error.status).equal(422);
+            expect(error.message).equal("Bad parameters, hike id and point id should be numbers");
+        }
+    })
+
+    test('link arrival point',async()=>{
+        hikesdao.updateStartingArrivalPoint=jest.fn();
+        hikesdao.updateStartingArrivalPoint.mockReturnValue();
+        await points.linkEnd(DAVIDWALLACE,ROCCIAMELONE.id,{pointId:3});
+        expect(hikesdao.updateStartingArrivalPoint.mock.calls[0][0]).equal(ROCCIAMELONE.id);
+        expect(hikesdao.updateStartingArrivalPoint.mock.calls[0][2]).equal(3);
+        expect(hikesdao.updateStartingArrivalPoint.mock.calls[0][1]===undefined).equal(true);
+    })
+
+    test('link arrival point not linkable',async()=>{
+        try{
+            hikesdao.updateStartingArrivalPoint=jest.fn();
+            hikesdao.updateStartingArrivalPoint.mockReturnValue();
+            await points.linkEnd(DAVIDWALLACE,ROCCIAMELONE.id,{pointId:99});
+        }catch(error){
+            expect(error.status).equal(422);
+            expect(error.message).equal("This point is not linkable as an arrival point for this hike");
+        }
+    })
+
+    test('link starting point without being the author',async()=>{
+        try{
+            hikesdao.updateStartingArrivalPoint=jest.fn();
+            hikesdao.updateStartingArrivalPoint.mockReturnValue();
+            await points.linkEnd(JOHNLAROCCIA,ROCCIAMELONE.id,{pointId:99});
+        }catch(error){
+            expect(error.status).equal(401);
+            expect(error.message).equal("This local guide doesn't have the rigths to update this hike");
+        }
+    })
+
+    test('link arrival point without being a local guide',async()=>{
+        try{
+            hikesdao.updateStartingArrivalPoint=jest.fn();
+            hikesdao.updateStartingArrivalPoint.mockReturnValue();
+            await points.linkEnd(JOEHIKER,ROCCIAMELONE.id,{pointId:99});
+        }catch(error){
+            expect(error.status).equal(401);
+            expect(error.message).equal("This type of user can't update the arrival point of a hike");
+        }
+    })
+
+    test('link arrival point with a bad parameter',async()=>{
+        try{
+            hikesdao.updateStartingArrivalPoint=jest.fn();
+            hikesdao.updateStartingArrivalPoint.mockReturnValue();
+            await points.linkEnd(DAVIDWALLACE,ROCCIAMELONE.id,{pointId:"wow"});
+        }catch(error){
+            expect(error.status).equal(422);
+            expect(error.message).equal("Bad parameters, hike id and point id should be numbers");
         }
     })
 })
@@ -288,7 +394,7 @@ describe('link/unlink huts',()=>{
         pointsdao.linkPointToHike.mockReturnValue();
         hikesdao.getHike=jest.fn();
         hikesdao.getHike.mockReturnValue(ROCCIAMELONEHIKENOHUTS);
-        await points.linkHut(DAVIDWALLACE,body);
+        await points.linkHut(DAVIDWALLACE,body.hikeId,body);
         expect(hikesdao.getHike.mock.calls[0][0]).equal(ROCCIAMELONEHIKENOHUTS.id);
         expect(pointsdao.linkPointToHike.mock.calls[0][0]).equal(body.hikeId);
         expect(pointsdao.linkPointToHike.mock.calls[0][1]).equal(body.hutId);
@@ -299,7 +405,7 @@ describe('link/unlink huts',()=>{
             const body={hikeId:1,hutId:68}
             pointsdao.linkPointToHike=jest.fn();
             pointsdao.linkPointToHike.mockReturnValue();
-            await points.linkHut(DAVIDWALLACE,body);
+            await points.linkHut(DAVIDWALLACE,body.hikeId,body);
         } catch (error) {
             expect(error.status).equal(422);
             expect(error.message).equal("This hut is not linkable to this hike");
@@ -311,7 +417,7 @@ describe('link/unlink huts',()=>{
             const body={hikeId:1,hutId:3}
             pointsdao.linkPointToHike=jest.fn();
             pointsdao.linkPointToHike.mockReturnValue();
-            await points.linkHut(DAVIDWALLACE,body);
+            await points.linkHut(DAVIDWALLACE,body.hikeId,body);
         } catch (error) {
             expect(error.status).equal(422);
             expect(error.message).equal("This hut is already linked to this hike");
@@ -324,7 +430,7 @@ describe('link/unlink huts',()=>{
         pointsdao.unlinkPointFromHike.mockReturnValue();
         hikesdao.getHike=jest.fn();
         hikesdao.getHike.mockReturnValue(ROCCIAMELONE);
-        await points.unlinkHut(DAVIDWALLACE,body);
+        await points.unlinkHut(DAVIDWALLACE,body.hikeId,body);
         expect(pointsdao.linkPointToHike.mock.calls[0][0]).equal(body.hikeId);
         expect(pointsdao.linkPointToHike.mock.calls[0][1]).equal(body.hutId);
     })
@@ -334,7 +440,7 @@ describe('link/unlink huts',()=>{
             const body={hikeId:1,hutId:68}
             pointsdao.unlinkPointFromHike=jest.fn();
             pointsdao.unlinkPointFromHike.mockReturnValue();
-            await points.unlinkHut(DAVIDWALLACE,body);
+            await points.unlinkHut(DAVIDWALLACE,body.hikeId,body);
         } catch (error) {
             expect(error.status).equal(422);
             expect(error.message).equal("This hut is not already linked to this hike");
@@ -346,7 +452,7 @@ describe('link/unlink huts',()=>{
             const body={hikeId:1,hutId:3}
             pointsdao.linkPointToHike=jest.fn();
             pointsdao.linkPointToHike.mockReturnValue();
-            await points.linkHut(JOHNLAROCCIA,body);
+            await points.linkHut(JOHNLAROCCIA,body.hikeId,body);
         } catch (error) {
             expect(error.status).equal(401);
             expect(error.message).equal("This local guide doesn't have the rigths to update this hike");
@@ -358,7 +464,7 @@ describe('link/unlink huts',()=>{
             const body={hikeId:1,hutId:3}
             pointsdao.unlinkPointFromHike=jest.fn();
             pointsdao.unlinkPointFromHike.mockReturnValue();
-            await points.linkHut(JOHNLAROCCIA,body);
+            await points.linkHut(JOHNLAROCCIA,body.hikeId,body);
         } catch (error) {
             expect(error.status).equal(401);
             expect(error.message).equal("This local guide doesn't have the rigths to update this hike");

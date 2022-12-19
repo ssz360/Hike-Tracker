@@ -2,7 +2,38 @@ const hikesdao=require('../dao/hikes');
 const gpxParser = require('gpxparser');
 const pointsdao=require('../dao/points');
 const points=require('./points');
-const newHike=async (body,user,file)=>{
+const DIFFICULTIES=['TOURIST','HIKER','PROFESSIONAL HIKER']
+const DEFCENTERLAT=0;
+const DEFCENTERLNG=0;
+const DEFRADIUS=6371;
+const getHikes=async ()=>{
+    try {
+        const ret=await hikesdao.getHikesList();
+        return ret;
+    } catch (error) {
+        throw {status:error.status,message:error.message};
+    }
+}
+
+const getHikesFilters=async queries=>{
+    try {
+        if((queries.centerLat && !isFinite(queries.centerLat)) || (queries.centerLng && !isFinite(queries.centerLng)) 
+        || (queries.radius && !isFinite(queries.radius)) || (queries.lenMin && !isFinite(queries.lenMin))
+        || (queries.lenMax && !isFinite(queries.lenMax)) || (queries.expTimeMin && !isFinite(queries.expTimeMin))
+        || (queries.expTimeMax && !isFinite(queries.expTimeMax)) || (queries.ascMin && !isFinite(queries.ascMin))
+        || (queries.ascMax && !isFinite(queries.ascMax)) || (queries.difficulty && !DIFFICULTIES.includes(queries.difficulty.toUpperCase()))) throw {status:422,message:"Bad parameters"};
+        const ret=await hikesdao.getHikesListWithFilters(queries.lenMin?parseFloat(queries.lenMin):undefined,queries.lenMax?parseFloat(queries.lenMax):undefined,
+            queries.expTimeMin?parseFloat(queries.expTimeMin):undefined,queries.expTimeMax?parseFloat(queries.expTimeMax):undefined,
+            queries.ascMin?parseFloat(queries.ascMin):undefined,queries.ascMax?parseFloat(queries.ascMax):undefined,queries.difficulty?queries.difficulty.toUpperCase():undefined,
+            queries.centerLat?parseFloat(queries.centerLat):DEFCENTERLAT,queries.centerLng?parseFloat(queries.centerLng):DEFCENTERLNG,
+            queries.radius?parseFloat(queries.radius):DEFRADIUS);
+        return ret;
+    } catch (error) {
+        throw {status:error.status,message:error.message};
+    }
+}
+
+const newHike=async (user,body,file)=>{
     try {
         if(user.type!=="localGuide")    throw {status:401,message:"This type of user can't describe a new hike"};
         if(typeof(body.name)!=="string" || typeof(body.description)!=="string" || typeof(body.difficulty)!=="string") throw {status:422,message:"Bad parameters"};
@@ -42,7 +73,7 @@ const hikesInBounds=async (maxLat,maxLng,minLat,minLng)=>{
     }
 }
 
-const addReferencePoint=async (hikeId,files,body,user)=>{
+const addReferencePoint=async (user,hikeId,body,files)=>{
     try {
         //console.log("In add ref point with hikeid",hikeId,"FILES",files,"body",body,"user",user);
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link points to a hike"};
@@ -73,5 +104,5 @@ const getMap=async id=>{
     }
 }
 
-const hikes={newHike,hikesInBounds,addReferencePoint,getMap};
+const hikes={newHike,hikesInBounds,addReferencePoint,getMap,getHikes,getHikesFilters};
 module.exports= hikes;

@@ -89,9 +89,12 @@ app.get("/api/verify/:token", tokens.verify);
 app.post("/api/referencePoint", ref.addReferencePoint);
 
 app.get('/api/hikes', async (req, res) => {
-    hikesdao.getHikesList()
-        .then(hikes => { res.json(hikes) })
-        .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
+    try {
+        const ret=await hikes.getHikes();
+        res.status(200).json(ret);
+    } catch (error) {
+        res.status(error.status).json(error.message);
+    }
 });
 
 // every field can contain a value or be null -> everything null == getHikesList()
@@ -113,6 +116,16 @@ app.post('/api/hikes', async (req, res) => {
         .catch(error => res.status(error.status).json(error.message).end());
 });
 
+app.get('/api/hikes/filters', async (req, res) => {
+    try {
+        console.log("Query",req.query);
+        const ret=await hikes.getHikesFilters(req.query);
+        res.status(200).json(ret);
+    } catch (error) {
+        res.status(error.status).json(error.message);
+    }
+});
+
 app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
     try {
         const ret = await hikes.getMap(req.params.id);
@@ -124,7 +137,7 @@ app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
 
 app.post('/api/newHike', isLoggedIn, upload.single('file'), async (req, res) => {
     try {
-        await hikes.newHike(req.body,req.user,req.file);
+        await hikes.newHike(req.user,req.body,req.file);
         return res.status(201).end();
     } catch (error) {
         //console.log("Error in index new hike",error);
@@ -250,21 +263,27 @@ app.post('/api/addReferenceToHike', async (req, res) => {
         await hikesdao.addReferenceToHike(IDHike, IDPoint);
         res.status(201).end();
     } catch (error) {
-        res.status(error.code).json(error.message);
+        res.status(error.status).json(error.message);
     }
 });
 
-app.post('/api/updateStartEndPoint', isLoggedIn, async (req, res) => {
-    console.log("Updatestart end point with ", req.body);
-    const { IDHike, StartPoint, EndPoint } = req.body;
-    console.log("IDHIKE", IDHike, "StartPoint", StartPoint, "EndPoint", EndPoint);
+app.post('/api/:hikeId/startPoint', isLoggedIn, async (req, res) => {
     try {
-        await hikesdao.updateStartingArrivalPoint(IDHike, StartPoint, EndPoint);
+        await points.linkStart(req.user,req.params.hikeId,req.body);
         res.status(201).end();
     } catch (error) {
-        res.status(error.code).json(error.message);
+        res.status(error.status).json(error.message);
     }
 });
+
+app.post('/api/:hikeId/endPoint',isLoggedIn,async (req, res) => {
+    try {
+        await points.linkEnd(req.user,req.params.hikeId,req.body);
+        res.status(201).end();
+    } catch (error) {
+        res.status(error.status).json(error.message);
+    }
+})
 
 
 /*app.post('/api/pointsInBounds', isLoggedIn, async (req, res) => {
@@ -283,25 +302,25 @@ app.post('/api/updateStartEndPoint', isLoggedIn, async (req, res) => {
 
 app.get('/api/hikes/:hikeId/linkablehuts', isLoggedIn, async (req, res) => {
     try {
-        const ret=await points.linkableHuts(req.params.hikeId,req.user);
+        const ret=await points.linkableHuts(req.user,req.params.hikeId);
         res.status(201).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message)
     }
 })
 
-app.post('/api/hikes/linkHut', isLoggedIn, async (req, res) => {
+app.post('/api/hikes/:hikeId/linkHut', isLoggedIn, async (req, res) => {
     try {
-        await points.linkHut(req.user,req.body);
+        await points.linkHut(req.user,req.params.hikeId,req.body);
         return res.status(201).end();
     } catch (error) {
         res.status(error.status).json(error.message);
     }
 })
 
-app.delete('/api/hikes/linkHut', async (req, res) => {
+app.delete('/api/hikes/:hikeId/linkHut', async (req, res) => {
     try {
-        await points.unlinkHut(req.user,req.body);
+        await points.unlinkHut(req.user,req.params.hikeId,req.body);
         return res.status(204).end();
     } catch (error) {
         res.status(error.status).json(error.message);
@@ -310,7 +329,7 @@ app.delete('/api/hikes/linkHut', async (req, res) => {
 
 app.get('/api/hikes/:hikeId/linkableStartPoints',isLoggedIn ,async(req,res)=>{
     try {
-        const ret=await points.linkableStartPoints(req.params.hikeId,req.user);
+        const ret=await points.linkableStartPoints(req.user,req.params.hikeId);
         res.status(200).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message)
@@ -319,7 +338,7 @@ app.get('/api/hikes/:hikeId/linkableStartPoints',isLoggedIn ,async(req,res)=>{
 
 app.get('/api/hikes/:hikeId/linkableEndPoints',isLoggedIn, async(req,res)=>{
     try {
-        const ret=await points.linkableEndPoints(req.params.hikeId,req.user);
+        const ret=await points.linkableEndPoints(req.user,req.params.hikeId);
         res.status(200).json(ret);
     } catch (error) {
         res.status(error.status).json(error.message)
@@ -338,7 +357,7 @@ app.get('/api/hikes/bounds/:maxLat/:maxLng/:minLat/:minLng',isLoggedIn,async (re
 
 app.post('/api/hikes/:hikeId/referencePoint',isLoggedIn,uploadImages.array('images'),async (req,res)=>{
     try {
-        await hikes.addReferencePoint(req.params.hikeId,req.files,req.body,req.user);
+        await hikes.addReferencePoint(req.user,req.params.hikeId,req.body,req.files);
         return res.status(201).json();
     } catch (error) {
         res.status(error.status).json(error.message);

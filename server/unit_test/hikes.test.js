@@ -82,7 +82,7 @@ describe('hikes services',()=>{
         pointsdao.insertPoint.mockReturnValue(9999);
         const file=await readTestFile(false);
         const body={name:"Roccia Del Malgioglio",description:"Testing hike",difficulty:"Hiker"}
-        await hikes.newHike(body,{username:"davidwallace@gmail.com",type:"localGuide"},{buffer:Buffer.from(file)});
+        await hikes.newHike({username:"davidwallace@gmail.com",type:"localGuide"},body,{buffer:Buffer.from(file)});
         expect(hikesdao.newHike.mock.calls[0][6]).equal("HIKER");
         expect(Math.ceil(hikesdao.newHike.mock.calls[0][2])).equal(1);
         expect(hikesdao.newHike.mock.calls[0][1]).equal("davidwallace@gmail.com");
@@ -99,7 +99,7 @@ describe('hikes services',()=>{
             hikesdao.newHike.mockReturnValue("");
             const file=await readTestFile(true);
             const body={name:"Roccia Del Malgioglio",description:"Testing hike",difficulty:"Hiker"}
-            await hikes.newHike(body,{username:"davidwallace@gmail.com",type:"localGuide"},{buffer:Buffer.from(file)});
+            await hikes.newHike({username:"davidwallace@gmail.com",type:"localGuide"},body,{buffer:Buffer.from(file)});
         } catch (error) {
             expect(error.status).equal(422);
         }
@@ -111,7 +111,7 @@ describe('hikes services',()=>{
             hikesdao.newHike.mockReturnValue("");
             const file=await readTestFile(true);
             const body={name:"Roccia Del Malgioglio",description:"Testing hike",difficulty:"Hiker"}
-            await hikes.newHike(body,{username:"jonhiker@gmail.com",type:"hiker"},{buffer:Buffer.from(file)});
+            await hikes.newHike({username:"jonhiker@gmail.com",type:"hiker"},body,{buffer:Buffer.from(file)});
         } catch (error) {
             expect(error.status).equal(401);
         }
@@ -183,7 +183,7 @@ describe('reference points',()=>{
         pointsdao.linkPointToHike=jest.fn();
         pointsdao.insertPoint.mockReturnValue(9999);
         pointsdao.linkPointToHike.mockReturnValue();
-        await hikes.addReferencePoint(ROCCIAMELONE.id,[],POINTINSIDEROCCIAMELONE,DAVIDWALLACE);
+        await hikes.addReferencePoint(DAVIDWALLACE,ROCCIAMELONE.id,POINTINSIDEROCCIAMELONE,[]);
         expect(pointsdao.insertPoint.mock.calls[0][0]).equal(POINTINSIDEROCCIAMELONE.name);
         expect(pointsdao.insertPoint.mock.calls[0][1]).equal(POINTINSIDEROCCIAMELONE.latitude);
         expect(pointsdao.insertPoint.mock.calls[0][2]).equal(POINTINSIDEROCCIAMELONE.longitude);
@@ -203,7 +203,7 @@ describe('reference points',()=>{
             pointsdao.linkPointToHike=jest.fn();
             pointsdao.insertPoint.mockReturnValue(9999);
             pointsdao.linkPointToHike.mockReturnValue();
-            await hikes.addReferencePoint(ROCCIAMELONE.id,[],POINTOUTSIDEROCCIAMELONE,DAVIDWALLACE);
+            await hikes.addReferencePoint(DAVIDWALLACE,ROCCIAMELONE.id,POINTOUTSIDEROCCIAMELONE,[]);
         }catch(error){
             expect(error.status).equal(422);
             expect(error.message).equal("These coordinates are not part of the hike track")
@@ -217,7 +217,7 @@ describe('reference points',()=>{
         pointsdao.linkPointToHike.mockReturnValue();
         pointsdao.insertImageForPoint=jest.fn();
         pointsdao.insertImageForPoint.mockReturnValue();
-        await hikes.addReferencePoint(ROCCIAMELONE.id,IMAGES,POINTINSIDEROCCIAMELONE,DAVIDWALLACE);
+        await hikes.addReferencePoint(DAVIDWALLACE,ROCCIAMELONE.id,POINTINSIDEROCCIAMELONE,IMAGES);
         expect(pointsdao.insertImageForPoint.mock.calls[0].length).equal(IMAGES.length-1);
         expect(pointsdao.insertImageForPoint.mock.calls[0][0]).equal(9999);
         expect(pointsdao.insertImageForPoint.mock.calls[0][1].filename).equal(IMAGES[0].filename);
@@ -229,7 +229,7 @@ describe('reference points',()=>{
             pointsdao.linkPointToHike=jest.fn();
             pointsdao.insertPoint.mockReturnValue(9999);
             pointsdao.linkPointToHike.mockReturnValue();
-            await hikes.addReferencePoint(ROCCIAMELONE.id,[],POINTINSIDEROCCIAMELONE,JOHNLAROCCIA);
+            await hikes.addReferencePoint(JOHNLAROCCIA,ROCCIAMELONE.id,POINTINSIDEROCCIAMELONE,[]);
         }catch(error){
             expect(error.status).equal(401);
             expect(error.message).equal("This local guide doesn't have the rigths to update this hike reference points")
@@ -242,7 +242,7 @@ describe('reference points',()=>{
             pointsdao.linkPointToHike=jest.fn();
             pointsdao.insertPoint.mockReturnValue(9999);
             pointsdao.linkPointToHike.mockReturnValue();
-            await hikes.addReferencePoint(ROCCIAMELONE.id,[],POINTINSIDEROCCIAMELONE,JOEHIKER);
+            await hikes.addReferencePoint(JOEHIKER,ROCCIAMELONE.id,POINTINSIDEROCCIAMELONE,[]);
         }catch(error){
             expect(error.status).equal(401);
             expect(error.message).equal("This type of user can't link points to a hike")
@@ -255,7 +255,7 @@ describe('reference points',()=>{
             pointsdao.linkPointToHike=jest.fn();
             pointsdao.insertPoint.mockReturnValue(9999);
             pointsdao.linkPointToHike.mockReturnValue();
-            await hikes.addReferencePoint(ROCCIAMELONE.id,[],{name:undefined,description:undefined,latitude:"33a",longitude:"bifoi1"},DAVIDWALLACE);
+            await hikes.addReferencePoint(DAVIDWALLACE,ROCCIAMELONE.id,{name:undefined,description:undefined,latitude:"33a",longitude:"bifoi1"},[]);
         }catch(error){
             expect(error.status).equal(422);
             expect(error.message).equal("Bad parameters")

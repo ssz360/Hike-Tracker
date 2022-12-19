@@ -50,7 +50,7 @@ const getGeoAndLatitude=async (lat,lng)=>{
     }
 }
 
-const linkableEndPoints=async (hikeId,user)=>{
+const linkableEndPoints=async (user,hikeId)=>{
     try {
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link points to a hike"};
         else if(!isFinite(hikeId)) throw {status:422,message:"Hike id should be an integer"};
@@ -62,7 +62,7 @@ const linkableEndPoints=async (hikeId,user)=>{
     }
 }
 
-const linkableStartPoints=async (hikeId,user)=>{
+const linkableStartPoints=async (user,hikeId)=>{
     try {
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link points to a hike"};
         else if(!isFinite(hikeId)) throw {status:422,message:"Hike id should be an integer"};
@@ -84,37 +84,37 @@ const getImages=async pointId=>{
     }
 }
 
-const linkHut=async (user,body)=>{
+const linkHut=async (user,hikeId,body)=>{
     try {
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link a hut to a hike"};
-        else if(!isFinite(body.hikeId) || !isFinite(body.hutId)) throw {status:422,message:"Bad parameters in the body, hike id and hut id should be numbers"};
-        const hike=await hikesdao.getHike(parseInt(body.hikeId));
+        else if(!isFinite(hikeId) || !isFinite(body.hutId)) throw {status:422,message:"Bad parameters, hike id and hut id should be numbers"};
+        const hike=await hikesdao.getHike(parseInt(hikeId));
         if(user.username!==hike.author) throw {status:401,message:"This local guide doesn't have the rigths to update this hike"};
-        const linkable=await linkableHuts(body.hikeId,user);
+        const linkable=await linkableHuts(user,hikeId);
         if(!linkable.some(h=>h.id===body.hutId)) throw {status:422,message:"This hut is not linkable to this hike"};
         else if(hike.huts.some(h=>h.id===body.hutId)) throw {status:422,message:"This hut is already linked to this hike"};
-        await pointsdao.linkPointToHike(parseInt(body.hikeId),parseInt(body.hutId));
+        await pointsdao.linkPointToHike(parseInt(hikeId),parseInt(body.hutId));
     } catch (error) {
         throw {status:error.status,message:error.message};   
     }
 }
 
 
-const unlinkHut=async (user,body)=>{
+const unlinkHut=async (user,hikeId,body)=>{
     try {
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't unlink a hut to a hike"};
-        else if(!isFinite(body.hikeId) || !isFinite(body.hutId)) throw {status:422,message:"Bad parameters in the body, hike id and hut id should be numbers"};
-        const hike=await hikesdao.getHike(parseInt(body.hikeId));
+        else if(!isFinite(hikeId) || !isFinite(body.hutId)) throw {status:422,message:"Bad parameters, hike id and hut id should be numbers"};
+        const hike=await hikesdao.getHike(parseInt(hikeId));
         if(user.username!==hike.author) throw {status:401,message:"This local guide doesn't have the rigths to update this hike"};
         if(!hike.huts.some(h=>h.id===body.hutId)) throw {status:422,message:"This hut is not already linked to this hike"};
-        await pointsdao.unlinkPointFromHike(parseInt(body.hikeId),parseInt(body.hutId));
+        await pointsdao.unlinkPointFromHike(parseInt(hikeId),parseInt(body.hutId));
     } catch (error) {
         throw {status:error.status,message:error.message};   
     }
 }
 
 
-const linkableHuts=async (hikeId,user)=>{
+const linkableHuts=async (user,hikeId)=>{
     try {
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link huts to a hike"};
         else if(!isFinite(hikeId)) throw {status:422,message:"The hike identifier should be an integer"};
@@ -125,6 +125,35 @@ const linkableHuts=async (hikeId,user)=>{
     }
 }
 
-const points={getGeoAreaPoint,getAltitudePoint,linkableEndPoints,linkableStartPoints,getImages,getGeoAndLatitude,linkHut,unlinkHut,linkableHuts};
+
+const linkStart=async (user,hikeId,body)=>{
+    try {
+        if(user.type!=="localGuide") throw {status:401,message:"This type of user can't update the starting point of a hike"};
+        else if(!isFinite(hikeId) || !isFinite(body.pointId)) throw {status:422,message:"Bad parameters, hike id and point id should be numbers"};
+        const hike=await hikesdao.getHike(parseInt(hikeId));
+        if(user.username!==hike.author) throw {status:401,message:"This local guide doesn't have the rigths to update this hike"};
+        const linkableStartP=await linkableStartPoints(user,hikeId);
+        if(!linkableStartP.some(p=>p.id===parseInt(body.pointId))) throw {status:422,message:"This point is not linkable as a start point for this hike"};
+        await hikesdao.updateStartingArrivalPoint(parseInt(hikeId),parseInt(body.pointId),undefined);
+    } catch (error) {
+        throw error;
+    }
+}
+
+const linkEnd=async (user,hikeId,body)=>{
+    try {
+        if(user.type!=="localGuide") throw {status:401,message:"This type of user can't update the arrival point of a hike"};
+        else if(!isFinite(hikeId) || !isFinite(body.pointId)) throw {status:422,message:"Bad parameters, hike id and point id should be numbers"};
+        const hike=await hikesdao.getHike(parseInt(hikeId));
+        if(user.username!==hike.author) throw {status:401,message:"This local guide doesn't have the rigths to update this hike"};
+        const linkableEndP=await linkableEndPoints(user,hikeId);
+        if(!linkableEndP.some(p=>p.id===parseInt(body.pointId))) throw {status:422,message:"This point is not linkable as an arrival point for this hike"};
+        await hikesdao.updateStartingArrivalPoint(parseInt(hikeId),undefined,parseInt(body.pointId));
+    } catch (error) {
+        throw error;
+    }
+}
+
+const points={getGeoAreaPoint,getAltitudePoint,linkableEndPoints,linkableStartPoints,getImages,getGeoAndLatitude,linkHut,unlinkHut,linkableHuts,linkStart,linkEnd};
 
 module.exports=points;

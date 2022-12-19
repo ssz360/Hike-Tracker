@@ -91,7 +91,7 @@ getHikesList = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM HIKES'
     db.all(sql, [], async (err, row) => {
         if (err) {
-            reject(err);
+            reject({status:503,message:err});
             return;
         }
         //console.log("Before adding points rows were ",row);
@@ -118,13 +118,13 @@ const getHikesListWithFilters = async (lengthMin, lengthMax, expectedTimeMin, ex
     const ascMax = ascentMax == null ? MAXDOUBLE : ascentMax;
 
     const diff = difficulty == null ? '%' : difficulty;
-    //console.log("lenMin",lenMin,"lenMax",lenMax,"expmin",expMin,"expmax",expMax,"ascmin",ascMin,"ascmax",ascMax,"maxlen",maxLen,"maxLon",maxLon,"minlen",minLen,"minlon",minLon);
+    console.log("lenMin",lenMin,"lenMax",lenMax,"expmin",expMin,"expmax",expMax,"ascmin",ascMin,"ascmax",ascMax,"centerlat",centerlat,"centerlon",centerlon,"radius",radius);
 
     //console.log("SQL IS ",sql2,"with pars");
     db.all(sql, [lenMin, lenMax, expMin, expMax, ascMin, ascMax, centerlat, centerlat, centerlon, radius, diff], async (err, row) => {
         if (err) {
             console.log("Err in get hikes with filters",err);
-            reject(err);
+            reject({status:503,message:err});
             return;
         }
 
@@ -143,7 +143,7 @@ const getHikesMoreData = async (row) => {
 
         db.all(linkedPointsSql, [id], (err, rows) => {
             if (err) {
-                reject(err);
+                reject({status:503,message:err});
                 return;
             }
             resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:points.getGeoArea(r),coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
@@ -211,23 +211,23 @@ const addReferenceToHike = async (IDHike, IDPoint) => new Promise((resolve, reje
 
     db.all(getHikeSql, [IDHike], (err, row) => {
         if (err) {
-            reject({ code: 500, message: err });
+            reject({ status: 500, message: err });
             return;
         }
 
         if (!row || !row.length) {
-            reject({ code: 404, message: 'hike not found' });
+            reject({ status: 404, message: 'hike not found' });
             return;
         }
 
         db.all(getPoint, [IDPoint], (err, row) => {
             if (err) {
-                reject({ code: 500, message: err });
+                reject({ status: 500, message: err });
                 return;
             }
     
             if(!row || !row.length) {
-                reject({code:404,message:'point not found'});
+                reject({status:404,message:'point not found'});
                 return;
             }
 
@@ -236,7 +236,7 @@ const addReferenceToHike = async (IDHike, IDPoint) => new Promise((resolve, reje
 
             db.run(sqlPoint, [IDHike, IDPoint], err => {
                 if (err) {
-                    reject({ code: 500, message: err });
+                    reject({ status: 500, message: err });
                     return;
                 }
                 resolve();
@@ -255,17 +255,17 @@ const updateStartingArrivalPoint = async (hikeId, startPointId, endPointId) => n
         if (startPointId) {
             db.all(checkIfPointExistsSql, [startPointId], (err, row) => {
                 if (err) {
-                    reject({ code: 500, message: err });
+                    reject({ status: 500, message: err });
                     return;
                 }
                 if (row.length === 0) {
-                    reject({ code: 404, message: "Start point didn't found" });
+                    reject({ status: 404, message: "Start point didn't found" });
                     return;
                 }
                 const sql = "UPDATE HIKES SET StartPoint = ? WHERE IDHike = ?";
                 db.run(sql, [startPointId, hikeId], err => {
                     if (err) {
-                        reject({ code: 500, message: err });
+                        reject({ status: 500, message: err });
                         return;
                     }
                     resolve();
@@ -279,17 +279,17 @@ const updateStartingArrivalPoint = async (hikeId, startPointId, endPointId) => n
         if (endPointId) {
             db.all(checkIfPointExistsSql, [endPointId], (err, row) => {
                 if (err) {
-                    reject({ code: 500, message: err });
+                    reject({ status: 500, message: err });
                     return;
                 }
                 if (row.length === 0) {
-                    reject({ code: 404, message: "End point didn't found" });
+                    reject({ status: 404, message: "End point didn't found" });
                     return;
                 }
                 const sql = "UPDATE HIKES SET EndPoint = ? WHERE IDHike = ?";
                 db.run(sql, [endPointId, hikeId], err => {
                     if (err) {
-                        reject({ code: 500, message: err });
+                        reject({ status: 500, message: err });
                         return;
                     }
                     resolve();
@@ -303,13 +303,13 @@ const updateStartingArrivalPoint = async (hikeId, startPointId, endPointId) => n
     if (startPointId && endPointId) {
         setStartPoint().then(() => {
             setEndPoint().then(resolve);
-        }).catch(reject);
+        }).catch(err=>reject(err));
     } else if (startPointId) {
-        setStartPoint().then(resolve).catch(reject);
+        setStartPoint().then(resolve).catch(err=>reject(err));
     } else if (endPointId) {
-        setEndPoint().then(resolve).catch(reject);
+        setEndPoint().then(resolve).catch(err=>reject(err));
     } else {
-        reject({ code: 500, message: "startPoint or endPoint must be defined" });
+        reject({ status: 500, message: "startPoint or endPoint must be defined" });
     }
 
 

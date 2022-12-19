@@ -38,7 +38,7 @@ function insertPoint(name, latitude, longitude, altitude, GeographicalArea, Type
     return new Promise((res, rej) => {
         console.log("In insert point with name",name,"lat",latitude,"long",longitude,"geoarea",GeographicalArea,"type",TypeOfPoint)
         if (!name || !latitude || !longitude || !GeographicalArea || !TypeOfPoint) {
-            rej("All of the 'name, coordinates, GeographicalArea, TypeOfPoint' are required.");
+            rej({status:503,message:"All of the 'name, coordinates, GeographicalArea, TypeOfPoint' are required."});
             return;
         }
 
@@ -46,7 +46,7 @@ function insertPoint(name, latitude, longitude, altitude, GeographicalArea, Type
 
         db.run(query, [name, latitude, longitude, altitude, GeographicalArea.province, GeographicalArea.region, GeographicalArea.country, TypeOfPoint, description], function (err) {
             if (err) {
-                rej(err);
+                reject({status:503,message:"Internal error"});
                 return;
             }
             res(this.lastID);
@@ -58,7 +58,7 @@ const getPointById = (id) => new Promise((resolve, reject) => {
     let sql = "SELECT * FROM POINTS WHERE IDPoint = ?";
     db.get(sql, [id], (err, row) => {
         if (err) {
-            reject(err);
+            reject({status:503,message:"Internal error"});
             return;
         }
         resolve(row);
