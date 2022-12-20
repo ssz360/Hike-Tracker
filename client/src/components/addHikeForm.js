@@ -94,7 +94,7 @@ function AddHikeForm(props) {
                                 <Form.Group className="mb-3">
                                     <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new hike"} successMessage={"New hike added correctly!"} />
                                     <div className="d-flex flex-row-reverse">
-                                        <CheckCircle role="button" className="me-3"onClick={e => {
+                                        <CheckCircle role="button" className="me-3" onClick={e => {
                                             e.preventDefault();
                                             e.stopPropagation();
                                             submitHandler();
