@@ -27,6 +27,7 @@ function App() {
         //console.log("IN APP")
         const h = await api.getHikesList();
         setHikes([...h]);
+        console.log(hikes);
         //filteredList=[...h];
         //console.log("NEW FILTERED LIST",filteredList,"hikes",hikes,"TO PASS",hikes.filter(h=>filteredList.map(f=>f.id).includes(h.id)));
         const usr = await api.isLogged();

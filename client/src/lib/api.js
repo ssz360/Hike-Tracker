@@ -305,7 +305,7 @@ const getHutsInBounds=async (bounds,startPoint,endPoint)=>{
     });
     const points=await res.json();
     console.log("Received points",points);
-    if(res.ok) return points.map(p=>new Point(p.id,p.name,p.coordinates,p.geographicalArea,p.typeOfPoint));
+    if(res.ok) return points.map(p=>new Point(p.id,p.name,p.coordinates,p.geographicalArea,p.typeOfPoint, p.description));
     else throw res.status;
 }
 
@@ -358,7 +358,7 @@ const getLinkableHuts=async id=>{
     });
     const ret=await res.json();
     //console.log("\t\tRECEIVED FROM GET HIKES IN BOUNDS ",ret);
-    if(res.ok) return ret.map(h=>new Point(h.id,h.name,h.coordinates,h.geographicalArea,h.typeOfPoint));
+    if(res.ok) return ret.map(h=>new Point(h.id,h.name,h.coordinates,h.geographicalArea,h.typeOfPoint, h.description));
     else    throw ret;
 }
 
@@ -367,7 +367,7 @@ const getLinkableStartPoints=async id=>{
         credentials:"include"
     });
     const ret=await res.json();
-    if(res.ok) return ret.map(h=>new Point(h.id,h.name,h.coordinates,h.geographicalArea,h.typeOfPoint));
+    if(res.ok) return ret.map(h=>new Point(h.id,h.name,h.coordinates,h.geographicalArea,h.typeOfPoint, h.description));
     else throw ret;
 }
 
@@ -376,7 +376,7 @@ const getLinkableEndPoints=async id=>{
         credentials:"include"
     });
     const ret=await res.json();
-    if(res.ok) return ret.map(h=>new Point(h.id,h.name,h.coordinates,h.geographicalArea,h.typeOfPoint));
+    if(res.ok) return ret.map(h=>new Point(h.id,h.name,h.coordinates,h.geographicalArea,h.typeOfPoint, h.description));
     else throw ret;
 }
 

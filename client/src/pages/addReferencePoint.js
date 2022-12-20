@@ -127,22 +127,22 @@ function ReferencePoint(props) {
         getImages();
     }, [props.point])
     return (
-        <Col xs={12} md={5}>
-            <div>
+        <>
+            <Col xs={12} md={5}>
+                <div>
 
-                
-                    
-                    
-                    {props.point.description}
                     {props.waiting ?
-                    <div className="my-3 text-center">
-                        <Spinner animation="grow" />
-                    </div>
-                    :
-                    <Gallery preview={false} addImage={false} imagesUrls={props.imagesUrls} />
-                }
+                        <div className="my-3 text-center">
+                            <Spinner animation="grow" />
+                        </div>
+                        :
+                        <Gallery preview={false} addImage={false} imagesUrls={props.imagesUrls} />}
+                </div>
+            </Col>
+            <div className="ms-3">
+                {props.point.description}
             </div>
-        </Col>
+        </>
     )
 }
 
@@ -153,73 +153,75 @@ function AddNewReferencePoint(props) {
     return (
         <Col xs={12}>
             <div className="align-items-center justify-content-center ms-4 me-4">
-            <Form>
-                <Form.Group className="my-3">
-                    <FloatingLabel controlId="floatingName" label="Name" className="mb-3">
-                        <Form.Control  placeholder={"Name"} type="text" value={props.name} onChange={e => { props.setName(e.target.value); }} />
-                    </FloatingLabel>
-                    <FloatingLabel controlId="floatingName" label="Description" className="mb-3">
-                        <Form.Control as="textarea" placeholder={"Description"} value={props.description} onChange={e => { props.setDescription(e.target.value); props.setOpenImages(e.target.value !== ""); }} />
-                    </FloatingLabel>
-                 
-                        <Gallery addImage={true} preview={true} images={props.images} setImages={props.setImages} imagesUrls={props.imagesUrls} setImagesUrls={props.setImagesUrls} />
-                    <Form.Group className="my-5">
-                        <div className="mx-auto my-3 d-flex flex-row-reverse">
-                         { !hoverX ?
-                            <XCircle role="button" 
-                            onClick={e => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                props.setName('');
-                                props.setDescription('');
-                                props.setImages([]);
-                                props.imagesUrls.forEach(img => URL.revokeObjectURL(img.url))
-                                props.setImagesUrls([]);}} size="20px"
-                                onMouseEnter={ () => setHoverX(true) }
-                                onMouseLeave={ () => setHoverX(false) }/>
-                                :
-                                <XCircleFill role="button"
-                                style={{
-                                    color: "#EA1818"
-                                }}
-                            onClick={e => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                props.setName('');
-                                props.setDescription('');
-                                props.setImages([]);
-                                props.imagesUrls.forEach(img => URL.revokeObjectURL(img.url))
-                                props.setImagesUrls([]);}} size="20px"
-                                onMouseEnter={ () => setHoverX(true) }
-                                onMouseLeave={ () => setHoverX(false) }/>
-                            }
+                <Form>
+                    <Form.Group className="my-3">
+                        <FloatingLabel controlId="floatingName" label="Name" className="mb-3">
+                            <Form.Control placeholder={"Name"} type="text" value={props.name} onChange={e => { props.setName(e.target.value); }} />
+                        </FloatingLabel>
+                        <FloatingLabel controlId="floatingName" label="Description" className="mb-3">
+                            <Form.Control as="textarea" placeholder={"Description"} value={props.description} onChange={e => { props.setDescription(e.target.value); props.setOpenImages(e.target.value !== ""); }} />
+                        </FloatingLabel>
 
-                            {!hoverV?
-                            <CheckCircle role="button" className="me-3" onClick={e => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                props.submitHandler();
-                            }} size="20px"
-                            onMouseEnter={ () => setHoverV(true) }
-                            onMouseLeave={ () => setHoverV(false) }/> 
-                            :
-                            <CheckCircleFill role="button" className="me-3" 
-                            style={{
-                                color: "#00BB52"
-                            }}
-                            onClick={e => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                props.submitHandler();
-                            }} size="20px"
-                            onMouseEnter={ () => setHoverV(true) }
-                            onMouseLeave={ () => setHoverV(false) }/>
-                            }
-                        </div>
+                        <Gallery addImage={true} preview={true} images={props.images} setImages={props.setImages} imagesUrls={props.imagesUrls} setImagesUrls={props.setImagesUrls} />
+                        <Form.Group className="my-5">
+                            <div className="mx-auto my-3 d-flex flex-row-reverse">
+                                {!hoverX ?
+                                    <XCircle role="button"
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            props.setName('');
+                                            props.setDescription('');
+                                            props.setImages([]);
+                                            props.imagesUrls.forEach(img => URL.revokeObjectURL(img.url))
+                                            props.setImagesUrls([]);
+                                        }} size="20px"
+                                        onMouseEnter={() => setHoverX(true)}
+                                        onMouseLeave={() => setHoverX(false)} />
+                                    :
+                                    <XCircleFill role="button"
+                                        style={{
+                                            color: "#EA1818"
+                                        }}
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            props.setName('');
+                                            props.setDescription('');
+                                            props.setImages([]);
+                                            props.imagesUrls.forEach(img => URL.revokeObjectURL(img.url))
+                                            props.setImagesUrls([]);
+                                        }} size="20px"
+                                        onMouseEnter={() => setHoverX(true)}
+                                        onMouseLeave={() => setHoverX(false)} />
+                                }
+
+                                {!hoverV ?
+                                    <CheckCircle role="button" className="me-3" onClick={e => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        props.submitHandler();
+                                    }} size="20px"
+                                        onMouseEnter={() => setHoverV(true)}
+                                        onMouseLeave={() => setHoverV(false)} />
+                                    :
+                                    <CheckCircleFill role="button" className="me-3"
+                                        style={{
+                                            color: "#00BB52"
+                                        }}
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            props.submitHandler();
+                                        }} size="20px"
+                                        onMouseEnter={() => setHoverV(true)}
+                                        onMouseLeave={() => setHoverV(false)} />
+                                }
+                            </div>
+                        </Form.Group>
                     </Form.Group>
-                </Form.Group>
-                <ServerReply waiting={props.waiting} error={props.error} success={props.success} errorMessage={"Error while uploading new reference point"} successMessage={"Uploaded new reference point correctly!"} />
-            </Form>
+                    <ServerReply waiting={props.waiting} error={props.error} success={props.success} errorMessage={"Error while uploading new reference point"} successMessage={"Uploaded new reference point correctly!"} />
+                </Form>
             </div>
         </Col>
     )
@@ -262,8 +264,8 @@ function AddReferencePoint(props) {
         }
     }
     useEffect(() => {
-        if (pointCoord !== undefined) 
-        setSelectedPoint(-1);
+        if (pointCoord !== undefined)
+            setSelectedPoint(-1);
         setName('');
         setDescription('');
         setImages([]);
@@ -312,10 +314,11 @@ function AddReferencePoint(props) {
                         :
                         <>
                             <Col xs={12} md={4}>
-                            <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/hikes")} size="20px" />
+                                <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/hikes")} size="20px" />
                                 <Card className="shadow my-4">
                                     <div className="my-4 mx-4">
-                                        <h4>Reference points - {props.hike.referencePoints.find(p => p.id === selectedPoint).name}</h4>
+                                        {console.log(props.hike)}
+                                        <h4>Reference points - <strong>{props.hike.referencePoints.find(p => p.id === selectedPoint).name}</strong></h4>
                                         <ReferencePoint waiting={waiting} setWaiting={setWaiting} imagesUrls={imagesUrls} setImagesUrls={setImagesUrls} point={props.hike.referencePoints.find(p => p.id === selectedPoint)} />
                                     </div>
                                 </Card>
