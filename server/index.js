@@ -44,6 +44,7 @@ const ref = require("./referencePoints");
 const pointsdao = require('./dao/points');
 const points = require('./services/points');
 const preferences = require('./dao/preferences');
+const routerTrips = require('./services/trips');
 
 app.use(express.json());
 passport.use(new LocalStrategy((username, password, callback) => {
@@ -483,6 +484,9 @@ app.use(express.static('public'));
 // 		res.status(err.status).json(err.message);
 // 	}
 // });
+
+app.post('/api/trips', isLoggedIn, routerTrips.addTrip);
+app.get('/api/trips/id/:idTrip', isLoggedIn, routerTrips.getTripById);
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)
