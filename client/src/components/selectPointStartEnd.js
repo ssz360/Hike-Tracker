@@ -18,6 +18,7 @@ function SelectPointStartEnd(props){
     const [error,setError]=useState();
     const [success,setSuccess]=useState(false);
     const [waiting,setWaiting]=useState(false);
+
     const submitHandler=async (e,start)=>{
         try {
             e.preventDefault();
@@ -35,6 +36,7 @@ function SelectPointStartEnd(props){
             setTimeout(()=>setError(false),3000);
         }
     }
+    
     return(
         <div className="justify-content-center text-center my-3">
             {icons.iconsvgelement[props.point.typeOfPoint]}

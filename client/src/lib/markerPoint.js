@@ -20,7 +20,8 @@ const getMarkerForPoint= (point,start,end,selected,selectable,selectedPoint,setS
         click: () => {
             console.log("clicked point",point.id);
             if(selectable){
-                if(selectedPoint!==point.id)    setSelectedPoint(point.id);
+                if(selectedPoint!==point.id)   
+                    setSelectedPoint(point.id);
                 else setSelectedPoint(-1);
             }
         }

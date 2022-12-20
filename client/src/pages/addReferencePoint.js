@@ -17,6 +17,7 @@ function AddReferencePointMap(props){
     const [bounds,setBounds]=useState([[0,0],[0.1,0.1]]);
     const [coordinates,setCoordinates]=useState([]);
     const [center,setCenter]=useState([0.05,0.05]);
+
     useEffect(()=>{
         const getMapDetails=async()=>{
             try {
@@ -33,12 +34,15 @@ function AddReferencePointMap(props){
         }
         getMapDetails();
     },[]);
+
     const customMarkerIcon = divIcon({
         html: icons.iconsvg['selectedPoint'],
         iconSize: [30,30],
         className:"map-point"
     });
+
     const [hover,setHover]=useState(false);
+
     const getStringPoint=()=>{
         if(props.pointCoord===undefined) return "";
         else return props.pointCoord[0]+","+props.pointCoord[1];
@@ -47,40 +51,44 @@ function AddReferencePointMap(props){
         <>
             {bounds[0][0]===0?
                 <Spinner animation="grow"/>
-                :<MapContainer bounds={bounds} style={{ height: "60vh", width: "auto" }} scrollWheelZoom={true}>
+                :
+                
+                <MapContainer bounds={bounds} style={{ height: "60vh", width: "auto" }} scrollWheelZoom={true}>
                     <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles}/>
-                    {props.pointCoord!==undefined?
-                        <Marker icon={customMarkerIcon} eventHandlers={{
-                            click: e => props.setPointCoord()
-                            }} position={props.pointCoord}>
-                            <Tooltip>This point has lat {props.pointCoord[0]} and longitude {props.pointCoord[1]}</Tooltip>
+                    {props.pointCoord!==undefined &&
+                        <Marker icon={customMarkerIcon} 
+                                eventHandlers={{ click: e => props.setPointCoord()}} 
+                                position={props.pointCoord}>
+                            <Tooltip>{"[" + props.pointCoord[0] + ", "+ props.pointCoord[1]+"]"}</Tooltip>
                         </Marker>
-                        :
-                        <></>
                     }
+                    {/* PATH */}
                     <Polyline eventHandlers={{
-                        click: e => {
-                            console.log("clicked point",e.latlng);
-                            let closer=null;
-                            let closerDist=-1;
-                            for(const k of coordinates){
-                                let dist=getDistance({latitude:k[0],longitude:k[1]},{latitude:e.latlng.lat,longitude:e.latlng.lng});
-                                if (closer==null || closerDist<0 || dist<closerDist){
-                                    closer=[k[0],k[1]];
-                                    closerDist=dist;
-                                }
-                                props.setPointCoord(closer);
-                            }
-                        },
-                        mouseover: e =>{
-                            setHover(true);
-                        },
-                        mouseout: e =>{
-                            setHover(false);
-                        }
-                    ,}} pathOptions={hover?{ color: "red",weight:7 }:{ color: "black",weight:5 }} positions={coordinates} />
-                    {[...props.hike.referencePoints,...props.hike.huts].filter(p=>p.id!==props.hike.startPoint.id && p.id!==props.hike.endPoint.id && (p.coordinates[0]+","+p.coordinates[1])!==getStringPoint()).map(p=>getMarkerForPoint(p,p.id===props.hike.startPoint.id,p.id===props.hike.endPoint.id,props.selectedPoint===p.id,p.typeOfPoint==="referencePoint" && props.pointCoord===undefined,props.selectedPoint,props.setSelectedPoint))}
+                                click: e => {
+                                    console.log("clicked point",e.latlng);
+                                    let closer=null;
+                                    let closerDist=-1;
+                                    for(const k of coordinates){
+                                        let dist=getDistance({latitude:k[0],longitude:k[1]},{latitude:e.latlng.lat,longitude:e.latlng.lng});
+                                        if (closer==null || closerDist<0 || dist<closerDist){
+                                            closer=[k[0],k[1]];
+                                            closerDist=dist;
+                                        }
+                                        props.setPointCoord(closer);
+                                    }
+                                },
+                                mouseover: e =>{ setHover(true);},
+                                mouseout: e =>{ setHover(false);}}} 
+                               pathOptions={hover?{ color: "red",weight:7 }:{ color: "black",weight:5 }} positions={coordinates} />
+                    {/* REFERENCE POINTS ICON ON MAP*/}
+                    {[...props.hike.referencePoints,...props.hike.huts]
+                            .filter(p=>p.id!==props.hike.startPoint.id && p.id!==props.hike.endPoint.id && (p.coordinates[0]+","+p.coordinates[1])!==getStringPoint())
+                            .map(p=>getMarkerForPoint(p,p.id===props.hike.startPoint.id,p.id===props.hike.endPoint.id,props.selectedPoint===p.id,p.typeOfPoint==="referencePoint" && props.pointCoord===undefined,props.selectedPoint,props.setSelectedPoint))}
+                    
+                    {/* START POINT ICON ON MAP*/}
                     {getMarkerForPoint(props.hike.startPoint,true,props.hike.startPoint.id===props.hike.endPoint.id,props.selectedPoint===props.hike.startPoint.id,false,props.selectedPoint,props.setSelectedPoint)}
+                    
+                    {/* END POINT ICON ON MAP*/}
                     {props.hike.startPoint.id!==props.hike.endPoint.id?getMarkerForPoint(props.hike.endPoint,false,true,props.selectedPoint===props.hike.endPoint.id,false,props.selectedPoint,props.setSelectedPoint):<></>}
                 </MapContainer>
             }
@@ -117,6 +125,8 @@ function ReferencePoint(props){
     },[props.point])
     return(
         <Col xs={12} md={5}>
+            <div>
+
             <div className="my-3 text-center">
                 {icons.iconsvgelement[props.point.typeOfPoint]}
             </div>
@@ -130,6 +140,7 @@ function ReferencePoint(props){
                 :
                 <Gallery preview={false} addImage={false} imagesUrls={props.imagesUrls}/>
             }
+            </div>
         </Col>
     )
 }
