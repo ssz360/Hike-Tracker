@@ -47,7 +47,7 @@ function HikeMapLinkHut(props){
             {props.bounds[0][0]===0?
                     <Spinner animation="grow" />
                 :
-            <MapContainer bounds={props.bounds} style={{width:"auto",height:"70vh"}} scrollWheelZoom={true}>
+            <MapContainer bounds={props.bounds} style={{width:"auto",height:"93vh"}} scrollWheelZoom={true}>
                 <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles}/>
                 <Polyline pathOptions={pathopts} positions={coordinates} />
                 {props.linkableHuts.filter(p=>![...props.hike.referencePoints,...props.hike.huts].map(h=>h.id).includes(p.id) && props.hike.endPoint.id!==p.id && props.hike.startPoint.id!==p.id).map(p=>getMarkerForPoint(p,p.id===props.hike.startPoint.id,p.id===props.hike.endPoint.id,props.selectedPoint===p.id,true,props.selectedPoint,props.setSelectedPoint))}
