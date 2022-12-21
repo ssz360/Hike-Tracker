@@ -376,6 +376,7 @@ const getLinkableEndPoints=async id=>{
         credentials:"include"
     });
     const ret=await res.json();
+    console.log("AIUTO" + ret.map(p => p.description))
     if(res.ok) return ret.map(h=>new Point(h.id,h.name,h.coordinates,h.geographicalArea,h.typeOfPoint, h.description));
     else throw ret;
 }

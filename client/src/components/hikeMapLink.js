@@ -35,7 +35,7 @@ function HikeMapLink(props){
             {props.bounds[0][0]===0?
                     <Spinner animation="grow" />
                 :
-            <MapContainer bounds={props.bounds} style={{width:"auto",height:"70vh"}} scrollWheelZoom={true}>
+            <MapContainer bounds={props.bounds} style={{width:"auto",height:"93vh"}} scrollWheelZoom={true}>
                 
                 <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles}/>
                 
