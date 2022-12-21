@@ -1,4 +1,4 @@
-import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container, OverlayTrigger, Tooltip, Image, Carousel,  } from 'react-bootstrap';
+import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
@@ -77,29 +77,29 @@ function HikesList(props) {
 
           {openArea && (<AreaMap center={center} setCenter={setCenter} radius={radius} setRadius={setRadius} drag={false} openArea={openArea} setOpenArea={setOpenArea} />)}
           {props.logged &&
-            <div className="mt-4">
-              <div className="d-grid gap-2">
-                <OverlayTrigger
-                  placement="right"
-                  delay={{ show: 250, hide: 400 }}
-                  overlay={<Tooltip> Your preferences</Tooltip>}
-                >
-                  <BookmarkHeartFill className="ms-4" role="button" size={"20px"}
-                    onClick={async (event) => {
-                      event.preventDefault();
-                      await api.getUserPerformance(props.user.username)
-                        .then(usrPref => {
-                          setLenMin(0);
-                          setLenMax(usrPref.length);
-                          setAscMin(0);
-                          setAscMax(usrPref.ascent);
-                          setTimeMin(0);
-                          setTimeMax(usrPref.time);
-                        }, err => { console.log(err) });
-                    }} />
-                </OverlayTrigger>
-              </div>
+          <div className="mt-4">
+            <div className="d-grid gap-2">
+              <OverlayTrigger
+                placement="right"
+                delay={{ show: 250, hide: 400 }}
+                overlay={<Tooltip> Your preferences</Tooltip>}
+              >
+                <BookmarkHeartFill className="ms-4" role="button" size={"20px"}
+                  onClick={async (event) => {
+                    event.preventDefault();
+                    await api.getUserPerformance(props.user.username)
+                      .then(usrPref => {
+                        setLenMin(0);
+                        setLenMax(usrPref.length);
+                        setAscMin(0);
+                        setAscMax(usrPref.ascent);
+                        setTimeMin(0);
+                        setTimeMax(usrPref.time);
+                      }, err => {console.log(err)});
+                  }} />
+              </OverlayTrigger>
             </div>
+          </div>
           }
           {/***** Area filter *****/}
           <div className="mt-4">
@@ -222,7 +222,7 @@ function HikesList(props) {
           </Row>
         </Col>
         {/***** Hikes List *****/}
-        <Col id="hikes-container" sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
+        <Col  id="hikes-container" sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
           <Row>
             {<Display logged={props.logged} displayedHikes={props.hikes} />}
           </Row>
@@ -248,34 +248,14 @@ function HikeRow(props) {
   return (
     <><Col xs={12} sm={8} md={6} lg={4} className="mt-2"><Card className="shadow mt-3 hikes-card">
       <Card.Header>
-        {/* <div className="mx-2"> */}
-        <Carousel autoPlay={false} interval={null} controls={true} indicators={true}>
-          <Carousel.Item>
-            <Image style={{width: "100vw", height: "35vh", objectFit: "cover"}} src= "/images/c.jpg" fluid/>
-          </Carousel.Item>
-          <Carousel.Item>
-            {props.logged && <HikeMap hike={props.hike} />}
-          </Carousel.Item>
-
-        </Carousel>
-          {/* <Tabs
-            defaultActiveKey="profile"
-            id="uncontrolled-tab-example"
-            className="mb-3"
-            justify
-            >
-            <Tab eventKey="Photos" title="Photos">
-            </Tab>
-            <Tab eventKey="Map" title="Map" disabled={!props.logged} >
-            </Tab> */}
-          {/* </Tabs> */}
-            {/* </div> */}
+        {props.logged && <HikeMap hike={props.hike} />}
         <div className='m-3'>
           <h4>{props.hike.name}</h4>
         </div>
       </Card.Header>
       <Card.Body>
         <Card.Text>
+
           <Row>
             <Col>
               <strong>Length: </strong><div className='hike-desc'><span className='test-length'>{Math.ceil(props.hike.len)}</span> km<br></br></div>
