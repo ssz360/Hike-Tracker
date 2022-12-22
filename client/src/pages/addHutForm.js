@@ -129,7 +129,7 @@ function AddHutForm(props) {
                                 style={
                                     { backgroundColor: "#FFFFFF", 
                                     border: "1px solid #ced4da", 
-                                    color: coord !== undefined? "#008522" : "#000000" 
+                                    color: "#000000" 
                                     }
                                 } onClick={() => setOpenArea(true)}>
                                 <GeoFill className="me-3 mb-1" />
