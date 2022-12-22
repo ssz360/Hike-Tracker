@@ -14,6 +14,8 @@ import globalVariables from "../lib/globalVariables"
 import { ArrowLeft, CheckCircle, XCircle, XCircleFill, CheckCircleFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
+/* const refPointIcon = (<img src="/icons/reference_point.svg" width={"27px"} height={"27px"} alt="SVG as an image"/>); */
+
 function AddReferencePointMap(props) {
     const [bounds, setBounds] = useState([[0, 0], [0.1, 0.1]]);
     const [coordinates, setCoordinates] = useState([]);
