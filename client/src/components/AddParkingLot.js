@@ -123,9 +123,15 @@ function AddParkingLot({ setParkings }) {
                             <FloatingLabel className="mb-3" controlId="floatingInput" label="Total slots">
                                 <Form.Control type="number" data-test="total-cost" value={totalSlots} onChange={ev => setTotalSlots(ev.target.value)} min={0} placeholder="Total slots" />
                             </FloatingLabel>
-                            <Alert role="button" variant="light" style={{ backgroundColor: "#FFFFFF", border: "1px solid #ced4da", color: "#000000" }} onClick={() => setOpenArea(true)}>
-                                <GeoFill className="me-3" />
-                                Position
+                            <Alert role="button" variant="light" 
+                                style={
+                                    { backgroundColor: "#FFFFFF", 
+                                    border: "1px solid #ced4da", 
+                                    color: coord !== undefined? "#008522" : "#000000" 
+                                    }
+                                } onClick={() => setOpenArea(true)}>
+                                <GeoFill className="me-3 mb-1" />
+                                {coord !== undefined ? "Position selected!" : "Position"}
                             </Alert>
 
                             {/* <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical area">

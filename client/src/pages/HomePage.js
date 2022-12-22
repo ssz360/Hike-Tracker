@@ -36,11 +36,17 @@ function HomePage(props) {
             fontSize: "49px"
           }}><strong>HIKES TRACKER</strong></h1>
 
-          <div class="box">
-            <h5 className="v-c">
-              <Link to={'/hikes'} > See all the hikes </Link>
-            </h5>
-          </div>
+          <p><a href="/hikes" style={{
+            fontFamily: "Montserrat,Helvetica,Arial,Lucida,sans-serif",
+            fontWeight: "750",
+            fontSize: "18px",
+            color: !isHover ? "white" : "#009999"
+          }}
+            onMouseEnter={() => setIsHover(true)}
+            onMouseLeave={() => setIsHover(false)}>
+            {!isHover ? <div class="box"><h5 className="v-c">See all the hikes</h5></div> :
+              <div class="box"><h5 className="v-c">See all the hikes {right_arr}</h5></div>
+            }</a></p>
 
         </Carousel.Caption>
       </Carousel.Item>

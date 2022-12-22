@@ -29,7 +29,7 @@ function Profile(props) {
             </Col>
         </Row> */}
         <Row className="px-0 mx-0">
-            <Col xs={2} style={{background:"#dde"}} className="px-1 py-1">
+            <Col xs={2} style={{ height: "97vh", backgroundColor: "#e0e3e5" }} className="px-1 py-1">
                 <Row>
                     <Col>
                         <h3 className="mx-2 my-4">Profile settings</h3>

@@ -125,9 +125,15 @@ function AddHutForm(props) {
                             </FloatingLabel>
 
 
-                            <Alert role="button" variant="light" style={{ backgroundColor: "#FFFFFF", border: "1px solid #ced4da", color: "#000000" }} onClick={() => setOpenArea(true)}>
-                                <GeoFill className="me-3" />
-                                Position
+                            <Alert role="button" variant="light" 
+                                style={
+                                    { backgroundColor: "#FFFFFF", 
+                                    border: "1px solid #ced4da", 
+                                    color: coord !== undefined? "#008522" : "#000000" 
+                                    }
+                                } onClick={() => setOpenArea(true)}>
+                                <GeoFill className="me-3 mb-1" />
+                                {coord !== undefined ? "Position selected!" : "Position"}
                             </Alert>
 
                             
