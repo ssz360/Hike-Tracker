@@ -87,9 +87,12 @@ async function getPreferences() {
     else if(response.status===404) {
         console.log("404 non trovato")
         const prefs = {
-            "length": 40,
-            "ascent": 4000,
-            "time": 15
+            "MinLength": 0,
+            "MaxLength": 40,
+            "MinAscent": 0,
+            "MaxAscent": 4000,
+            "MinTime": 0,
+            "MaxTime": 15
         };
         return prefs;
     }

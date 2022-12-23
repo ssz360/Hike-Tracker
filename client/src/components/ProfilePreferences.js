@@ -16,9 +16,12 @@ function Preferences() {
     useEffect(() => {
         const getPreferences = async () => {
             const prefs = await api.getPreferences();
-            setLenMax(prefs.length);
-            setAscMax(prefs.ascent);
-            setTimeMax(prefs.time);
+            setLenMin(prefs.MinLength);
+            setLenMax(prefs.MaxLength);
+            setAscMin(prefs.MinAscent);
+            setAscMax(prefs.MaxAscent);
+            setTimeMin(prefs.MinTime);
+            setTimeMax(prefs.MaxTime);
             setSaved(true);
             console.log(prefs)
         }
@@ -27,14 +30,17 @@ function Preferences() {
 
     useEffect(() => {
         setSaved(false);
-    },[lenMax,ascMax,timeMax]);
+    },[lenMin,lenMax,ascMin,ascMax,timeMin,timeMax]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const prefs = {
-            "length": lenMax,
-            "ascent": ascMax,
-            "time": timeMax
+            "MinLength": lenMax,
+            "MaxLength": lenMax,
+            "MinAscent": ascMax,
+            "MaxAscent": ascMax,
+            "MinTime": timeMax,
+            "MaxTime": timeMax
         };
         await api.addPreferences(prefs);
         setSaved(true);

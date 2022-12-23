@@ -81,9 +81,12 @@ CREATE TABLE IF NOT EXISTS "LINKEDPOINTS" (
 );
 CREATE TABLE IF NOT EXISTS "PREFERENCES" (
 	"IDUser"	VARCHAR NOT NULL,
-	"LENGTH"	INTEGER,
-	"ASCENT"	INTEGER,
-	"TIME"	INTEGER,
+	"MinLength"	INTEGER,
+	"MaxLength"	INTEGER,
+	"MinAscent"	INTEGER,
+	"MaxAscent"	INTEGER,
+	"MinTime"	INTEGER,
+	"MaxTime"	INTEGER,
 	FOREIGN KEY("IDUser") REFERENCES "USERS"("Username")
 );
 INSERT INTO "HIKES" ("IDHike","Name","Author","Length","ExpectedTime","Ascent","Difficulty","StartPoint","EndPoint","CenterLat","CenterLon","Description") VALUES (1,'Rocciamelone','davidwallace@gmail.com',4.56489292313034,2.28244646156517,1353.053467,'PROFESSIONAL HIKER',1,2,45.1906585,7.079086,'La montagna più alta di tutta la Val di Susa e una delle più importanti di tutto il Piemonte il cui indistinguibile profilo è ben visibile dalla pianura e sovrastra l’abitato di Susa con un dislivello dalla fondovalle alla cima di oltre 3000m in meno di 10km, caso unico in Europa. Noi affronteremo la salita dal Rifugio La Riposa, seguendo la via normale, un percorso per escursionisti esperti con un buon allenamento, che garantisce soddisfazioni uniche e visuali veramente superlative.'),
@@ -45459,4 +45462,4 @@ INSERT INTO "LINKEDPOINTS" ("IDPoint","IDHike") VALUES (1,1),
  (66,49),
  (67,50),
  (68,50);
-INSERT INTO "PREFERENCES" ("IDUser","LENGTH","ASCENT","TIME") VALUES ('davidwallace@gmail.com',2,2700,7);
+INSERT INTO "PREFERENCES" ("IDUser","MinLength","MaxLength","MinAscent","MaxAscent","MinTime","MaxTime") VALUES ('davidwallace@gmail.com',0,2,0,2700,0,7);
