@@ -428,6 +428,30 @@ const getImagesPoint=async pointId=>{
     else throw ret;
 }
 
+const startHike=async id=>{
+    //throw "Cannot start hike "+id;
+    return;
+}
+
+const getUnfinishedHike=async ()=>{
+    return {
+        hikeId:1,
+        start:'2022-12-23 17:50:10',
+        stoppedAt:'2022-12-23 17:50:10',
+        stopped:false,
+        secsFromLastStop:0
+    }
+}
+
+const stopResumeHike=async (stoppedAt,secsFromLastStop,stopped)=>{
+    return {
+        hikeId:1,
+        start:'2022-12-23 17:50:10',
+        'stoppedAt':stoppedAt,
+        'stopped':stopped,
+        secsFromLastStop:secsFromLastStop
+    }
+}
 
 const api = {
 	login,
@@ -454,7 +478,10 @@ const api = {
 	getLinkableEndPoints,
 	getElevation,
 	addReferencePoint,
-	getImagesPoint
+	getImagesPoint,
+    startHike,
+    getUnfinishedHike,
+    stopResumeHike
 };
 
 export default api;

@@ -7,6 +7,8 @@ import { ParkingLot,  HikesList, Hut, HomePage, Profile} from './pages';
 import api from './lib/api';
 import { Header, Login, SignUp, CheckEmail } from './components';
 import { useEffect, useState } from 'react';
+import HikeStatus from './components/hikerHike';
+import HikerHike from './components/hikerHike';
 function App() {
   /*let vett = [{name: "Hut1", country: "Italy", numOfGuests: 10, numOfBedrooms: 3}, 
     {name: "Hut2", country: "Italy", numOfGuests: 30, numOfBedrooms: 7},
@@ -163,6 +165,7 @@ function App() {
           <Route path='/signup' element={<SignUp setLogged={setLogged} />} />
           <Route path='/checkemail' element={<CheckEmail />} />
           <Route path='/profile/*' element={<Profile />} />
+          <Route path='/hiker/hike' element={<HikerHike hikes={hikes} user={user}/>}/>
         </Routes>
       {/* </Container> */}
     </>

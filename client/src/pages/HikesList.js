@@ -1,4 +1,4 @@
-import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container, OverlayTrigger, Tooltip, Toast, Spinner, ToastContainer, Modal, Stack, Alert } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
@@ -6,9 +6,19 @@ import HikeMap from '../components/hikeMap';
 import MultiRangeSliderHooked from '../components/MultiRangeSliderHooked'
 import { ChevronCompactDown, ChevronCompactUp, BookmarkHeartFill, Search, XLg } from 'react-bootstrap-icons'
 import { useNavigate } from 'react-router-dom'
+import ServerReply from '../components/serverReply';
 import api from '../lib/api'
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import "flatpickr/dist/themes/material_green.css";
 
+import Flatpickr from "react-flatpickr";
+dayjs.extend(duration);
 function HikesList(props) {
+
+  const [errorStartHike,setErrorStartHike]=useState();
+  const [waitingStartHike,setWaitingStartHike]=useState(false);
+
   //console.log("Rerendering hikeslist with",props.hikes);
   const [center, setCenter] = useState();
   const [radius, setRadius] = useState(0);
@@ -68,10 +78,115 @@ function HikesList(props) {
   function goToTop() {
     document.getElementById('hikes-container').scrollTo({ top: 0, behavior: 'smooth' });
   }
+  const [startingHike,setStartingHike]=useState(-1);
+  const [timeStartingHike,setTimeStartingHike]=useState('');
+  const [changeStart,setChangeStart]=useState(false);
+  const [unfinishedHikeId,setUnfinishedHikeId]=useState(-1);
+  const sleep=async ms=>new Promise((resolve,reject)=>setTimeout(()=>resolve(),ms));
+  const startHike=id=>setStartingHike(id);
+  const submitStartHike=async ()=>{
+    try {
+      setWaitingStartHike(true);
+      await sleep(2000);
+      await api.startHike(startingHike);
+      setWaitingStartHike(false);
+      setErrorStartHike();
+      navigate('/hiker/hike');
+    } catch (error) {
+      setErrorStartHike(error);
+      setWaitingStartHike(false);
+      setTimeout(()=>setErrorStartHike(),3000);
+    }
+  }
 
-
+  useEffect(()=>{
+    const getUnfinishedHike=async()=>{
+      try {
+        if(props.logged){
+          const hikeDetails=await api.getUnfinishedHike(props.user.username);
+          setUnfinishedHikeId(hikeDetails.hikeId);
+        }
+        else{
+          setUnfinishedHikeId(-1);
+        }
+      } catch (error) {
+        setUnfinishedHikeId(-1);
+      }
+    }
+    getUnfinishedHike();
+  },[props.user]);
   return (
     <Container fluid style={{ height: "93vh" }}>
+      <Modal className='my-2' show={startingHike!==-1} onHide={e=>setStartingHike(-1)}>
+        <Modal.Header closeButton><strong>Start hike!</strong></Modal.Header>
+        <Modal.Body>
+          <Container>
+            <Row>
+              <Col sm={12}>
+                <h2>Starting hike {startingHike!==-1?props.hikes.find(p=>p.id===startingHike).name:''}</h2>
+              </Col>
+            </Row>
+            <Row className='my-3'>
+              <Col sm={12}>
+              <div className='text-center'> <strong>
+            {changeStart?'Select the date and time when you started the hike!':timeStartingHike!==''?'Update the starting time!':'Did you start the hike earlier?'}</strong>
+          {!changeStart &&
+            <svg className='mx-3' onClick={e=>{
+              e.preventDefault();
+              e.stopPropagation();
+              setChangeStart(true);
+              if(timeStartingHike==='') setTimeStartingHike(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
+            }} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-chevron-double-down" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+              <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+            </svg>
+          }</div>
+              </Col>
+            </Row>
+                            <Collapse in={changeStart}>
+                            <Row className='my-3'>
+              <Col sm={12} md={6}>
+                <Flatpickr data-enable-time value={timeStartingHike} onChange={([date]) => setTimeStartingHike(date)} options={{maxDate:dayjs().format('YYYY-MM-DDTHH:mm:ss')}}/>
+              </Col>
+              <Col sm={6} md={3}>
+              <svg onClick={e=>{
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      setChangeStart(false);
+                                    }} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-calendar2-check-fill" viewBox="0 0 16 16">
+                                      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zm-2.6 5.854a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/>
+                                    </svg>
+              </Col>
+              <Col sm={6} md={3}>
+              <svg onClick={e=>{
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      setTimeStartingHike('');
+                                      setChangeStart(false);
+                                    }} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-calendar2-x-fill" viewBox="0 0 16 16">
+                                      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zm-6.6 5.146a.5.5 0 1 0-.708.708L7.293 10l-1.147 1.146a.5.5 0 0 0 .708.708L8 10.707l1.146 1.147a.5.5 0 0 0 .708-.708L8.707 10l1.147-1.146a.5.5 0 0 0-.708-.708L8 9.293 6.854 8.146z"/>
+                                    </svg>
+              </Col>
+            </Row>
+                            </Collapse>
+        <Row>
+          <Col>
+            <div className='text-center'>
+            <Button variant="outline-success" onClick={e=>{
+                e.preventDefault();
+                e.stopPropagation();
+                submitStartHike();
+              }}>Start!</Button></div>
+          </Col>
+          </Row>
+          <Row className='my-3'>
+          <Col >
+          <ServerReply error={errorStartHike} errorMessage={"Couldn't start the hike, retry!"} waiting={waitingStartHike}/>
+          </Col>
+          </Row>
+          </Container>
+          </Modal.Body>
+      </Modal>
       <Row id="first-row" style={{ height: "93vh" }}>
         <Col sm={2} style={{ height: "93vh", backgroundColor: "#e0e3e5" }}>
 
@@ -224,7 +339,14 @@ function HikesList(props) {
         {/***** Hikes List *****/}
         <Col  id="hikes-container" sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
           <Row>
-            {<Display logged={props.logged} displayedHikes={props.hikes} />}
+            {unfinishedHikeId!==-1 &&
+              <Alert className='mt-3 justify-content-center mx-auto' style={{width:'95%'}} variant='info' onClose={()=>setUnfinishedHikeId(-1)} dismissible>
+                <Alert.Heading>You started a hike but still have to complete it!</Alert.Heading>
+                <strong>
+                  You still have to complete hike <Alert.Link href={props.hikes? '/hiker/hike':'#'}>{props.hikes? props.hikes.find(p=>p.id===unfinishedHikeId).name:'error'}</Alert.Link>
+                </strong>
+              </Alert>}
+            {<Display startHike={startHike} logged={props.logged} displayedHikes={props.hikes} star/>}
           </Row>
         </Col>
 
@@ -238,7 +360,7 @@ function HikesList(props) {
 
 
 function Display(props) {
-  return props.displayedHikes.map((hike) => <HikeRow logged={props.logged} key={hike.id} hike={hike} />)
+  return props.displayedHikes.map((hike) => <HikeRow startHike={props.startHike} logged={props.logged} key={hike.id} hike={hike} />)
 }
 
 
@@ -298,6 +420,17 @@ function HikeRow(props) {
         <Card.Text >
         </Card.Text>
       </Card.Body>
+      {props.logged?
+        <div className="justify-content-center mx-auto mb-2" onClick={e=>{
+          e.preventDefault();
+          e.stopPropagation();
+          props.startHike(props.hike.id);
+        }}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="auto" fill="green" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z"/>
+      </svg></div>
+      :
+      <></>}
     </Card>
     </Col>
     </>);
