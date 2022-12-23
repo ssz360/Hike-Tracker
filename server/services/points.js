@@ -1,7 +1,7 @@
 const fetch=require('node-fetch');
 const hikesdao=require('../dao/hikes');
 const pointsdao=require('../dao/points');
-const OSMELAPI='https://api.open-elevation.com/api/v1/lookup?';
+const OSMELAPI='https://api.elevationapi.com/api/Elevation?';
 
 const getGeoAreaPoint=async(lat,lng,errs)=>{
     if(errs) checkLatitudeLongitude(lat,lng);
@@ -20,14 +20,14 @@ const getGeoAreaPoint=async(lat,lng,errs)=>{
 
 const getAltitudePoint=async(lat,lng,errs)=>{
     if(errs)   checkLatitudeLongitude(lat,lng);
-    const res=await fetch(OSMELAPI+'locations='+lat+','+lng);
+    const res=await fetch(OSMELAPI+'lat='+lat+'&lon='+lng);
     const ret=await res.json();
     if(res.ok){
-        if(ret.error) throw {status:422,message:ret.error};
-        else if(ret.results) return ret.results[0].elevation;
+        if(ret.message!=='OK') throw {status:422,message:ret.message};
+        else if(ret.geoPoints) return ret.geoPoints[0].elevation;
         else throw {status:404,message:"No result was found"};
     }
-    else    throw {status:res.status,message:ret.error};
+    else    throw {status:res.status,message:ret.message};
 }
 
 const checkLatitudeLongitude=(lat,lng)=>{

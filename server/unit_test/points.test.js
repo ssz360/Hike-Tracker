@@ -5,9 +5,9 @@ const pointsdao=require('../dao/points');
 const { expect } = require('chai');
 const hikesdao = require('../dao/hikes');
 
-const NEW_YORK={lat:40.730610,lng: -73.935242,alt:8,geopos:{country: "United States", province: "", region: "New York"}};
-const TURIN={lat:45.116177, lng:7.742615,alt:213,geopos:{country: "Italy", province: "Torino", region: "Piedmont"}};
-const MILAN={lat:45.464664, lng:9.188540,alt:139,geopos:{country: "Italy", province: "Milan", region: "Lombardy"}};
+const NEW_YORK={lat:40.730610,lng: -73.935242,alt:12.363762855529785,geopos:{country: "United States", province: "", region: "New York"}};
+const TURIN={lat:45.116177, lng:7.742615,alt:211.47377014160156,geopos:{country: "Italy", province: "Torino", region: "Piedmont"}};
+const MILAN={lat:45.464664, lng:9.188540,alt:134.83441162109375,geopos:{country: "Italy", province: "Milan", region: "Lombardy"}};
 const INVALIDLAT={lat:96,lng:90,alt:422,geopos:422};
 const INVALIDLNG={lat:54,lng:529,alt:422,geopos:422};
 const INVALIDCOORDS={lat:124,lng:240,alt:422,geopos:422};
