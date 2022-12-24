@@ -180,7 +180,6 @@ async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, ex
                 if (response.ok) {
                     response.json().then(ret=>{
                         const arr=[];ret.forEach(h=>arr.push(new Hike(h.id,h.name,h.author,h.length,h.ascent,h.difficulty,h.expectedTime,h.startPoint,h.endPoint,h.referencePoints,h.description,h.huts,h.center)));
-                        //console.log("RETURNING NEW ARR",arr);
                         resolve(arr);
                     });
                 } else {

@@ -346,7 +346,7 @@ function HikesList(props) {
                   You still have to complete hike <Alert.Link href={props.hikes? '/profile/hikes':'#'}>{props.hikes? props.hikes.find(p=>p.id===unfinishedHikeId).name:'error'}</Alert.Link>
                 </strong>
               </Alert>}
-            {<Display startHike={startHike} unfinishedHikeId={unfinishedHikeId} logged={props.logged} displayedHikes={props.hikes} star/>}
+            {<Display startHike={startHike} unfinishedHikeId={unfinishedHikeId} logged={props.logged} displayedHikes={props.hikes.filter(h=>h.show)} star/>}
           </Row>
         </Col>
 

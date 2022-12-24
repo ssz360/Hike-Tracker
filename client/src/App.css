@@ -117,7 +117,7 @@
   filter: brightness(50%);
 }
 
-.cardimages:hover .image {
+.cardimages:hover .image:not(:fullscreen) {
   filter: brightness(50%);
 }
 
@@ -179,4 +179,31 @@
 
 .dropdown-menu.show {
   z-index: 9999;
+}
+
+.slick-slide div img {
+  width: 100%;
+  height: 100%;
+}
+
+.sliderimage {
+  position: relative;
+}
+
+.sliderimage .sliderimageoverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+.sliderimage:hover > .sliderimageoverlay {
+  display: block;
+  box-shadow: 0 0 1rem red;
+}
+
+.sliderimage:hover .sliderimageimg {
+  filter: brightness(50%);
 }
