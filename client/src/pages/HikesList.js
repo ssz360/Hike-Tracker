@@ -91,7 +91,7 @@ function HikesList(props) {
       await api.startHike(startingHike);
       setWaitingStartHike(false);
       setErrorStartHike();
-      navigate('/hiker/hike');
+      navigate('/profile/hikes');
     } catch (error) {
       setErrorStartHike(error);
       setWaitingStartHike(false);
@@ -343,10 +343,10 @@ function HikesList(props) {
               <Alert className='mt-3 justify-content-center mx-auto' style={{width:'95%'}} variant='info' onClose={()=>setUnfinishedHikeId(-1)} dismissible>
                 <Alert.Heading>You started a hike but still have to complete it!</Alert.Heading>
                 <strong>
-                  You still have to complete hike <Alert.Link href={props.hikes? '/hiker/hike':'#'}>{props.hikes? props.hikes.find(p=>p.id===unfinishedHikeId).name:'error'}</Alert.Link>
+                  You still have to complete hike <Alert.Link href={props.hikes? '/profile/hikes':'#'}>{props.hikes? props.hikes.find(p=>p.id===unfinishedHikeId).name:'error'}</Alert.Link>
                 </strong>
               </Alert>}
-            {<Display startHike={startHike} logged={props.logged} displayedHikes={props.hikes} star/>}
+            {<Display startHike={startHike} unfinishedHikeId={unfinishedHikeId} logged={props.logged} displayedHikes={props.hikes} star/>}
           </Row>
         </Col>
 
@@ -360,7 +360,7 @@ function HikesList(props) {
 
 
 function Display(props) {
-  return props.displayedHikes.map((hike) => <HikeRow startHike={props.startHike} logged={props.logged} key={hike.id} hike={hike} />)
+  return props.displayedHikes.map((hike) => <HikeRow unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} key={hike.id} hike={hike} />)
 }
 
 
@@ -420,7 +420,7 @@ function HikeRow(props) {
         <Card.Text >
         </Card.Text>
       </Card.Body>
-      {props.logged?
+      {props.logged && props.unfinishedHikeId===-1?
         <div className="justify-content-center mx-auto mb-2" onClick={e=>{
           e.preventDefault();
           e.stopPropagation();
