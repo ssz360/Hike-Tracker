@@ -164,8 +164,7 @@ function App() {
           <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser} />} />
           <Route path='/signup' element={<SignUp setLogged={setLogged} />} />
           <Route path='/checkemail' element={<CheckEmail />} />
-          <Route path='/profile/*' element={<Profile />} />
-          <Route path='/hiker/hike' element={<HikerHike hikes={hikes} user={user}/>}/>
+          <Route path='/profile/*' element={<Profile hikes={hikes}/>} />
         </Routes>
       {/* </Container> */}
     </>
