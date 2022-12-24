@@ -267,7 +267,7 @@ app.post('/api/addReferenceToHike', async (req, res) => {
     }
 });
 
-app.post('/api/:hikeId/startPoint', isLoggedIn, async (req, res) => {
+app.post('/api/hikes/:hikeId/startPoint', isLoggedIn, async (req, res) => {
     try {
         await points.linkStart(req.user, req.params.hikeId, req.body);
         res.status(201).end();
@@ -276,7 +276,7 @@ app.post('/api/:hikeId/startPoint', isLoggedIn, async (req, res) => {
     }
 });
 
-app.post('/api/:hikeId/endPoint', isLoggedIn, async (req, res) => {
+app.post('/api/hikes/:hikeId/endPoint', isLoggedIn, async (req, res) => {
     try {
         await points.linkEnd(req.user, req.params.hikeId, req.body);
         res.status(201).end();

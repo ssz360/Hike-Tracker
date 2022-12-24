@@ -81,7 +81,8 @@ const addReferencePoint=async (user,hikeId,body,files)=>{
         const hike=await hikesdao.getHike(parseInt(hikeId));
         if(user.username!==hike.author) throw {status:401,message:"This local guide doesn't have the rigths to update this hike reference points"};
         const hikeMap=await hikesdao.getHikeMap(parseInt(hikeId));
-        if(!hikeMap.coordinates.some(p=>p[0]===body.latitude && p[1]===body.longitude)) throw {status:422,message:"These coordinates are not part of the hike track"};
+        //console.log("POINT IS PART OF HIKE? ",hikeMap.coordinates.some(p=>p[0]===parseFloat(body.latitude) && p[1]===parseFloat(body.longitude)))
+        if(!hikeMap.coordinates.some(p=>p[0]===parseFloat(body.latitude) && p[1]===parseFloat(body.longitude))) throw {status:422,message:"These coordinates are not part of the hike track"};
         const geoData=await points.getGeoAndLatitude(body.latitude,body.longitude);
         const pointId=await pointsdao.insertPoint(body.name,parseFloat(body.latitude),parseFloat(body.longitude),geoData.altitude,geoData.geopos,"referencePoint",body.description);
         await pointsdao.linkPointToHike(parseInt(hikeId),pointId);

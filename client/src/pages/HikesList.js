@@ -340,7 +340,7 @@ function HikesList(props) {
         <Col  id="hikes-container" sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
           <Row>
             {unfinishedHikeId!==-1 &&
-              <Alert className='mt-3 justify-content-center mx-auto' style={{width:'95%'}} variant='info' onClose={()=>setUnfinishedHikeId(-1)} dismissible>
+              <Alert className='mt-4 justify-content-center mx-auto' style={{width:'95%'}} variant='info' onClose={()=>setUnfinishedHikeId(-1)} dismissible>
                 <Alert.Heading>You started a hike but still have to complete it!</Alert.Heading>
                 <strong>
                   You still have to complete hike <Alert.Link href={props.hikes? '/profile/hikes':'#'}>{props.hikes? props.hikes.find(p=>p.id===unfinishedHikeId).name:'error'}</Alert.Link>
