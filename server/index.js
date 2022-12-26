@@ -1,10 +1,12 @@
 'use strict';
 const express = require('express');
+const fs=require('fs');
 const hikesdao = require('./dao/hikes');
 const hikes = require('./services/hikes');
 const parkings = require('./dao/parkings');
 const multer = require('multer');
-const huts = require('./dao/huts');
+const hutsdao = require('./dao/huts');
+const huts = require('./services/huts');
 const uuid = require('uuid');
 const path = require('path');
 const app = express();
@@ -20,6 +22,12 @@ const storageEngine = multer.diskStorage({
 const uploadImages = multer({
     storage: storageEngine,
     limits: { fileSize: 8000000 }
+});
+
+const deleteFiles=async files=>new Promise((resolve,reject)=>{
+    const proms=[];
+    files.forEach(f=>proms.push(fs.unlink(f)));
+    return Promise.all(proms).then(resolve()).catch(resolve());
 });
 // AUTHENTICATION CONTROL
 const passport = require('passport');
@@ -135,12 +143,13 @@ app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
     }
 })
 
-app.post('/api/newHike', isLoggedIn, upload.single('file'), async (req, res) => {
+app.post('/api/newHike', isLoggedIn, upload.single('file'),uploadImages.array('images') , async (req, res) => {
     try {
-        await hikes.newHike(req.user, req.body, req.file);
+        await hikes.newHike(req.user, req.body, req.file, req.files);
         return res.status(201).end();
     } catch (error) {
         //console.log("Error in index new hike",error);
+        deleteFiles(req.files.map(f=>f.filename));
         res.status(error.status).json(error.message);
     }
 })
@@ -159,14 +168,24 @@ app.post('/api/newHike', isLoggedIn, upload.single('file'), async (req, res) => 
 //     "coordinates":"41.000144, 14.534893"
 //  }
 
-app.post('/api/huts', async (req, res) => {
+/*app.post('/api/huts', async (req, res) => {
     try {
         const { name, description, numberOfBedrooms, coordinate, phone, email, website } = req.body;
         const geodata = await points.getGeoAndLatitude(coordinate[0], coordinate[1]);
-        const ret = await huts.insertHut(name, description, numberOfBedrooms, coordinate, geodata.geopos, geodata.altitude, phone, email, website);
+        const ret = await hutsdao.insertHut(name, description, numberOfBedrooms, coordinate, geodata.geopos, geodata.altitude, phone, email, website);
         return res.status(201).json(ret);
     } catch (error) {
         console.log(error);
+        res.status(error.status).json(error.message);
+    }
+});*/
+
+app.post('/api/huts',isLoggedIn, uploadImages.array('images'), async (req, res) => {
+    try {
+        const ret=await huts.addHut(req.user, req.body, req.files);
+        return res.status(201).json(ret);
+    } catch (error) {
+        deleteFiles(req.files.map(f=>f.filename));
         res.status(error.status).json(error.message);
     }
 });
@@ -201,8 +220,8 @@ app.post('/api/huts', async (req, res) => {
 app.post('/api/huts/list', async (req, res) => {
     const { name, country, numberOfBedrooms, geographicalArea } = req.body;
     console.log("IN server FILTERS WITH NAME", name, "COUNTRY", country, "NUMBEROFBEDS", numberOfBedrooms, "Geogr", geographicalArea);
-    huts.getHutsListWithFilters(name, country, numberOfBedrooms, geographicalArea)
-        .then(huts => res.json(huts))
+    hutsdao.getHutsListWithFilters(name, country, numberOfBedrooms, geographicalArea)
+        .then(hs => res.json(hs))
         .catch(err => res.status(500).json('Error looking for hut: \r\n' + err));
 });
 
@@ -360,6 +379,7 @@ app.post('/api/hikes/:hikeId/referencePoint', isLoggedIn, uploadImages.array('im
         await hikes.addReferencePoint(req.user, req.params.hikeId, req.body, req.files);
         return res.status(201).json();
     } catch (error) {
+        deleteFiles(req.files.map(f=>f.filename));
         res.status(error.status).json(error.message);
     }
 })
@@ -369,6 +389,18 @@ app.get('/api/point/:pointId/images', async (req, res) => {
         const ret = await points.getImages(req.params.pointId);
         return res.status(200).json(ret);
     } catch (error) {
+        res.status(error.status).json(error.message);
+    }
+})
+
+app.get('/api/hike/:hikeId/images', async (req, res) => {
+    try {
+        console.log("Trying to get images for hike",req.params.hikeId);
+        const ret = await hikes.getImages(req.params.hikeId);
+        console.log("Images for hike",req.params.hikeId,"are",ret);
+        return res.status(200).json(ret);
+    } catch (error) {
+        console.log("Error in getting images for hike",req.params.hikeId,"error",error);
         res.status(error.status).json(error.message);
     }
 })

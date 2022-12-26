@@ -10,5 +10,6 @@ import ProfileDashboard from "./ProfileDashboard"
 import ProfilePreferences from "./ProfilePreferences"
 import ProfileHikes from "./profileHikes";
 import StopWatch from "./stopwatch";
+import GallerySlider from "./gallerySlider";
 
-export { Header, Login, SignUp, PointMap, CheckEmail, MultiRangeSlider, MultiRangeSliderHooked, AddParkingLot, ProfileDashboard, ProfilePreferences, ProfileHikes, StopWatch };
+export { Header, Login, SignUp, PointMap, CheckEmail, MultiRangeSlider, MultiRangeSliderHooked, AddParkingLot, ProfileDashboard, ProfilePreferences, ProfileHikes, StopWatch, GallerySlider };

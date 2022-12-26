@@ -110,15 +110,24 @@ async function addPreferences(prefs) {
   else throw prefs;
 };
 
-async function insertHut(name, description, country, numberOfBedrooms, coordinate, phone, email, website) {
+async function insertHut(name, description, country, numberOfBedrooms, coordinate, phone, email, website, images) {
+    const data=new FormData();
+    data.append('name',name);
+    data.append('description',description);
+    data.append('country',country);
+    data.append('numberOfBedrooms',numberOfBedrooms);
+    data.append('latitude',coordinate[0]);
+    data.append('longitude',coordinate[1]);
+    data.append('phone',phone);
+    data.append('email',email);
+    data.append('website',website);
+    images.forEach(i=>data.append('images',i));
     return new Promise((resolve, reject) => {
         const thisURL = "huts";
         fetch(new URL(thisURL, APIURL), {
-            method: 'POST',
-            headers:{
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({name, description, country, numberOfBedrooms, coordinate, phone, email, website}),
+            method:'POST',
+            credentials:"include",
+            body: data
         })
             .then((response) => {
                 if (response.ok) {
@@ -213,12 +222,13 @@ async function getHikesListWithFilters(lengthMin, lengthMax, expectedTimeMin, ex
     else throw {status:res.status,message:ret};
 }*/
 
-const addHike= async (file,name,desc,difficulty)=>{
+const addHike= async (file,name,desc,difficulty,images)=>{
     const data=new FormData();
     data.append('file',file);
     data.append('name',name);
     data.append('description',desc);
     data.append('difficulty',difficulty);
+    images.forEach(i=>data.append('images',i));
     //console.log("Adding a new hike with formdata",data);
     const res=await fetch('http://localhost:3001/api/newHike',{
         method:'POST',
@@ -427,6 +437,15 @@ const getImagesPoint=async pointId=>{
     else throw ret;
 }
 
+const getImagesHike=async hikeId=>{
+    const res=await fetch(APIBASE+'hike/'+hikeId+'/images',{
+        credentials:"include"
+    });
+    const ret=await res.json();
+    if(res.ok) return ret.map(i=>({name:i.name,url:'http://localhost:3001/images/'+i.path}));
+    else throw ret;
+}
+
 const startHike=async id=>{
     //throw "Cannot start hike "+id;
     return;
@@ -480,7 +499,8 @@ const api = {
 	getImagesPoint,
     startHike,
     getUnfinishedHike,
-    stopResumeHike
+    stopResumeHike,
+    getImagesHike
 };
 
 export default api;

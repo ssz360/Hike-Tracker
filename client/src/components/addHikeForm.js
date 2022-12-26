@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import ServerReply from "./serverReply";
 import {CheckCircle, XCircle, ArrowLeft} from 'react-bootstrap-icons'
+import GallerySlider from "./gallerySlider";
 function AddHikeForm(props) {
     const [error, setError] = useState();
     const [success, setSuccess] = useState(false);
@@ -13,20 +14,32 @@ function AddHikeForm(props) {
     const [file, setFile] = useState();
     const [fileName, setFileName] = useState('');
     const [waiting, setWaiting] = useState(false);
+    const [images,setImages] = useState([]);
     const navigate = useNavigate();
+    const resetFields=()=>{
+        setName('');
+        setDifficulty();
+        setDesc('');
+        setFile();
+        setFileName('');
+        images.forEach(i=>URL.revokeObjectURL(i.url));
+        setImages([]);
+    }
     const submitHandler = async () => {
         try {
             let err = "";
             if (!name) err += "No name was provided. ";
             if (!difficulty) err += "No difficulty was selected. "
             if (!file) err += "The track file was not provided. ";
+            if (images.length===0) err+="You must provide at least one image to insert a new hike!";
             if (err !== "") throw err;
             setWaiting(true);
             //console.log("Trying to send an api call")
-            await api.addHike(file, name, desc, difficulty);
+            await api.addHike(file, name, desc, difficulty,images);
             setWaiting(false);
             //console.log("Success in api call");
             setSuccess(true);
+            resetFields();
             setTimeout(() => setSuccess(false), 3000);
             await props.refreshHikes();
         } catch (error) {
@@ -64,7 +77,7 @@ function AddHikeForm(props) {
                                 opacity: "90%"
                             }}>
 
-                            <Form className="shadow-lg p-3 mb-5 bg-white rounded " style={{ width: "40%" }}>
+                            <Form className="shadow-lg p-3 mb-5 bg-white rounded " style={{ width: "60%" }}>
                                 <Form.Group className="mb-3">
                                     <FloatingLabel controlId="floatingName" label="Hike Name" className="mb-3">
                                         <Form.Control placeholder="Insert Name" className="mx-auto" type="text" value={name} onChange={e => setName(e.target.value)} />
@@ -90,6 +103,10 @@ function AddHikeForm(props) {
                                 <Form.Group controlId="formFile" className="mb-3" onChange={e => { setFileName(e.target.value); setFile(e.target.files[0]); }}>
                                     <Form.Label > <strong>Track file</strong></Form.Label>
                                     <Form.Control type="file" accept=".gpx" value={fileName} />
+                                </Form.Group>
+                                
+                                <Form.Group className='mb-3'>
+                                    <GallerySlider add={true} images={images} setImages={setImages}/>
                                 </Form.Group>
                                 <Form.Group className="mb-3">
                                     <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new hike"} successMessage={"New hike added correctly!"} />

@@ -33,10 +33,11 @@ const getHikesFilters=async queries=>{
     }
 }
 
-const newHike=async (user,body,file)=>{
+const newHike=async (user,body,file,images)=>{
     try {
         if(user.type!=="localGuide")    throw {status:401,message:"This type of user can't describe a new hike"};
         if(typeof(body.name)!=="string" || typeof(body.description)!=="string" || typeof(body.difficulty)!=="string") throw {status:422,message:"Bad parameters"};
+        if(images.length===0) throw {status:422,message:"To insert a new hike you must provide at least one image!"};
         const gpx = new gpxParser();gpx.parse(file.buffer.toString());
         if(gpx.tracks[0]===undefined) throw {status:422,message:"The gpx file provided is not a valid one"}
         const coors=[];
@@ -57,7 +58,10 @@ const newHike=async (user,body,file)=>{
             const geoposend=await points.getGeoAreaPoint(coors[coors.length-1][0],coors[coors.length-1][1],true);
             endPoint=await pointsdao.insertPoint("Point of hike "+body.name,coors[coors.length-1][0],coors[coors.length-1][1],gpx.tracks[0].points[coors.length-1]["ele"],geoposend,"hikePoint","Default arrival point of hike "+body.name);
         }
-        await hikesdao.newHike(body.name,user.username,len/1000,(len/1000)/2,ascent,body.description,body.difficulty.toUpperCase(),startPoint,endPoint,coors,centerlat,centerlon,Math.max(...lats),Math.max(...lons),Math.min(...lats),Math.min(...lons));
+        const hikeid=await hikesdao.newHike(body.name,user.username,len/1000,(len/1000)/2,ascent,body.description,body.difficulty.toUpperCase(),startPoint,endPoint,coors,centerlat,centerlon,Math.max(...lats),Math.max(...lons),Math.min(...lats),Math.min(...lons));
+        for(const i of images){
+            await hikesdao.insertImageForHike(hikeid,i);
+        }
     } catch (error) {
         throw {status:error.status,message:error.message};
     }
@@ -105,5 +109,15 @@ const getMap=async id=>{
     }
 }
 
-const hikes={newHike,hikesInBounds,addReferencePoint,getMap,getHikes,getHikesFilters};
+const getImages=async hikeId=>{
+    try {
+        if(!isFinite(hikeId)) throw {status:422,message:"Bad parameters"};
+        const ret=await hikesdao.getImages(parseInt(hikeId));
+        return ret;
+    } catch (error) {
+        throw {status:error.status,message:error.message};
+    }
+}
+
+const hikes={newHike,hikesInBounds,addReferencePoint,getMap,getHikes,getHikesFilters,getImages};
 module.exports= hikes;

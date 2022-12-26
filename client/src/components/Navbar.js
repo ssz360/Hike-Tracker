@@ -23,7 +23,7 @@ function Header(props) {
         <Navbar sticky='top' collapseOnSelect bg="black" expand='md' variant="dark" >
             <Container>
             {props.logged ? <>
-                <Navbar.Brand as={Link} to="/hikes" className="px-4">
+                <Navbar.Brand as={Link} to="/hikes">
                     <Image className="mb-1" fluid roundedCircle src={process.env.PUBLIC_URL + "/favicon.ico"} style={{"width":"20%"}}/>
                     {" HikeTracker"}
                 </Navbar.Brand>
@@ -69,7 +69,7 @@ function Header(props) {
                 </Nav>
                 </Navbar.Collapse>
             </> : <>
-                <Navbar.Brand as={Link} to="/" className="px-4">
+                <Navbar.Brand as={Link} to="/">
                     <Image className="mb-1" fluid roundedCircle src={process.env.PUBLIC_URL + "/favicon.ico"} style={{"width":"20%"}}/>
                     {" HikeTracker"}
                 </Navbar.Brand>

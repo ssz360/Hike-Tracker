@@ -135,11 +135,11 @@ function App() {
     }
   }
 
-  async function newHut(name, description, country, numBeds, coord, phone, email, website) {
+  async function newHut(name, description, country, numBeds, coord, phone, email, website, images) {
     try {
       //console.log(name, country, numberOfGuests, numberOfBedrooms, coordinate);
     //here call api.elevation with coordinate to get elevation
-      await api.insertHut(name, description, country, numBeds, coord, phone, email, website);
+      await api.insertHut(name, description, country, numBeds, coord, phone, email, website, images);
     } catch (error) {
       throw error;
     }
