@@ -68,13 +68,6 @@ function HikesList(props) {
     props.setAllHikesShow();
   }
 
-
-  //if we get again in this page no filter should be on and we should see again all hikes
-  useEffect(() => {
-    if (center === undefined && radius === 0 && lenMin === null && lenMax === null
-      && dif === null && ascMin === null && ascMax === null && timeMin === null && timeMax === null) props.setAllHikesShow();
-  }, [])
-
   function goToTop() {
     document.getElementById('hikes-container').scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -82,15 +75,23 @@ function HikesList(props) {
   const [timeStartingHike,setTimeStartingHike]=useState('');
   const [changeStart,setChangeStart]=useState(false);
   const [unfinishedHikeId,setUnfinishedHikeId]=useState(-1);
-  const [updateScroll,setUpdateScroll]=useState(false);
+  const [updateCard,setUpdateCard]=useState(false);
   let updateTimeout;
-  const updateCallback=()=>setUpdateScroll(!updateScroll);
+  const updateCallback=()=>setUpdateCard(!updateCard);
   const manageUpdates=()=>{
     //console.log("In manage updates of",props.hike.name,"with timeoutid",timeOutId);
     clearTimeout(updateTimeout);// setTimeout returns the numeric ID which is used by
     // clearTimeOut to reset the timer
     updateTimeout = setTimeout(updateCallback, 500);
   };
+
+  //if we get again in this page no filter should be on and we should see again all hikes
+  useEffect(() => {
+    if (center === undefined && radius === 0 && lenMin === null && lenMax === null
+      && dif === null && ascMin === null && ascMax === null && timeMin === null && timeMax === null) props.setAllHikesShow();
+    window.addEventListener('resize',manageUpdates);
+    return(()=>window.removeEventListener('resize',manageUpdates));
+  }, [])
   const sleep=async ms=>new Promise((resolve,reject)=>setTimeout(()=>resolve(),ms));
   const startHike=id=>setStartingHike(id);
   const submitStartHike=async ()=>{
@@ -355,7 +356,7 @@ function HikesList(props) {
                   You still have to complete hike <Alert.Link href={props.hikes? '/profile/hikes':'#'}>{props.hikes? props.hikes.find(p=>p.id===unfinishedHikeId).name:'error'}</Alert.Link>
                 </strong>
               </Alert>}
-            {<Display updateScroll={updateScroll} startHike={startHike} unfinishedHikeId={unfinishedHikeId} logged={props.logged} displayedHikes={props.hikes.filter(h=>h.show)} star/>}
+            {<Display updateCard={updateCard} startHike={startHike} unfinishedHikeId={unfinishedHikeId} logged={props.logged} displayedHikes={props.hikes.filter(h=>h.show)} star/>}
           </Row>
         </Col>
 
@@ -369,14 +370,14 @@ function HikesList(props) {
 
 
 function Display(props) {
-  return props.displayedHikes.map((hike) =><HikeRowContainer updateScroll={props.updateScroll} key={hike.id} unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} hike={hike}/>)
+  return props.displayedHikes.map((hike) =><HikeRowContainer updateCard={props.updateCard} key={hike.id} unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} hike={hike}/>)
   //return props.displayedHikes.map((hike) => <div id={'hikecard'+hike.id} key={hike.id}><HikeRow unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} hike={hike} /></div>)
 }
 
 function HikeRowContainer(props){
   return(
     <Col xs={12} sm={8} md={6} lg={4} className="mt-2" id={'hikecard'+props.hike.id}>
-      <HikeRow updateScroll={props.updateScroll} unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} hike={props.hike} />
+      <HikeRow updateCard={props.updateCard} unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} hike={props.hike} />
     </Col>
   );
 }
@@ -414,14 +415,14 @@ function HikeRow(props) {
     // clearTimeOut to reset the timer
     timeOutId = setTimeout(updateViewability, 500);
   };
-  //attach updates listener and release them at unmount
+  /*attach updates listener and release them at unmount
   useEffect(()=>{
     window.addEventListener('resize',manageUpdates);
     return(()=>{
       window.removeEventListener('resize',manageUpdates);
     }
     )
-  },[]);
+  },[]);*/
   //get images if the active state is that and the card is visible
   useEffect(()=>{
     const getImgs=async()=>{
@@ -438,7 +439,7 @@ function HikeRow(props) {
 
   useEffect(()=>{
     manageUpdates();
-  },[props.updateScroll]);
+  },[props.updateCard]);
 
   return (
     <Card className="shadow mt-3 hikes-card">
