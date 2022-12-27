@@ -12,7 +12,7 @@ getParkingsList = async () => new Promise((resolve, reject) => {
     });
 });
 
-const linkPointToHike=(hikeId,pointId)=>new Promise((resolve,reject)=>{
+const linkPointToHike= (hikeId,pointId)=>new Promise((resolve,reject)=>{
     const sql="INSERT INTO LINKEDPOINTS(IDPoint,IDHike) VALUES(?,?)";
     db.run(sql,[pointId,hikeId],err=>{
         if(err){
@@ -120,7 +120,7 @@ const insertImageForPoint=async (pointId,image)=>new Promise((resolve,reject)=>{
             console.log("ERROR IN INSERT NEW IMAGE",err," FOR POINT",pointId,"WITH IMAGE",image);
             reject({status:503,message:err});
         }
-        else resolve();
+        else resolve(true);
     })
 })
 

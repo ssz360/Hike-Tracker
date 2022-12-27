@@ -334,6 +334,20 @@ const hikesInBounds=async (maxlat,maxlon,minlat,minlon)=>new Promise((resolve,re
     });
 })
 
+const getReferencesPoints = IDHike => {
+	return new Promise((resolve, reject) => {
+		const query = "SELECT * FROM REFERENCE_POINTS WHERE IDHike = ?";
+		db.all(query, [IDHike], function (err, rows) {
+			if (err) reject(err);
+			else
+				resolve(
+					rows.map(row => {
+						return row;
+					})
+				);
+		});
+	});
+};
 
-const hikes = { getHike,getHikesList, getHikesListWithFilters, newHike, getHikeMap, addReferenceToHike, updateStartingArrivalPoint, hikesInBounds };
+const hikes = { getHike,getHikesList,getReferencesPoints, getHikesListWithFilters, newHike, getHikeMap, addReferenceToHike, updateStartingArrivalPoint, hikesInBounds };
 module.exports = hikes;
