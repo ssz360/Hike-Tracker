@@ -135,11 +135,11 @@ function App() {
     }
   }
 
-  async function newHut(name, description, country, numBeds, coord, phone, email, website) {
+  async function newHut(name, description, country, numBeds, coord, phone, email, website, images) {
     try {
       //console.log(name, country, numberOfGuests, numberOfBedrooms, coordinate);
     //here call api.elevation with coordinate to get elevation
-      await api.insertHut(name, description, country, numBeds, coord, phone, email, website);
+      await api.insertHut(name, description, country, numBeds, coord, phone, email, website, images);
     } catch (error) {
       throw error;
     }
@@ -158,14 +158,13 @@ function App() {
         {path !== '/' && <Header logged={logged} setLogged={setLogged} user={user} setUser={setUser} setDirty={setDirty} />}
         <Routes>
           <Route path='/' element={<HomePage />} />
-          <Route path='hikes' element={<HikesList user={user} logged={logged} hikes={hikes.filter(h => h.show)} setAllHikesShow={setAllHikesShow} filtering={filtering} />} />              
+          <Route path='hikes' element={<HikesList user={user} logged={logged} hikes={hikes} setAllHikesShow={setAllHikesShow} filtering={filtering} />} />              
           <Route path='/localGuide/*' element={<LocalGuide refreshHikes={refreshHikes} updateStartEndPoint={updateStartEndPoint} hikes={user !== undefined ? hikes.filter(h => h.author === user.username) : []} user={user} newHut={newHut} />}></Route>
           <Route path='/hut' element={<Hut huts={huts} setHuts={setHuts} filteringHut={filteringHut} user={user} />} />
           <Route path='/login' element={<Login setLogged={setLogged} setUser={setUser} />} />
           <Route path='/signup' element={<SignUp setLogged={setLogged} />} />
           <Route path='/checkemail' element={<CheckEmail />} />
-          <Route path='/profile/*' element={<Profile />} />
-          <Route path='/hiker/hike' element={<HikerHike hikes={hikes} user={user}/>}/>
+          <Route path='/profile/*' element={<Profile hikes={hikes}/>} />
         </Routes>
       {/* </Container> */}
     </>

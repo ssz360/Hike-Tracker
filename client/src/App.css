@@ -117,7 +117,7 @@
   filter: brightness(50%);
 }
 
-.cardimages:hover .image {
+.cardimages:hover .image:not(:fullscreen) {
   filter: brightness(50%);
 }
 
@@ -180,3 +180,152 @@
 .dropdown-menu.show {
   z-index: 9999;
 }
+
+.slick-slide div img {
+  width: 100%;
+  height: 100%;
+}
+
+.sliderimage {
+  position: relative;
+}
+
+.sliderimage .sliderimageoverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+.sliderimage:hover > .sliderimageoverlay {
+  display: block;
+  box-shadow: 0 0 1rem red;
+}
+
+.sliderimage:hover .sliderimageimg {
+  filter: brightness(50%);
+}
+
+.addimagecontainer {
+  position: relative;
+}
+
+.addimageimg {
+  border-radius: 50%;
+}
+
+.addimagelogo {
+  position: absolute;
+  top:calc(-18px + 50%);
+  left: 0;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  color: aliceblue;
+}
+
+.addimagecontainer:hover .addimageimg {
+  filter: brightness(50%);
+}
+
+.addimagelogo:hover {
+  color:darkkhaki;
+}
+
+.slidecont {
+  position: relative;
+}
+
+.slidecont:hover .slideimg:not(:fullscreen) {
+  filter: brightness(50%);
+}
+
+.slidecont:hover .slideoverlay {
+  color: aliceblue;
+}
+
+.slideoverlay {
+  position: absolute;
+  top:calc(-18px + 50%);
+  left: 0;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  display: none;
+}
+
+.slidecont:hover .slideoverlay {
+  display: block;
+}
+
+.slidedelete:hover {
+  color: red;
+}
+
+.slidefullscreen:hover {
+  color:cadetblue;
+}
+
+.slick-prev:before, .slick-next:before {
+  color:maroon!important;
+}
+
+.hikecardnav {
+  display: none;
+  position: relative;
+}
+.hikecardnavsel {
+  position: absolute;
+  top:0;
+  left: calc(-52px + 100%);
+}
+.hikes-card:hover > .hikecardheader > .hikecardcont > .hikecardnav {
+  display: block;
+}
+
+.hikeselectimage {
+  color:blueviolet;
+}
+
+.hikeselectimage:hover {
+  filter: brightness(150%);
+}
+
+.hikeselectmap:hover {
+  filter: brightness(150%);
+}
+
+.hikeselectimage.active {
+  text-shadow: 0 0 0.2rem white,
+               0 0 0.5rem white,
+               0 0 0.7rem blueviolet,
+               0 0 1rem blueviolet;
+}
+
+.hikeselectmap {
+  color:darkcyan;
+}
+
+.hikeselectmap.active {
+  text-shadow: 0 0 0.2rem white,
+               0 0 0.5rem white,
+               0 0 0.7rem darkcyan,
+               0 0 1rem darkcyan;
+}
+
+.hikeselectmap.disabled {
+  color:dimgrey;
+}
+
+.hikeimgmap {
+  transition-delay: 0s;
+}
+
+.material-icons-round.md-18 { font-size: 18px; }
+.material-icons-round.md-24 { font-size: 24px; } /* Default */
+.material-icons-round.md-36 { font-size: 36px; }
+.material-icons-round.md-48 { font-size: 48px; }

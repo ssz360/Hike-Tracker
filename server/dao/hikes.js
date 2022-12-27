@@ -80,7 +80,7 @@ const newHike = async (name, author, len,expectedTime, ascent, desc, difficulty,
                         proms.push(insertHikePoint(hikeId,c[0],c[1],i));
                         i++;
                     }
-                    Promise.all(proms).then(()=>resolve()).catch(err=>reject({ status: 503, message: { err } }));
+                    Promise.all(proms).then(()=>resolve(hikeId)).catch(err=>reject({ status: 503, message: { err } }));
                 })
             }
         });
@@ -349,5 +349,27 @@ const getReferencesPoints = IDHike => {
 	});
 };
 
-const hikes = { getHike,getHikesList,getReferencesPoints, getHikesListWithFilters, newHike, getHikeMap, addReferenceToHike, updateStartingArrivalPoint, hikesInBounds };
+const insertImageForHike=async (hikeId,image)=>new Promise((resolve,reject)=>{
+    const sql="INSERT INTO HIKESIMAGES(hikeId,path,name) VALUES(?,?,?)";
+    db.run(sql,[hikeId,image.filename,image.originalname],err=>{
+        if(err){
+            console.log("ERROR IN INSERT NEW IMAGE",err," FOR HIKE",hikeId,"WITH IMAGE",image);
+            reject({status:503,message:err});
+        }
+        else resolve();
+    })
+})
+
+const getImages=async hikeId=>new Promise((resolve,reject)=>{
+    const sql="SELECT path,name FROM HIKESIMAGES WHERE hikeId=?";
+    db.all(sql,[hikeId],(err,rows)=>{
+        if(err){
+            console.log("ERROR IN GET NEW IMAGES",err,hikeId);
+            reject({status:503,message:err});
+        }
+        else resolve(rows);
+    })
+})
+
+const hikes = { getHike,getHikesList,getReferencesPoints, getHikesListWithFilters, newHike, getHikeMap, addReferenceToHike, updateStartingArrivalPoint, hikesInBounds, insertImageForHike, getImages };
 module.exports = hikes;

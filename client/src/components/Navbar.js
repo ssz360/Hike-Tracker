@@ -1,4 +1,4 @@
-import { Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Image, Container } from 'react-bootstrap';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { BoxArrowRight } from 'react-bootstrap-icons';
 import api from '../lib/api';
@@ -20,12 +20,15 @@ function Header(props) {
     return (<>
         
         {/* <Navbar bg="black" variant="dark" fixed="top"> */}
-        <Navbar bg="black" variant="dark" >
+        <Navbar sticky='top' collapseOnSelect bg="black" expand='md' variant="dark" >
+            <Container>
             {props.logged ? <>
-                <Navbar.Brand as={Link} to="/hikes" className="px-4">
+                <Navbar.Brand as={Link} to="/hikes">
                     <Image className="mb-1" fluid roundedCircle src={process.env.PUBLIC_URL + "/favicon.ico"} style={{"width":"20%"}}/>
                     {" HikeTracker"}
                 </Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav>
                     {props.user.type === "localGuide" ? <>
                         <NavDropdown title={"Hikes"} className="px-4" style={path==="/localGuide/hikes" || path==="/hikes" || path === "/localGuide/newHike"? {"fontWeight":"bold"} : null}>
@@ -64,16 +67,21 @@ function Header(props) {
                         </NavDropdown.Item>
                     </NavDropdown>
                 </Nav>
+                </Navbar.Collapse>
             </> : <>
-                <Navbar.Brand as={Link} to="/" className="px-4">
+                <Navbar.Brand as={Link} to="/">
                     <Image className="mb-1" fluid roundedCircle src={process.env.PUBLIC_URL + "/favicon.ico"} style={{"width":"20%"}}/>
                     {" HikeTracker"}
                 </Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="ms-auto">
                     <Nav.Link as={Link} to="/login" className="px-4">Sign in</Nav.Link>
                     <Nav.Link as={Link} to="/signup" className="px-4">Sign up</Nav.Link>
                 </Nav>
+            </Navbar.Collapse>
             </>}
+            </Container>
         </Navbar>
     </>);
 }

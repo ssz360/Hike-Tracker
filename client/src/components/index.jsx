@@ -8,5 +8,8 @@ import MultiRangeSliderHooked from "./MultiRangeSliderHooked"
 import AddParkingLot from "./AddParkingLot"
 import ProfileDashboard from "./ProfileDashboard"
 import ProfilePreferences from "./ProfilePreferences"
+import ProfileHikes from "./profileHikes";
+import StopWatch from "./stopwatch";
+import GallerySlider from "./gallerySlider";
 
-export { Header, Login, SignUp, PointMap, CheckEmail, MultiRangeSlider, MultiRangeSliderHooked, AddParkingLot, ProfileDashboard, ProfilePreferences };
+export { Header, Login, SignUp, PointMap, CheckEmail, MultiRangeSlider, MultiRangeSliderHooked, AddParkingLot, ProfileDashboard, ProfilePreferences, ProfileHikes, StopWatch, GallerySlider };

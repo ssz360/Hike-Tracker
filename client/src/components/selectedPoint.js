@@ -3,6 +3,7 @@ import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstr
 import api from "../lib/api";
 import icons from "../lib/iconspoint";
 import Gallery from "./gallery";
+import GallerySlider from "./gallerySlider";
 
 
 function SelectedPoint(props){
@@ -42,7 +43,7 @@ function SelectedPoint(props){
                     <Spinner animation="grow"/>
                 </div>
                 :
-                <Gallery preview={false} addImage={false} imagesUrls={imagesUrls}/>
+                <GallerySlider add={false} images={imagesUrls}/>
             }
         </>
     )

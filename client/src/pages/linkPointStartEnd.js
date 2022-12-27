@@ -35,12 +35,13 @@ function LinkPointStartEnd(props){
             await props.refreshHikes();//props.hike,points.find(p=>p.id===selectedPoint),linkType);
             const linkableStartPoints=await api.getLinkableStartPoints(props.hike.id);
             const linkableEndPoints=await api.getLinkableEndPoints(props.hike.id);
-            console.log("Linkable start points",linkableStartPoints);
-            console.log("Linkable end points",linkableEndPoints);
+            //console.log("Linkable start points",linkableStartPoints);
+            //onsole.log("Linkable end points",linkableEndPoints);
             setLinkableStartPoints([...linkableStartPoints]);
             setLinkableEndPoints([...linkableEndPoints]);
         } catch (error) {
-            console.log("Error in linkpoint",error);
+            //console.log("Error in linkpoint",error);
+            throw error;
         }
     }
     if(submit || selectedPoint===(-1)){
