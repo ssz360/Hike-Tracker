@@ -2,6 +2,7 @@ const hikesdao=require('../dao/hikes');
 const gpxParser = require('gpxparser');
 const pointsdao=require('../dao/points');
 const points=require('./points');
+const fs = require('fs');
 const DIFFICULTIES=['TOURIST','HIKER','PROFESSIONAL HIKER']
 const DEFCENTERLAT=0;
 const DEFCENTERLNG=0;
@@ -35,10 +36,12 @@ const getHikesFilters=async queries=>{
 
 const newHike=async (user,body,file,images)=>{
     try {
+        console.log('NEW HIKE   user',user,'body',body,'gpx file',file,'images',images);
         if(user.type!=="localGuide")    throw {status:401,message:"This type of user can't describe a new hike"};
         if(typeof(body.name)!=="string" || typeof(body.description)!=="string" || typeof(body.difficulty)!=="string") throw {status:422,message:"Bad parameters"};
         if(images.length===0) throw {status:422,message:"To insert a new hike you must provide at least one image!"};
-        const gpx = new gpxParser();gpx.parse(file.buffer.toString());
+        const bufffile=fs.readFileSync(__dirname+'/../tmp/'+file.filename);
+        const gpx = new gpxParser();gpx.parse(bufffile);
         if(gpx.tracks[0]===undefined) throw {status:422,message:"The gpx file provided is not a valid one"}
         const coors=[];
         gpx.tracks[0].points.forEach(p =>coors.push([p["lat"],p["lon"]]));

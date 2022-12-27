@@ -82,6 +82,15 @@ function HikesList(props) {
   const [timeStartingHike,setTimeStartingHike]=useState('');
   const [changeStart,setChangeStart]=useState(false);
   const [unfinishedHikeId,setUnfinishedHikeId]=useState(-1);
+  const [updateScroll,setUpdateScroll]=useState(false);
+  let updateTimeout;
+  const updateCallback=()=>setUpdateScroll(!updateScroll);
+  const manageUpdates=()=>{
+    //console.log("In manage updates of",props.hike.name,"with timeoutid",timeOutId);
+    clearTimeout(updateTimeout);// setTimeout returns the numeric ID which is used by
+    // clearTimeOut to reset the timer
+    updateTimeout = setTimeout(updateCallback, 500);
+  };
   const sleep=async ms=>new Promise((resolve,reject)=>setTimeout(()=>resolve(),ms));
   const startHike=id=>setStartingHike(id);
   const submitStartHike=async ()=>{
@@ -337,7 +346,7 @@ function HikesList(props) {
           </Row>
         </Col>
         {/***** Hikes List *****/}
-        <Col className="hikes-container" id="hikescontainer" sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
+        <Col onScroll={manageUpdates} className="hikes-container" id="hikescontainer" sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
           <Row>
             {unfinishedHikeId!==-1 &&
               <Alert className='mt-4 justify-content-center mx-auto' style={{width:'95%'}} variant='info' onClose={()=>setUnfinishedHikeId(-1)} dismissible>
@@ -346,7 +355,7 @@ function HikesList(props) {
                   You still have to complete hike <Alert.Link href={props.hikes? '/profile/hikes':'#'}>{props.hikes? props.hikes.find(p=>p.id===unfinishedHikeId).name:'error'}</Alert.Link>
                 </strong>
               </Alert>}
-            {<Display startHike={startHike} unfinishedHikeId={unfinishedHikeId} logged={props.logged} displayedHikes={props.hikes.filter(h=>h.show)} star/>}
+            {<Display updateScroll={updateScroll} startHike={startHike} unfinishedHikeId={unfinishedHikeId} logged={props.logged} displayedHikes={props.hikes.filter(h=>h.show)} star/>}
           </Row>
         </Col>
 
@@ -360,14 +369,14 @@ function HikesList(props) {
 
 
 function Display(props) {
-  return props.displayedHikes.map((hike) =><HikeRowContainer key={hike.id} unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} hike={hike}/>)
+  return props.displayedHikes.map((hike) =><HikeRowContainer updateScroll={props.updateScroll} key={hike.id} unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} hike={hike}/>)
   //return props.displayedHikes.map((hike) => <div id={'hikecard'+hike.id} key={hike.id}><HikeRow unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} hike={hike} /></div>)
 }
 
 function HikeRowContainer(props){
   return(
     <Col xs={12} sm={8} md={6} lg={4} className="mt-2" id={'hikecard'+props.hike.id}>
-      <HikeRow unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} hike={props.hike} />
+      <HikeRow updateScroll={props.updateScroll} unfinishedHikeId={props.unfinishedHikeId} startHike={props.startHike} logged={props.logged} hike={props.hike} />
     </Col>
   );
 }
@@ -407,15 +416,12 @@ function HikeRow(props) {
   };
   //attach updates listener and release them at unmount
   useEffect(()=>{
-    document.getElementById('hikescontainer').addEventListener('scroll',manageUpdates);
     window.addEventListener('resize',manageUpdates);
-    manageUpdates();
     return(()=>{
-      document.getElementById('hikescontainer').removeEventListener('scroll',manageUpdates);
       window.removeEventListener('resize',manageUpdates);
     }
     )
-  },[])
+  },[]);
   //get images if the active state is that and the card is visible
   useEffect(()=>{
     const getImgs=async()=>{
@@ -428,7 +434,12 @@ function HikeRow(props) {
     }
     if(visible && active==='images') getImgs();
     else setImages([]);
-  },[visible,active])
+  },[visible,active]);
+
+  useEffect(()=>{
+    manageUpdates();
+  },[props.updateScroll]);
+
   return (
     <Card className="shadow mt-3 hikes-card">
       <Card.Header className='hikecardheader'>
@@ -455,7 +466,7 @@ function HikeRow(props) {
         </Row>
         {visible?
             active==='images'?
-              <GallerySlider className='hikecardel' add={false} images={images.length>0?images:[{url:'/images/placeholder.png'}]}/>
+              <GallerySlider dots={false} className='hikecardel' add={false} images={images.length>0?images:[{url:'/images/placeholder.png'}]}/>
               :
               active==='map' && props.logged?
                 <HikeMap on hike={props.hike} />

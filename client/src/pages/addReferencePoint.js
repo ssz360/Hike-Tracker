@@ -12,6 +12,7 @@ import { getDistance } from "geolib";
 import ServerReply from "../components/serverReply";
 import getMarkerForPoint from "../lib/markerPoint";
 import globalVariables from "../lib/globalVariables"
+import { GallerySlider } from "../components";
 
 function AddReferencePointMap(props){
     const [bounds,setBounds]=useState([[0,0],[0.1,0.1]]);
@@ -98,19 +99,16 @@ function AddReferencePointMap(props){
 }
 
 function ReferencePoint(props){
-    console.log("IN REFERENCE POINT WITH",props.point)
     useEffect(()=>{
         const getImages=async()=>{
             try {
                 props.setWaiting(true);
-                //console.log("GETTING IMAGES");
                 const imgs=await api.getImagesPoint(props.point.id);
-                //console.log("GOT IMGS",imgs);
                 props.setWaiting(false);
-                props.setImagesUrls([...imgs]);
+                props.setImages([...imgs]);
             } catch (error) {
                 props.setWaiting(false);
-                props.setImagesUrls([]);
+                props.setImages([]);
             }
         }
         getImages();
@@ -128,7 +126,7 @@ function ReferencePoint(props){
                     <Spinner animation="grow"/>
                 </div>
                 :
-                <Gallery preview={false} addImage={false} imagesUrls={props.imagesUrls}/>
+                <GallerySlider add={false} images={props.images}/>
             }
         </Col>
     )
@@ -148,7 +146,7 @@ function AddNewReferencePoint(props){
                             <Collapse in={props.openImages}>
                                 <div>
                                     <Form.Label className="text-center" style={{width:"100%",fontWeight:"bolder"}}>Reference point pictures</Form.Label>
-                                    <Gallery addImage={true} preview={true} images={props.images} setImages={props.setImages} imagesUrls={props.imagesUrls} setImagesUrls={props.setImagesUrls}/>
+                                    <GallerySlider add={true} images={props.images} setImages={props.setImages}/>
                                     <Form.Group className="mx-5 my-5">
                                         <div className="mx-auto text-center my-3">
                                             <Button variant="outline-success" onClick={e=>{
@@ -161,9 +159,8 @@ function AddNewReferencePoint(props){
                                                 e.stopPropagation();
                                                 props.setName('');
                                                 props.setDescription('');
+                                                props.images.forEach(img=>URL.revokeObjectURL(img.url))
                                                 props.setImages([]);
-                                                props.imagesUrls.forEach(img=>URL.revokeObjectURL(img.url))
-                                                props.setImagesUrls([]);
                                                 props.setOpenDescription(false);
                                                 props.setOpenImages(false);
                                             }}><strong>Cancel</strong></Button>
@@ -184,7 +181,6 @@ function AddNewReferencePoint(props){
 function AddReferencePoint(props){
     const [pointCoord,setPointCoord]=useState();
     const [images,setImages]=useState([]);
-    const [imagesUrls,setImagesUrls]=useState([]);
     const [selectedPoint,setSelectedPoint]=useState(-1);
 
     // data
@@ -195,23 +191,22 @@ function AddReferencePoint(props){
     const [waiting,setWaiting]=useState(false);
     const [error,setError]=useState();
     const [success,setSuccess]=useState(false);
+    const cleanup=()=>{
+        setName('');
+        setDescription('');
+        if(pointCoord!==undefined && selectedPoint===-1)    images.forEach(img=>URL.revokeObjectURL(img.url))
+        setImages([]);
+        setOpenDescription(false);
+        setOpenImages(false);
+    }
     const submitHandler=async ()=>{
         try {
             setWaiting(true);
-            await api.addReferencePoint(props.hike.id,name,pointCoord,description,images);
+            await api.addReferencePoint(props.hike.id,name,pointCoord,description,images.map(i=>i.image));
             setWaiting(false);
             setError();
             setSuccess(true);
-            setTimeout(()=>{
-                setSuccess(false);
-                setName('');
-                setDescription('');
-                setImages([]);
-                imagesUrls.forEach(img=>URL.revokeObjectURL(img.url))
-                setImagesUrls([]);
-                setOpenDescription(false);
-                setOpenImages(false);
-            },3000);
+            setTimeout(cleanup,1500);
             props.refreshHikes();
         } catch (error) {
             setWaiting(false);
@@ -222,14 +217,9 @@ function AddReferencePoint(props){
     }
     useEffect(()=>{
         if(pointCoord!==undefined) setSelectedPoint(-1);
-        setName('');
-        setDescription('');
-        setImages([]);
-        imagesUrls.forEach(img=>URL.revokeObjectURL(img.url))
-        setImagesUrls([]);
-        setOpenDescription(false);
-        setOpenImages(false);
-    },[pointCoord,selectedPoint])
+        cleanup();
+        return(()=>cleanup());
+    },[pointCoord,selectedPoint]);
     return(
         <Container className="my-5">
             <Row>
@@ -245,15 +235,14 @@ function AddReferencePoint(props){
                     </Col>
                     <AddNewReferencePoint waiting={waiting} setWaiting={setWaiting} error={error} setError={setError} success={success} setSuccess={setSuccess}
                     name={name} setName={setName} description={description} setDescription={setDescription} openDescription={openDescription} setOpenDescription={setOpenDescription}
-                    openImages={openImages} setOpenImages={setOpenImages} submitHandler={submitHandler} images={images} setImages={setImages}
-                    imagesUrls={imagesUrls} setImagesUrls={setImagesUrls}/>
+                    openImages={openImages} setOpenImages={setOpenImages} submitHandler={submitHandler} images={images} setImages={setImages}/>
                 </>
                 :
                 <>
                     <Col xs={12} md={7}>
                         <AddReferencePointMap selectedPoint={selectedPoint} setSelectedPoint={setSelectedPoint} hike={props.hike} pointCoord={pointCoord} setPointCoord={setPointCoord}/>
                     </Col>
-                    <ReferencePoint waiting={waiting} setWaiting={setWaiting} imagesUrls={imagesUrls} setImagesUrls={setImagesUrls} point={props.hike.referencePoints.find(p=>p.id===selectedPoint)}/>
+                    <ReferencePoint waiting={waiting} setWaiting={setWaiting} images={images} setImages={setImages} point={props.hike.referencePoints.find(p=>p.id===selectedPoint)}/>
                 </>
         }
         </Row>

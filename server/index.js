@@ -11,24 +11,27 @@ const uuid = require('uuid');
 const path = require('path');
 const app = express();
 const port = 3001;
-const upload = multer();
 const storageEngine = multer.diskStorage({
-    destination: "./public/images",
+    destination: (req,file,cb)=>path.extname(file.originalname)!=='.gpx'?cb(null,"./public/images"):cb(null,'./tmp'),
     limits: { fileSize: 8000000 },
     filename: (req, file, cb) => {
-        cb(null, uuid.v4() + path.extname(file.originalname));
+        if(path.extname(file.originalname)!=='.gpx')    cb(null, uuid.v4() + path.extname(file.originalname));
+        else cb(null,file.originalname);
     },
 });
-const uploadImages = multer({
+const upload = multer({
     storage: storageEngine,
     limits: { fileSize: 8000000 }
 });
 
-const deleteFiles=async files=>new Promise((resolve,reject)=>{
+const deleteFiles=async files=>{
     const proms=[];
-    files.forEach(f=>proms.push(fs.unlink(f)));
-    return Promise.all(proms).then(resolve()).catch(resolve());
-});
+    files.forEach(f=>proms.push(fs.unlink(f,err=>{
+        if(err) console.log('error while deleting file',f,'error',err);
+        return;
+    })));
+    return Promise.all(proms);
+};
 // AUTHENTICATION CONTROL
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -143,13 +146,15 @@ app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
     }
 })
 
-app.post('/api/newHike', isLoggedIn, upload.single('file'),uploadImages.array('images') , async (req, res) => {
+app.post('/api/newHike', isLoggedIn, upload.fields([{name:'file',maxCount:1},{name:'images',maxCount:25}]), async (req, res) => {
     try {
-        await hikes.newHike(req.user, req.body, req.file, req.files);
+        console.log('IN INDEX NEW HIKE WITH REQ.FILES',req.files);
+        await hikes.newHike(req.user, req.body, req.files.file[0], req.files.images);
+        deleteFiles([req.files.file[0].path]);
         return res.status(201).end();
     } catch (error) {
-        //console.log("Error in index new hike",error);
-        deleteFiles(req.files.map(f=>f.filename));
+        console.log("Error in index new hike",error);
+        deleteFiles([...req.files.images.map(f=>f.path),req.files.file[0].path]);
         res.status(error.status).json(error.message);
     }
 })
@@ -180,12 +185,12 @@ app.post('/api/newHike', isLoggedIn, upload.single('file'),uploadImages.array('i
     }
 });*/
 
-app.post('/api/huts',isLoggedIn, uploadImages.array('images'), async (req, res) => {
+app.post('/api/huts',isLoggedIn, upload.array('images'), async (req, res) => {
     try {
         const ret=await huts.addHut(req.user, req.body, req.files);
         return res.status(201).json(ret);
     } catch (error) {
-        deleteFiles(req.files.map(f=>f.filename));
+        deleteFiles(req.files.map(f=>f.path));
         res.status(error.status).json(error.message);
     }
 });
@@ -374,12 +379,12 @@ app.get('/api/hikes/bounds/:maxLat/:maxLng/:minLat/:minLng', isLoggedIn, async (
     }
 })
 
-app.post('/api/hikes/:hikeId/referencePoint', isLoggedIn, uploadImages.array('images'), async (req, res) => {
+app.post('/api/hikes/:hikeId/referencePoint', isLoggedIn, upload.array('images'), async (req, res) => {
     try {
         await hikes.addReferencePoint(req.user, req.params.hikeId, req.body, req.files);
         return res.status(201).json();
     } catch (error) {
-        deleteFiles(req.files.map(f=>f.filename));
+        deleteFiles(req.files.map(f=>f.path));
         res.status(error.status).json(error.message);
     }
 })

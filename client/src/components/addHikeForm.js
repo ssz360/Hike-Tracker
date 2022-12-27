@@ -35,7 +35,7 @@ function AddHikeForm(props) {
             if (err !== "") throw err;
             setWaiting(true);
             //console.log("Trying to send an api call")
-            await api.addHike(file, name, desc, difficulty,images);
+            await api.addHike(file, name, desc, difficulty,images.map(i=>i.image));
             setWaiting(false);
             //console.log("Success in api call");
             setSuccess(true);

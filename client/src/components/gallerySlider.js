@@ -38,7 +38,7 @@ function GallerySlider(props){
     const sliderSettings = {
         arrows: true,
         infinite: true,
-        dots:true,
+        dots:props.dots===undefined? true: props.dots,
         lazyLoad:true,
         slidesToShow: 1,
         slidesToScroll: 1,
