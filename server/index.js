@@ -1,6 +1,6 @@
 'use strict';
 const express = require('express');
-const fs=require('fs');
+const fs = require('fs');
 const hikesdao = require('./dao/hikes');
 const hikes = require('./services/hikes');
 const parkings = require('./dao/parkings');
@@ -12,11 +12,11 @@ const path = require('path');
 const app = express();
 const port = 3001;
 const storageEngine = multer.diskStorage({
-    destination: (req,file,cb)=>path.extname(file.originalname)!=='.gpx'?cb(null,"./public/images"):cb(null,'./tmp'),
+    destination: (req, file, cb) => path.extname(file.originalname) !== '.gpx' ? cb(null, "./public/images") : cb(null, './tmp'),
     limits: { fileSize: 8000000 },
     filename: (req, file, cb) => {
-        if(path.extname(file.originalname)!=='.gpx')    cb(null, uuid.v4() + path.extname(file.originalname));
-        else cb(null,file.originalname);
+        if (path.extname(file.originalname) !== '.gpx') cb(null, uuid.v4() + path.extname(file.originalname));
+        else cb(null, file.originalname);
     },
 });
 const upload = multer({
@@ -24,10 +24,10 @@ const upload = multer({
     limits: { fileSize: 8000000 }
 });
 
-const deleteFiles=async files=>{
-    const proms=[];
-    files.forEach(f=>proms.push(fs.unlink(f,err=>{
-        if(err) console.log('error while deleting file',f,'error',err);
+const deleteFiles = async files => {
+    const proms = [];
+    files.forEach(f => proms.push(fs.unlink(f, err => {
+        if (err) console.log('error while deleting file', f, 'error', err);
         return;
     })));
     return Promise.all(proms);
@@ -146,15 +146,15 @@ app.get('/api/hikes/:id/map', isLoggedIn, async (req, res) => {
     }
 })
 
-app.post('/api/newHike', isLoggedIn, upload.fields([{name:'file',maxCount:1},{name:'images',maxCount:25}]), async (req, res) => {
+app.post('/api/newHike', isLoggedIn, upload.fields([{ name: 'file', maxCount: 1 }, { name: 'images', maxCount: 25 }]), async (req, res) => {
     try {
-        console.log('IN INDEX NEW HIKE WITH REQ.FILES',req.files);
+        console.log('IN INDEX NEW HIKE WITH REQ.FILES', req.files);
         await hikes.newHike(req.user, req.body, req.files.file[0], req.files.images);
         deleteFiles([req.files.file[0].path]);
         return res.status(201).end();
     } catch (error) {
-        console.log("Error in index new hike",error);
-        deleteFiles([...req.files.images.map(f=>f.path),req.files.file[0].path]);
+        console.log("Error in index new hike", error);
+        deleteFiles([...req.files.images.map(f => f.path), req.files.file[0].path]);
         res.status(error.status).json(error.message);
     }
 })
@@ -185,12 +185,12 @@ app.post('/api/newHike', isLoggedIn, upload.fields([{name:'file',maxCount:1},{na
     }
 });*/
 
-app.post('/api/huts',isLoggedIn, upload.array('images'), async (req, res) => {
+app.post('/api/huts', isLoggedIn, upload.array('images'), async (req, res) => {
     try {
-        const ret=await huts.addHut(req.user, req.body, req.files);
+        const ret = await huts.addHut(req.user, req.body, req.files);
         return res.status(201).json(ret);
     } catch (error) {
-        deleteFiles(req.files.map(f=>f.path));
+        deleteFiles(req.files.map(f => f.path));
         res.status(error.status).json(error.message);
     }
 });
@@ -384,7 +384,7 @@ app.post('/api/hikes/:hikeId/referencePoint', isLoggedIn, upload.array('images')
         await hikes.addReferencePoint(req.user, req.params.hikeId, req.body, req.files);
         return res.status(201).json();
     } catch (error) {
-        deleteFiles(req.files.map(f=>f.path));
+        deleteFiles(req.files.map(f => f.path));
         res.status(error.status).json(error.message);
     }
 })
@@ -400,12 +400,12 @@ app.get('/api/point/:pointId/images', async (req, res) => {
 
 app.get('/api/hike/:hikeId/images', async (req, res) => {
     try {
-        console.log("Trying to get images for hike",req.params.hikeId);
+        console.log("Trying to get images for hike", req.params.hikeId);
         const ret = await hikes.getImages(req.params.hikeId);
-        console.log("Images for hike",req.params.hikeId,"are",ret);
+        console.log("Images for hike", req.params.hikeId, "are", ret);
         return res.status(200).json(ret);
     } catch (error) {
-        console.log("Error in getting images for hike",req.params.hikeId,"error",error);
+        console.log("Error in getting images for hike", req.params.hikeId, "error", error);
         res.status(error.status).json(error.message);
     }
 })
@@ -483,6 +483,17 @@ app.use(express.static('public'));
 // 		res.status(err.status).json(err.message);
 // 	}
 // });
+
+
+app.post('/api/finishHike', isLoggedIn, async (req, res) => {
+    try {
+        const { time, timeOnClock } = req.body;
+        hikes.finishHike(time, timeOnClock);
+        res.status(201).json();
+    } catch (error) {
+        res.status(error.status ?? 500).json(error.message)
+    }
+})
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)

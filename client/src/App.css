@@ -45,12 +45,11 @@
   }
 }
 
-
 .hikes-card .card-header {
   padding: 0;
 }
 
-.hike-desc{
+.hike-desc {
   margin-left: 10px;
   font-size: 12px;
 }
@@ -59,7 +58,7 @@
   margin: 10px;
 }
 
-.hike-expandable{
+.hike-expandable {
   height: 100%;
   line-height: 45px;
 }
@@ -70,7 +69,6 @@
   bottom: 20px;
   z-index: 9999;
 }
-
 
 .custom-modal-body {
   padding: 0;
@@ -112,7 +110,6 @@
   object-position: center;
 }
 
-
 .addimage:hover .image {
   filter: brightness(50%);
 }
@@ -137,31 +134,31 @@
   color: #f1f1f1;
   width: 100%;
   height: 100%;
-  transition: .5s ease;
+  transition: 0.5s ease;
   display: none;
   text-align: center;
 }
 
 .imageuploader {
   position: absolute;
-  top:0;
-  left:0;
+  top: 0;
+  left: 0;
   color: #f1f1f1;
   width: 14vmin;
   height: 20vmin;
   opacity: 0;
-  transition: .5s ease;
+  transition: 0.5s ease;
 }
 
 .cardoverlayimageremove {
-  width: 100%
+  width: 100%;
 }
 
 .cardoverlayimageremove > .bi {
   fill: red;
 }
 
-.cardoverlayimageremove:hover > .bi{
+.cardoverlayimageremove:hover > .bi {
   fill: white;
 }
 
@@ -169,12 +166,12 @@
   fill: cyan;
 }
 
-.cardoverlayimagezoom:hover > .bi{
+.cardoverlayimagezoom:hover > .bi {
   fill: white;
 }
 
 .cardoverlayimagezoom {
-  width: 100%
+  width: 100%;
 }
 
 .dropdown-menu.show {
@@ -218,7 +215,7 @@
 
 .addimagelogo {
   position: absolute;
-  top:calc(-18px + 50%);
+  top: calc(-18px + 50%);
   left: 0;
   height: 100%;
   width: 100%;
@@ -232,7 +229,7 @@
 }
 
 .addimagelogo:hover {
-  color:darkkhaki;
+  color: darkkhaki;
 }
 
 .slidecont {
@@ -249,7 +246,7 @@
 
 .slideoverlay {
   position: absolute;
-  top:calc(-18px + 50%);
+  top: calc(-18px + 50%);
   left: 0;
   height: 100%;
   width: 100%;
@@ -267,11 +264,12 @@
 }
 
 .slidefullscreen:hover {
-  color:cadetblue;
+  color: cadetblue;
 }
 
-.slick-prev:before, .slick-next:before {
-  color:maroon!important;
+.slick-prev:before,
+.slick-next:before {
+  color: maroon !important;
 }
 
 .hikecardnav {
@@ -280,7 +278,7 @@
 }
 .hikecardnavsel {
   position: absolute;
-  top:0;
+  top: 0;
   left: calc(-52px + 100%);
 }
 .hikes-card:hover > .hikecardheader > .hikecardcont > .hikecardnav {
@@ -288,7 +286,7 @@
 }
 
 .hikeselectimage {
-  color:blueviolet;
+  color: blueviolet;
 }
 
 .hikeselectimage:hover {
@@ -300,32 +298,40 @@
 }
 
 .hikeselectimage.active {
-  text-shadow: 0 0 0.2rem white,
-               0 0 0.5rem white,
-               0 0 0.7rem blueviolet,
-               0 0 1rem blueviolet;
+  text-shadow: 0 0 0.2rem white, 0 0 0.5rem white, 0 0 0.7rem blueviolet,
+    0 0 1rem blueviolet;
 }
 
 .hikeselectmap {
-  color:darkcyan;
+  color: darkcyan;
 }
 
 .hikeselectmap.active {
-  text-shadow: 0 0 0.2rem white,
-               0 0 0.5rem white,
-               0 0 0.7rem darkcyan,
-               0 0 1rem darkcyan;
+  text-shadow: 0 0 0.2rem white, 0 0 0.5rem white, 0 0 0.7rem darkcyan,
+    0 0 1rem darkcyan;
 }
 
 .hikeselectmap.disabled {
-  color:dimgrey;
+  color: dimgrey;
 }
 
 .hikeimgmap {
   transition-delay: 0s;
 }
 
-.material-icons-round.md-18 { font-size: 18px; }
-.material-icons-round.md-24 { font-size: 24px; } /* Default */
-.material-icons-round.md-36 { font-size: 36px; }
-.material-icons-round.md-48 { font-size: 48px; }
+.btn-finish {
+  width: 100%;
+  height: 100%;
+}
+.material-icons-round.md-18 {
+  font-size: 18px;
+}
+.material-icons-round.md-24 {
+  font-size: 24px;
+} /* Default */
+.material-icons-round.md-36 {
+  font-size: 36px;
+}
+.material-icons-round.md-48 {
+  font-size: 48px;
+}
