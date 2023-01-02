@@ -7,6 +7,7 @@ import api from "../lib/api";
 import SelectedPoint from "./selectedPoint";
 import getMarkerForPoint from "../lib/markerPoint";
 import globalVariables from "../lib/globalVariables";
+import Glossary from "./Glossary";
 
 function HikeMap(props) {
     const [bounds, setBounds] = useState([[0, 0], [0.1, 0.1]]);
@@ -37,6 +38,9 @@ function HikeMap(props) {
             {show ?
                 <Modal show={show} size="lg" className="my-1" onHide={e => setShow(false)}>
                     <Modal.Body className="custom-modal-body">
+                        {/* Glossary */}
+                        <Glossary></Glossary>
+
                         {selectedPoint > 0 ?
                             <Container fluid>
                                 <Row>
