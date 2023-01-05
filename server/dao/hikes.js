@@ -91,8 +91,9 @@ getHikesList = async () => new Promise((resolve, reject) => {
             return;
         }
         row = await getHikesMoreData(row);
-        console.log(row.map(h => h.referencePoints))
-        const hikes = row.map((h) => ({ IDHike: h.IDHike, Name: h.Name, Author: h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, Description: h.Description, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts: h.huts, center: [h.CenterLat, h.CenterLon] }))
+        // console.log(row.map(h => h.referencePoints))
+        const hikes = row.map((h) => ({ IDHike: h.IDHike, Name: h.Name, Author: h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, Description: h.Description, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts: h.huts, center: [h.CenterLat,h.CenterLon] }))
+        //console.log("Returning hikes",hikes);
         resolve(hikes);
     });
 });

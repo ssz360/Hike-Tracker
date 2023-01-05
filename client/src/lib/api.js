@@ -393,28 +393,47 @@ const getImagesHike = async hikeId => {
 
 const startHike = async id => {
     //throw "Cannot start hike "+id;
-    return;
-}
+	const response = await fetch(APIBASE + "trip", {
+		method: "POST",
+		credentials: "include",
+		headers: {
+			"Content-type": "application/json"
+		},
+		body: JSON.stringify({ IDHike: id })
+	});
+	const res = await response.json();
+	if (response.ok) return res;
+	else throw new Error("Cannot start hike " + id);
+};
 
 const getUnfinishedHike = async () => {
-    return {
-        hikeId: 1,
-        start: '2022-12-23 17:50:10',
-        stoppedAt: '2022-12-23 17:50:10',
-        stopped: false,
-        secsFromLastStop: 0
-    }
-}
+	const response = await fetch(APIBASE + "trip/ongoing", {
+		credentials: "include"
+	});
+	const res = await response.json();
+	if (response.ok) return res;
+	else throw res;
+};
 
-const stopResumeHike = async (stoppedAt, secsFromLastStop, stopped) => {
-    return {
-        hikeId: 1,
-        start: '2022-12-23 17:50:10',
-        'stoppedAt': stoppedAt,
-        'stopped': stopped,
-        secsFromLastStop: secsFromLastStop
-    }
-}
+const stopResumeHike = async (stoppedAt, secsFromLastStop, stopping) => {
+	const response = await fetch(
+		APIBASE + "trip/" + (stopping ? "pause" : "resume"),
+		{
+			method: "PUT",
+			credentials: "include",
+			headers: {
+				"Content-type": "application/json"
+			},
+			body: JSON.stringify({
+				stoppedAt: stoppedAt.replace("T", " "),
+				secsFromLastStop: secsFromLastStop
+			})
+		}
+	);
+	const res = await response.json();
+	if (response.ok) return await getUnfinishedHike();
+	else throw res;
+};
 
 const api = {
     login,

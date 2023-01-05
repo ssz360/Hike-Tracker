@@ -130,7 +130,7 @@ app.post('/api/hikes', async (req, res) => {
 
 app.get('/api/hikes/filters', async (req, res) => {
     try {
-        console.log("Query", req.query);
+        // console.log("Query", req.query);
         const ret = await hikes.getHikesFilters(req.query);
         res.status(200).json(ret);
     } catch (error) {
@@ -401,12 +401,12 @@ app.get('/api/point/:pointId/images', async (req, res) => {
 
 app.get('/api/hike/:hikeId/images', async (req, res) => {
     try {
-        console.log("Trying to get images for hike",req.params.hikeId);
+        // console.log("Trying to get images for hike",req.params.hikeId);
         const ret = await hikes.getImages(req.params.hikeId);
-        console.log("Images for hike",req.params.hikeId,"are",ret);
+        // console.log("Images for hike",req.params.hikeId,"are",ret);
         return res.status(200).json(ret);
     } catch (error) {
-        console.log("Error in getting images for hike",req.params.hikeId,"error",error);
+        // console.log("Error in getting images for hike",req.params.hikeId,"error",error);
         res.status(error.status).json(error.message);
     }
 })
@@ -460,33 +460,13 @@ app.post('/api/preferences', isLoggedIn, async (req, res) => {
 })
 
 app.use(express.static('public'));
-// req.body: { user: { username: string }}
-// res.body: { hikeList: Array<Hike> }
 
-// app.get("/api/hikes/byUserPreference", isLoggedIn, async (req, res) => {
-// 	try {
-// 		const userPref = await preferences.getUserPreferences(parseInt(req.user.username)).catch(err => {
-// 			throw err;
-// 		});
-// 		// console.log("userPref", userPref);
-// 		await hikesdao
-// 			.getHikesListWithFilters(undefined, userPref.length, undefined, userPref.time, undefined, userPref.ascent)
-// 			.then(
-// 				hikeList => {
-// 					// console.log("hikeList.length", hikeList.length);=> {
-// 					return res.status(200).json(hikeList);
-// 				},
-// 				err => {
-// 					throw err;
-// 				}
-// 			);
-// 	} catch (err) {
-// 		res.status(err.status).json(err.message);
-// 	}
-// });
-
-app.post('/api/trips', isLoggedIn, routerTrips.addTrip);
-app.get('/api/trips/id/:idTrip', isLoggedIn, routerTrips.getTripById);
+app.post('/api/trip', isLoggedIn, routerTrips.addTrip);
+app.get('/api/trip/ongoing', isLoggedIn, routerTrips.getCurrentTrip);
+app.get('/api/trips/tripId/:idTrip', isLoggedIn, routerTrips.getTripById);
+app.get('/api/trips/userId/:idUser', isLoggedIn, routerTrips.getTripsByUser);
+app.put('/api/trip/pause', isLoggedIn, routerTrips.pauseTrip);
+app.put('/api/trip/resume', isLoggedIn, routerTrips.resumeTrip);
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)

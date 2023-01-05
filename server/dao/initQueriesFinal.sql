@@ -104,8 +104,10 @@ CREATE TABLE "TRIPS" (
 	"end_time"	TEXT,
 	"ID_last_ref"	INTEGER NOT NULL,
 	"status"	TEXT NOT NULL,
+	"last_seg_duration"	INTEGER NOT NULL,
+	"last_seg_end_time"	TEXT NOT NULL,
+	PRIMARY KEY("IDTrip" AUTOINCREMENT),
 	FOREIGN KEY("IDUser") REFERENCES "USERS"("Username"),
-	PRIMARY KEY("IDTrip"),
 	FOREIGN KEY("ID_last_ref") REFERENCES "POINTS"("IDPoint"),
 	FOREIGN KEY("IDHike") REFERENCES "HIKES"("IDHike")
 );

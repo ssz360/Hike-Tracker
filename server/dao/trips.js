@@ -1,23 +1,9 @@
 const db = require("../dao/dao");
 
-// Functions
-// addTrip(IDHike, IDUser, start_time, ID_last_ref)
-// getTrip(IDTrip)
-// getTripsByStatus(status)
-// getTripsByUserAndStatus(IDUser, status)
-// getTripsByHikeAndUser(IDHike, IDUser)
-// getTripsByHikeAndUserAndStatus(IDHike, IDUser, status)
-// terminateTrip(IDTrip, end_time, ID_end_point)
-// updateTripStatus(IDTrip, status)
-// updateTripLastReference(IDTrip, ID_last_ref)
-// updateTrip(IDTrip, IDHike, IDUser, start_time, end_time, ID_last_ref, status)
-// deleteTrip(IDTrip)
-// deleteTripsByHike(IDHike)
-// deleteTripsByUser(IDUser)
-
-exports.addTrip = (IDHike, IDUser, start_time, ID_start_point) => {
-	const sql = "INSERT INTO TRIPS(IDHike,IDUser,start_time,ID_last_ref,status) VALUES(?,?,dateTime(?),?,?)";
-	const params = [IDHike, IDUser, start_time, ID_start_point, "Ongoing"];
+exports.addTrip = (IDHike, IDUser, ID_start_point) => {
+	const sql =
+		"INSERT INTO TRIPS(IDHike,IDUser,start_time,ID_last_ref,last_seg_duration,last_seg_end_time,status) VALUES(?,?,dateTime(),?,?,dateTime(),?)";
+	const params = [IDHike, IDUser, ID_start_point, 0, "Ongoing"];
 	return new Promise((resolve, reject) => {
 		db.run(sql, params, function (err) {
 			if (err) {
@@ -33,96 +19,46 @@ exports.getTrip = IDTrip => {
 	return new Promise((resolve, reject) => {
 		db.get(sql, [IDTrip], (err, row) => {
 			if (err) {
-				reject({ status: 500, message: "Error getting trip" });
+				reject({ status: 500, message: err.toString() });
 				return;
 			} else resolve(row);
 		});
 	});
 };
 
-exports.terminateTrip = (IDTrip, end_time, ID_end_point) => {
-	const sql = "UPDATE TRIPS SET status = ?,end_time = dateTime(?),ID_end_point = ? WHERE IDTrip = ?";
-	const params = ["terminated", end_time, ID_end_point, IDTrip];
-	return new Promise((resolve, reject) => {
-		db.run(sql, params, function (err) {
-			if (err) {
-				reject({ status: 500, message: "Error terminating trip" });
-				return;
-			} else resolve(this.lastID);
-		});
-	});
-};
-
-exports.updateTripStatus = (IDTrip, status) => {
-	const sql = "UPDATE TRIPS SET status = ? WHERE IDTrip = ?";
-	return new Promise((resolve, reject) => {
-		db.run(sql, [status, IDTrip], function (err) {
-			if (err) {
-				reject({ status: 500, message: "Error updating trip status" });
-				return;
-			} else resolve(this.lastID);
-		});
-	});
-};
-
-exports.updateLastReference = (IDTrip, ID_last_ref) => {
-	const sql = "UPDATE TRIPS SET ID_last_ref = ? WHERE IDTrip = ?";
-	return new Promise((resolve, reject) => {
-		db.run(sql, [ID_last_ref, IDTrip], function (err) {
-			if (err) {
-				reject({ status: 500, message: "Error updating trip last reference" });
-				return;
-			} else resolve(this.lastID);
-		});
-	});
-};
-
-exports.updateTrip = (IDTrip, IDHike, IDUser, start_time, end_time, ID_last_ref, status) => {
+exports.getCurrentTrip = IDUser => {
 	const sql =
-		"UPDATE TRIPS SET IDHike = ?,IDUser = ?,start_time = dateTime(?),end_time = dateTime(?),ID_last_ref = ?,status = ? WHERE IDTrip = ?";
-	const params = [IDHike, IDUser, start_time, end_time, ID_last_ref, status, IDTrip];
+		"SELECT * FROM TRIPS WHERE IDUser = ? AND (status = ? OR status = ?);";
 	return new Promise((resolve, reject) => {
-		db.run(sql, params, function (err) {
+		db.get(sql, [IDUser, "Ongoing", "Paused"], (err, row) => {
 			if (err) {
-				reject({ status: 500, message: "Error updating trip" });
+				reject({ status: 500, message: err.toString() });
 				return;
-			} else resolve(this.lastID);
+			} else
+				resolve(
+					row
+						? {
+								IDTrip: row.IDTrip,
+								hikeId: row.IDHike,
+								start: row.start_time,
+								stoppedAt: row.last_seg_end_time,
+								stopped: row.status === "Paused",
+								secsFromLastStop: row.last_seg_duration
+						  }
+						: null
+				);
 		});
 	});
 };
 
-exports.deleteTrip = IDTrip => {
-	const sql = "DELETE FROM TRIPS WHERE IDTrip = ?";
+exports.getAllTripsByUser = IDUser => {
+	const sql = "SELECT * FROM TRIPS WHERE IDUser = ?";
 	return new Promise((resolve, reject) => {
-		db.run(sql, [IDTrip], function (err) {
+		db.all(sql, [IDUser], (err, rows) => {
 			if (err) {
-				reject({ status: 500, message: "Error deleting trip" });
+				reject({ status: 500, message: err.toString() });
 				return;
-			} else resolve(this.lastID);
-		});
-	});
-};
-
-exports.deleteTripsByUser = IDUser => {
-	const sql = "DELETE FROM TRIPS WHERE IDUser = ?";
-	return new Promise((resolve, reject) => {
-		db.run(sql, [IDUser], function (err) {
-			if (err) {
-				reject({ status: 500, message: "Error deleting trips" });
-				return;
-			} else resolve(this.lastID);
-		});
-	});
-};
-
-exports.deleteTripsByHike = IDHike => {
-	const sql = "DELETE FROM TRIPS WHERE IDHike = ?";
-	return new Promise((resolve, reject) => {
-		db.run(sql, [IDHike], function (err) {
-			if (err) {
-				reject({ status: 500, message: "Error deleting trips" });
-				return;
-			} else resolve(this.lastID);
+			} else resolve(rows);
 		});
 	});
 };
@@ -132,81 +68,51 @@ exports.getTripsByHike = IDHike => {
 	return new Promise((resolve, reject) => {
 		db.all(sql, [IDHike], (err, rows) => {
 			if (err) {
-				reject({ status: 500, message: "Error getting trips" });
+				reject({ status: 500, message: err.toString() });
 				return;
 			} else resolve(rows);
 		});
 	});
 };
 
-exports.getTripsByUser = IDUser => {
-	const sql = "SELECT * FROM TRIPS WHERE IDUser = ?";
+exports.pauseTrip = (IDTrip, lastSegDuration, lastSegEndTime) => {
+	const sql =
+		"UPDATE TRIPS SET status = ?, last_seg_duration = ?, last_seg_end_time = ? WHERE IDTrip = ?";
 	return new Promise((resolve, reject) => {
-		db.all(sql, [IDUser], (err, rows) => {
-			if (err) {
-				reject({ status: 500, message: "Error getting trips" });
-				return;
-			} else resolve(rows);
-		});
+		db.run(
+			sql,
+			["Paused", lastSegDuration, lastSegEndTime, IDTrip],
+			function (err) {
+				if (err) {
+					reject({ status: 500, message: err.toString() });
+					return;
+				} else resolve(this.lastID);
+			}
+		);
 	});
 };
 
-exports.getTripsByStatus = status => {
-	const sql = "SELECT * FROM TRIPS WHERE status = ?";
+exports.resumeTrip = (IDTrip, lastSegEndTime) => {
+	const sql =
+		"UPDATE TRIPS SET status = ?, last_seg_end_time = ? WHERE IDTrip = ?";
 	return new Promise((resolve, reject) => {
-		db.run(sql, [status], function (err) {
+		db.run(sql, ["Ongoing", lastSegEndTime, IDTrip], function (err) {
 			if (err) {
-				reject({ status: 500, message: "Error getting trips" });
+				reject({ status: 500, message: err.toString() });
 				return;
 			} else resolve(this.lastID);
 		});
 	});
 };
 
-exports.getTripsByHikeAndUser = (IDHike, IDUser) => {
-	const sql = "SELECT * FROM TRIPS WHERE IDHike = ? AND IDUser = ?";
-	return new Promise((resolve, reject) => {
-		db.all(sql, [IDHike, IDUser], (err, rows) => {
-			if (err) {
-				reject({ status: 500, message: "Error getting trips" });
-				return;
-			} else resolve(rows);
-		});
-	});
-};
-
-exports.getTripsByHikeAndStatus = (IDHike, status) => {
-	const sql = "SELECT * FROM TRIPS WHERE IDHike = ? AND status = ?";
-	return new Promise((resolve, reject) => {
-		db.all(sql, [IDHike, status], (err, rows) => {
-			if (err) {
-				reject({ status: 500, message: "Error getting trips" });
-				return;
-			} else resolve(rows);
-		});
-	});
-};
-
-exports.getTripsByUserAndStatus = (IDUser, status) => {
-	const sql = "SELECT * FROM TRIPS WHERE IDUser = ? AND status = ?";
-	return new Promise((resolve, reject) => {
-		db.all(sql, [IDUser, status], (err, rows) => {
-			if (err) {
-				reject({ status: 500, message: "Error getting trips" });
-				return;
-			} else resolve(rows);
-		});
-	});
-};
-
-exports.getTripsByHikeAndUserAndStatus = (IDHike, IDUser, status) => {
-	const sql = "SELECT * FROM TRIPS WHERE IDHike = ? AND IDUser = ? AND status = ?";
-	return new Promise((resolve, reject) => {
-		db.all(sql, [IDHike, IDUser, status], (err, rows) => {
-			if (err) {
-				reject({ status: 500, message: "Error getting trips" });
-				return;
-			} else resolve(rows);
-		});
-	});
-};
+// exports.updateLastReference = (IDTrip, ID_last_ref) => {
+// 	const sql = "UPDATE TRIPS SET ID_last_ref = ? WHERE IDTrip = ?";
+// 	return new Promise((resolve, reject) => {
+// 		db.run(sql, [ID_last_ref, IDTrip], function (err) {
+// 			if (err) {
+// 				reject({ status: 500, message: err.toString() });
+// 				return;
+// 			} else resolve(this.lastID);
+// 		});
+// 	});
+// };
