@@ -11,7 +11,7 @@ function SelectLinkHut(props) {
     const [success, setSuccess] = useState(false);
     const [waiting, setWaiting] = useState(false);
     
-    useEffect((props) => {
+    useEffect(() => {
         setLink(props.hike.huts.map(p => p.id).includes(props.point.id))
     }, [props.point])
     const submitHandler = async () => {

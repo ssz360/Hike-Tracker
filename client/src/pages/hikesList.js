@@ -85,7 +85,7 @@ function HikesList(props) {
   };
 
   //if we get again in this page no filter should be on and we should see again all hikes
-  useEffect((center, radius, lenMin, lenMax, dif, ascMin, ascMax, timeMin, timeMax, props) => {
+  useEffect(() => {
     if (center === undefined && radius === 0 && lenMin === null && lenMax === null && dif === null && ascMin === null && ascMax === null && timeMin === null && timeMax === null) 
       props.setAllHikesShow();
     window.addEventListener('resize', manageUpdates);
@@ -108,7 +108,7 @@ function HikesList(props) {
     }
   }
 
-  useEffect((props) => {
+  useEffect(() => {
     const getUnfinishedHike = async () => {
       try {
         if (props.logged) {
@@ -405,7 +405,7 @@ function HikeRow(props) {
     )
   },[]);*/
   //get images if the active state is that and the card is visible
-  useEffect((props) => {
+  useEffect(() => {
     const getImgs = async () => {
       try {
         const ret = await api.getImagesHike(props.hike.id);

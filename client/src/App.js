@@ -21,7 +21,7 @@ function App() {
   const navigate = useNavigate();
   const [dirty, setDirty] = useState(false);
 
-  useEffect((hikes, path) => {
+  useEffect(() => {
     const getHikesUseEff = async () => {
       try {
         const h = await api.getHikesList();

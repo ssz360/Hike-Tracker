@@ -15,7 +15,7 @@ function LinkHut(props) {
     const [linkableHuts, setLinkableHuts] = useState([]);
     const navigate = useNavigate();
 
-    useEffect((props) => {
+    useEffect(() => {
         const linkableHuts = async () => {
             try {
                 const newPoints = await api.getLinkableHuts(props.hike.id);

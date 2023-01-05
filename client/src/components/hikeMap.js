@@ -14,7 +14,7 @@ function HikeMap(props) {
     const [coordinates, setCoordinates] = useState([]);
     const [ , setCenter] = useState([0.05, 0.05]);
 
-    useEffect((props) => {
+    useEffect(() => {
         const getMapDetails = async () => {
             try {
                 const mapdets = await api.getHikeMap(props.hike.id);

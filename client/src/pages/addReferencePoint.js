@@ -21,7 +21,7 @@ function AddReferencePointMap(props) {
     const [coordinates, setCoordinates] = useState([]);
     const [ , setCenter] = useState([0.05, 0.05]);
 
-    useEffect((props) => {
+    useEffect(() => {
         const getMapDetails = async () => {
             try {
                 const mapdets = await api.getHikeMap(props.hike.id);
@@ -99,7 +99,7 @@ function AddReferencePointMap(props) {
 }
 
 function ReferencePoint(props) {
-    useEffect((props) => {
+    useEffect(() => {
         const getImages = async () => {
             try {
                 props.setWaiting(true);
@@ -247,7 +247,7 @@ function AddReferencePoint(props) {
             setTimeout(() => setError(), 3000);
         }
     }
-    useEffect((cleanup) => {
+    useEffect(() => {
         if (pointCoord !== undefined) setSelectedPoint(-1);
         cleanup();
         return (() => cleanup());

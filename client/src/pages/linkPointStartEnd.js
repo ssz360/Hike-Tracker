@@ -17,7 +17,7 @@ function LinkPointStartEnd(props) {
     const navigate = useNavigate();
     
 
-    useEffect((props) => {
+    useEffect(() => {
         const linkableHuts = async () => {
             try {
                 const linkableStartPoints = await api.getLinkableStartPoints(props.hike.id);

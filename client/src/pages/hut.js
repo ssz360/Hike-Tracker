@@ -10,13 +10,13 @@ function Hut(props) {
 
   const [filterName, setFilterName] = useState(null);
   const [filterCountry, setFilterCountry] = useState(null);
-  const [ , setFilterGuests] = useState(null);
+  const [filterGuests , setFilterGuests] = useState(null);
   const [filterBeds, setFilterBeds] = useState(null);
   const [, setIsHover] = useState(false);
   const [searchHover, setSearchHover] = useState(false);
   const [clearHover, setClearHover] = useState(false);
 
-  useEffect((filterName, filterCountry, filterGuests, filterBeds, props) => {
+  useEffect(() => {
     const getHuts = async () => {
       const huts = await api.getHutsListWithFilters(null, null, null, null, null, null);
       props.setHuts(huts);
@@ -140,7 +140,7 @@ function DisplayHut(props) {
 function HutRow(props) {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
-  useEffect((props) => {
+  useEffect(() => {
     const getImgs = async () => {
       try {
         const ret = await api.getImagesPoint(props.hut.id);
