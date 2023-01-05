@@ -28,7 +28,7 @@ function LinkHut(props) {
     const linkHut = async linkType => {
         try {
             await api.linkHut(props.hike.id, selectedPoint, linkType);
-            await props.refreshHikes();//props.hike,points.find(p=>p.id===selectedPoint),linkType);
+            await props.refreshHikes();
             const newPoints = await api.getLinkableHuts(props.hike.id);
             setLinkableHuts([...newPoints]);
         } catch (error) {

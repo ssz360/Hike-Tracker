@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Row, Col, Form, FloatingLabel, Alert, InputGroup, Container, Button } from 'react-bootstrap';
+import { Row, Col, Form, FloatingLabel, Alert, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
-import { PointMap } from '../components';
+import { PointMap } from '.';
 import services from '../lib/services';
-import { GeoFill, CheckCircle, XCircle, ArrowLeft } from 'react-bootstrap-icons'
+import { GeoFill, CheckCircle, XCircle } from 'react-bootstrap-icons'
 import ServerReply from "./serverReply";
 
 function AddParkingLot({ setParkings }) {
@@ -28,32 +28,6 @@ function AddParkingLot({ setParkings }) {
         setGeographicalArea("");
     }
 
-    /* const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (validateInfo(name, description, totalSlots, geographicalArea, coord, setError)) {
-            const pk = {
-                "name": name,
-                "desc": description,
-                "slots": totalSlots,
-                "coordinates": coord,
-                "geographicalArea": geographicalArea
-            };
-            setWaiting(true);
-            await api.addParking(pk);
-            setWaiting(false);
-            setSuccess(true);
-            setTimeout(() => setSuccess(false), 3000);
-            const pks = await api.getParkings();
-            setParkings(pks);
-            resetFields();
-        } else {
-            setWaiting(false);
-            setSuccess(false);
-            setError(error);
-            setTimeout(() => setError(false), 3000);
-        }
-    } */
-
     const handleSubmit = async () => {
         try {
             let err = "";
@@ -74,8 +48,6 @@ function AddParkingLot({ setParkings }) {
             setWaiting(false);
             setSuccess(true);
             setTimeout(() => setSuccess(false), 3000);
-            // const pks = await api.getParkings();
-            // setParkings(pks);
             resetFields();
         } catch (err) {
             setWaiting(false);
@@ -137,10 +109,6 @@ function AddParkingLot({ setParkings }) {
                                     {coord !== undefined ? "Position selected!" : "Position"}
                                 </Alert>
 
-                                {/* <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical area">
-                                <Form.Control disabled={true} type="text" data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} placeholder="Geographical Area" />
-                            </FloatingLabel> */}
-
 
                                 {/* ERROR HANDLING */}
                                 <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new parking"} successMessage={"New parking lot added correctly!"} />
@@ -164,29 +132,5 @@ function AddParkingLot({ setParkings }) {
         </div>
     </>);
 }
-
-/* const validateInfo = (name, description, totalSlots, geographicalArea, coord, setError) => {
-    if ([name, description, totalSlots, geographicalArea, coord, setError].some(t => t.length === 0)) {
-        setError("All fields should be filled");
-        return false;
-    }
-
-    if (name.match(/^\s+$/)) {
-        setError("Invalid parking name.");
-        return false;
-    }
-
-    if (!geographicalArea.match(/^[a-zA-Z]+[a-zA-Z]+$/)) {
-        setError("Invalid geographical area name.");
-        return false;
-    }
-    
-    if (!(coordinate.split(",").length === 2 && coordinate.split(",").every(t => t.match(/^([0-9]*[.])?[0-9]+$/)))) {
-        setMessage("The coordinates should be two numbers separated by comma");
-        return false;
-    }
-
-    return true;
-}; */
 
 export default AddParkingLot;

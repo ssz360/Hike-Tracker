@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
+import { Container, Row, Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import api from "../lib/api";
@@ -10,7 +10,6 @@ function SignUp(props) {
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
-    //const [type, setType] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

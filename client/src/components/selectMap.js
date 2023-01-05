@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useMap } from "react-leaflet";
-import SelectArea from 'leaflet-area-select';
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 
@@ -21,9 +20,7 @@ function SelectMap(props) {
     map.selectArea.enable();
     map.selectArea.setControlKey(false);
     map.on("areaselected", (e) => {
-      //console.log(e.bounds.toBBoxString()); // lon, lat, lon, lat
       props.setAreaBounds(e.bounds);
-      //console.log("SELECTED ",e.bounds);
     });
 
     // You can restrict selection area like this:

@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Row, Card, Container, Collapse, Button, Col } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Row, Card, Container, Collapse, Col } from 'react-bootstrap';
 import api from '../lib/api';
-import { AddParkingLot } from '../components';
-import { PlusCircle, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons'
+import { ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons'
 
 function ParkingLotRow({ p, i }) {
     const [open, setOpen] = useState(false);
@@ -54,8 +52,6 @@ function ParkingLotRow({ p, i }) {
 function ParkingLot() {
 
     const [parkings, setParkings] = useState([]);
-    const navigate = useNavigate();
-    const [isHover, setIsHover] = useState(false);
 
     useEffect(() => {
         const getParkings = async () => {
@@ -68,22 +64,6 @@ function ParkingLot() {
     return (<>
         <Container fluid style={{ height: "93vh"}} >
         <Row id="first-row" fluid style={{ height: "93vh" }}>
-            {/* <br></br>
-            <Row className="mt-3" fluid>
-                <div className="d-grid gap-2 ">
-                    <Button className="rounded-pill" style={
-                        {
-                            width: "fit-content",
-                            height: "45px",
-                            borderColor: "white",
-                            backgroundColor: !isHover ? '#006666' : '#009999'
-                        }
-                    }
-                        onMouseEnter={() => setIsHover(true)}
-                        onMouseLeave={() => setIsHover(false)}
-                        onClick={() => navigate("/localGuide/newParking")}><strong><PlusCircle size={"20px"} className="mb-1" /> Add new parking lot</strong> </Button>
-                </div>
-            </Row> */}
             <Col sm={2} style={{ height: "93vh", backgroundColor: "#e0e3e5" }}></Col>
             <Col  sm={10} style={{overflowY:'scroll', height:'93vh'}} >
                 <Row >
@@ -94,7 +74,5 @@ function ParkingLot() {
         </Container>
     </>);
 }
-
-//parkings.map((p, i) => (<ParkingLotRow p={p} i={i} key={i} />))
 
 export default ParkingLot;

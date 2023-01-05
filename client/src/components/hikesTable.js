@@ -1,7 +1,4 @@
 import {Table} from 'react-bootstrap';
-import Hike from '../lib/hike';
-import api from '../lib/api';
-import { useState,useEffect } from 'react';
 import HikeRow from './hikeRow';
 
 function HikesTable(props){

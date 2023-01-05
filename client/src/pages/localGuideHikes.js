@@ -1,45 +1,20 @@
 import { useState } from "react";
-import { Col, Container, Row, Button, Card, Collapse, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Col, Container, Row, Card, Collapse, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import HikeMap from '../components/hikeMap';
-import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp, PlusCircle, ArrowUpCircleFill } from 'react-bootstrap-icons'
+import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons'
 
 
 function LocalGuideHikes(props) {
-  const [isHover, setIsHover] = useState(false);
-  const navigate = useNavigate();
+
   return (
     <>
-      <Container fluid style={{ width: "85%"}} >
-      {/* <br></br>
-      <Row id="top" className="mt-3" >
-        <div className="d-grid gap-2">
-            <Button className="rounded-pill" style={
-              {
-                width: "fit-content",
-                height: "45px",
-                borderColor: "white",
-                backgroundColor: !isHover ? '#006666' : '#009999'
-              }
-            }
-            onMouseEnter={ () => setIsHover(true) }
-            onMouseLeave={ () => setIsHover(false) }
-            onClick = {() => navigate("/localGuide/newHike")}><strong><PlusCircle size={"20px"} className="mb-1"/> Add new hike</strong> </Button>
-        </div>
-        </Row> */}
-        <Row className="mt-1  " style={{height:'93vh', overflowY: 'scroll'}}>
+      <Container fluid style={{ width: "85%" }} >
+        <Row className="mt-1  " style={{ height: '93vh', overflowY: 'scroll' }}>
           {
             props.hikes.map(hike => <LocalGuideHikeRow key={hike.id} hike={hike} />)
           }
         </Row>
-
-        {/* <Row className="mt-4">
-           <div className="d-grid gap-2">
-          <a href="#top"><ArrowUpCircleFill size={"30px"}/></a>
-          </div>
-        </Row> */}
-        {/* <br></br> */}
-        
       </Container>
     </>
   );
@@ -61,7 +36,7 @@ function LocalGuideHikeRow(props) {
       <Card.Body>
         {/* MAP */}
         <HikeMap hike={props.hike} />
-        
+
         {/* ATTRIBUTES */}
         <Card.Text>
           <strong>Length: </strong> {Math.ceil(props.hike.len)} km<br></br>
@@ -72,43 +47,46 @@ function LocalGuideHikeRow(props) {
 
         <Card.Text>
           {/* DEFINE REFERENCE POINTS - PIN ON MAP */}
-          <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay = {<Tooltip> Define reference points</Tooltip>}>
+          <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip> Define reference points</Tooltip>}>
             <PinMapFill role="button" size="20px" style={{
-              color: !isHoverPin ? "black" : "#009999"}} 
-              onMouseEnter={ () => setHoverPin(true) }
-              onMouseLeave={ () => setHoverPin(false) }
+              color: !isHoverPin ? "black" : "#009999"
+            }}
+              onMouseEnter={() => setHoverPin(true)}
+              onMouseLeave={() => setHoverPin(false)}
               onClick={e => {
                 e.preventDefault();
                 e.stopPropagation();
                 navigate("/localGuide/hikes/" + props.hike.id + "/addReferencePoint");
               }}
-            /> 
+            />
           </OverlayTrigger>
 
           {/* LINK START/END POINT - FLAG */}
-          <OverlayTrigger  delay={{ show: 250, hide: 400 }} overlay = {<Tooltip> Link start/end point</Tooltip>}>
+          <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip> Link start/end point</Tooltip>}>
             <FlagFill role="button" size="20px" className="ms-2" style={{
-              color: !isHoverFlag ? "black" : "#009999"}} 
-              onMouseEnter={ () => setHoverFlag(true) }
-              onMouseLeave={ () => setHoverFlag(false) }
+              color: !isHoverFlag ? "black" : "#009999"
+            }}
+              onMouseEnter={() => setHoverFlag(true)}
+              onMouseLeave={() => setHoverFlag(false)}
               onClick={e => {
-              e.preventDefault();
-              e.stopPropagation();
-              navigate("/localGuide/hikes/" + props.hike.id + "/linkstartend");
+                e.preventDefault();
+                e.stopPropagation();
+                navigate("/localGuide/hikes/" + props.hike.id + "/linkstartend");
               }}
             />
           </OverlayTrigger>
 
           {/* LINK HUT TO HIKE - HOUSE */}
-          <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay = {<Tooltip> Link hut to hike</Tooltip>}>
+          <OverlayTrigger delay={{ show: 250, hide: 400 }} overlay={<Tooltip> Link hut to hike</Tooltip>}>
             <HouseDoorFill role="button" size="20px" className="ms-2" style={{
-              color: !isHoverHut ? "black" : "#009999"}} 
-              onMouseEnter={ () => setHoverHut(true) }
-              onMouseLeave={ () => setHoverHut(false) }onClick={e => {
-              e.preventDefault();
-              e.stopPropagation();
-              navigate("/localGuide/hikes/" + props.hike.id + "/linkhut");
-            }} />
+              color: !isHoverHut ? "black" : "#009999"
+            }}
+              onMouseEnter={() => setHoverHut(true)}
+              onMouseLeave={() => setHoverHut(false)} onClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigate("/localGuide/hikes/" + props.hike.id + "/linkhut");
+              }} />
           </OverlayTrigger>
 
           {/* OPEN/CLOSE DESCRIPTION */}
@@ -137,7 +115,8 @@ function LocalGuideHikeRow(props) {
         </Card.Text>
       </Card.Body>
     </Card>
-    </Col></>);
+    </Col>
+    </>);
 }
 
 export default LocalGuideHikes;

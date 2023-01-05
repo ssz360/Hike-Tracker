@@ -8,9 +8,9 @@ const GetAddressFromPoint = (lat, lng) => new Promise((resolve, reject) => {
     }, 2000);
 
     fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`).then(res => res.json())
-            .then(res => {
-                resolve(res);
-            }).catch(err=>reject(err));
+        .then(res => {
+            resolve(res);
+        }).catch(err => reject(err));
 })
 
 const services = { GetAddressFromPoint };

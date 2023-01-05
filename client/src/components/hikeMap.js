@@ -1,13 +1,12 @@
-import Hike from "../lib/hike";
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Polyline, useMap, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Polyline, } from 'react-leaflet'
 import { useEffect, useState } from "react";
 import { Col, Container, Modal, Row, Spinner } from "react-bootstrap";
 import api from "../lib/api";
 import SelectedPoint from "./selectedPoint";
 import getMarkerForPoint from "../lib/markerPoint";
 import globalVariables from "../lib/globalVariables";
-import Glossary from "./Glossary";
+import Glossary from "./glossary";
 
 function HikeMap(props) {
     const [bounds, setBounds] = useState([[0, 0], [0.1, 0.1]]);
@@ -16,7 +15,6 @@ function HikeMap(props) {
     useEffect(() => {
         const getMapDetails = async () => {
             try {
-                //console.log("GETTIN MAP DATA FOR",props.hike.id)
                 const mapdets = await api.getHikeMap(props.hike.id);
                 setBounds(mapdets.bounds);
                 setCoordinates(mapdets.coordinates);
@@ -29,7 +27,6 @@ function HikeMap(props) {
         }
         getMapDetails();
     }, []);
-    //console.log("IN HIKE MAP WITH HIKE",props.hike);
     const opts = { color: 'red' }
     const [show, setShow] = useState(false);
     const [selectedPoint, setSelectedPoint] = useState(-1);
@@ -49,8 +46,8 @@ function HikeMap(props) {
                                             <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles} />
                                             <Polyline pathOptions={opts} positions={coordinates} />
                                             {[...props.hike.referencePoints, ...props.hike.huts].filter(p => p.id !== props.hike.startPoint.id && p.id !== props.hike.endPoint.id).map(p => getMarkerForPoint(p, p.id === props.hike.startPoint.id, p.id === props.hike.endPoint.id, selectedPoint === p.id, true, selectedPoint, setSelectedPoint))}
-                                            {getMarkerForPoint(props.hike.startPoint,true,props.hike.startPoint.id===props.hike.endPoint.id,selectedPoint===props.hike.startPoint.id,true,selectedPoint,setSelectedPoint)}
-                                            {props.hike.startPoint.id!==props.hike.endPoint.id?getMarkerForPoint(props.hike.endPoint,false,true,selectedPoint===props.hike.endPoint.id,true,selectedPoint,setSelectedPoint):<></>}
+                                            {getMarkerForPoint(props.hike.startPoint, true, props.hike.startPoint.id === props.hike.endPoint.id, selectedPoint === props.hike.startPoint.id, true, selectedPoint, setSelectedPoint)}
+                                            {props.hike.startPoint.id !== props.hike.endPoint.id ? getMarkerForPoint(props.hike.endPoint, false, true, selectedPoint === props.hike.endPoint.id, true, selectedPoint, setSelectedPoint) : <></>}
                                         </MapContainer>
                                     </Col>
                                     <Col xs={12} md={4}>
@@ -63,8 +60,8 @@ function HikeMap(props) {
                                 <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url={globalVariables.mapTiles} />
                                 <Polyline pathOptions={opts} positions={coordinates} />
                                 {[...props.hike.referencePoints, ...props.hike.huts].filter(p => p.id !== props.hike.startPoint.id && p.id !== props.hike.endPoint.id).map(p => getMarkerForPoint(p, p.id === props.hike.startPoint.id, p.id === props.hike.endPoint.id, selectedPoint === p.id, true, selectedPoint, setSelectedPoint))}
-                                {getMarkerForPoint(props.hike.startPoint,true,props.hike.startPoint.id===props.hike.endPoint.id,selectedPoint===props.hike.startPoint.id,true,selectedPoint,setSelectedPoint)}
-                                {props.hike.startPoint.id!==props.hike.endPoint.id?getMarkerForPoint(props.hike.endPoint,false,true,selectedPoint===props.hike.endPoint.id,true,selectedPoint,setSelectedPoint):<></>}
+                                {getMarkerForPoint(props.hike.startPoint, true, props.hike.startPoint.id === props.hike.endPoint.id, selectedPoint === props.hike.startPoint.id, true, selectedPoint, setSelectedPoint)}
+                                {props.hike.startPoint.id !== props.hike.endPoint.id ? getMarkerForPoint(props.hike.endPoint, false, true, selectedPoint === props.hike.endPoint.id, true, selectedPoint, setSelectedPoint) : <></>}
                             </MapContainer>
                         }
                     </Modal.Body>
