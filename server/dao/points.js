@@ -1,16 +1,16 @@
 const db = require('./dao');
 
-getParkingsList = async () => new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM HIKES'
-    db.all(sql, [], (err, row) => {
-        if (err) {
-            reject(err);
-            return;
-        }
-        const hikes = row.map((p) => ({ IDPoint: p.IDPoint, Name: p.Name, Coordinates: [p.Latitude,p.Longitude], GeographicalArea: getGeoArea(p) }))
-        resolve(hikes);
-    });
-});
+// getParkingsList = async () => new Promise((resolve, reject) => {
+//     const sql = 'SELECT * FROM HIKES'
+//     db.all(sql, [], (err, row) => {
+//         if (err) {
+//             reject(err);
+//             return;
+//         }
+//         const hikes = row.map((p) => ({ IDPoint: p.IDPoint, Name: p.Name, Coordinates: [p.Latitude,p.Longitude], GeographicalArea: getGeoArea(p) }))
+//         resolve(hikes);
+//     });
+// });
 
 const linkPointToHike= (hikeId,pointId)=>new Promise((resolve,reject)=>{
     const sql="INSERT INTO LINKEDPOINTS(IDPoint,IDHike) VALUES(?,?)";
@@ -77,7 +77,7 @@ const getPointsInBounds= async (minLat,maxLat,minLon,maxLon,startLat,startLon,en
     let sql = "SELECT * FROM POINTS WHERE Latitude>=? AND Latitude<=? AND Longitude>=? AND Longitude<=? AND NOT((Latitude=? AND Longitude=?) OR (Latitude=? AND Longitude=?))";
     db.all(sql, [minLat,maxLat,minLon,maxLon,startLat,startLon,endLat,endLon], (err, rows) => {
         if (err)    reject({status:503,message:"Internal error"});
-        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint})));
+        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint, description:p.Description})));
     })
 });
 
@@ -87,7 +87,7 @@ const linkableStartPoints= async (startLat,startLon,startId,hikeName) =>new Prom
     db.all(sql, ["Default starting point of hike "+hikeName,"Default starting and arrival point of hike "+hikeName,startLat,startLat,startLon,startId], (err, rows) => {
         if (err)    reject({status:503,message:"Internal error"});
         //console.log("GET START POINTS",rows);
-        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint})));
+        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint, description:p.Description})));
     })
 });
 
@@ -97,7 +97,7 @@ const linkableEndPoints= async (endLat,endLon,endId,hikeName) =>new Promise((res
     db.all(sql, ["Default arrival point of hike "+hikeName,"Default starting and arrival point of hike "+hikeName,endLat,endLat,endLon,endId], (err, rows) => {
         if (err)    reject({status:503,message:"Internal error"});
         //console.log("GET END POINTS",rows);
-        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint})));
+        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint, description:p.Description})));
     })
 });
 
@@ -108,7 +108,7 @@ const linkableHuts= async id =>new Promise((resolve, reject) => {
             console.log("Error in linkable huts",err);
             reject({status:503,message:"Internal error"});
         }
-        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint})));
+        resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint, description:p.Description})));
     })
 });
 
@@ -135,5 +135,5 @@ const getImages=async pointId=>new Promise((resolve,reject)=>{
     })
 })
 
-const points = { getParkingsList, insertPoint, getPointById, getPointsInBounds, linkableHuts, linkableStartPoints, linkableEndPoints , linkPointToHike, unlinkPointFromHike, insertImageForPoint, getImages, getGeoArea}
+const points = { insertPoint, getPointById, getPointsInBounds, linkableHuts, linkableStartPoints, linkableEndPoints , linkPointToHike, unlinkPointFromHike, insertImageForPoint, getImages, getGeoArea}
 module.exports = points;

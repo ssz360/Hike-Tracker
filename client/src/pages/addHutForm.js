@@ -89,12 +89,14 @@ function AddHutForm(props) {
                         style={{
                             opacity: "90%"
                         }}>
+                        <Col md={5} xs={12} sm={10} >
+
                         {/* MAP */}
                         {openArea ? (<PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoordinateAndGetCountry} coord={coord} />) : <></>}
 
 
                         {/* FORM */}
-                        <Form className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: "60%" }}>
+                        <Form className="shadow-lg p-3 mb-5 bg-white rounded" >
 
                             {/* Hut name */}
                             <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
@@ -127,9 +129,15 @@ function AddHutForm(props) {
                             </FloatingLabel>
 
 
-                            <Alert role="button" variant="light" style={{ backgroundColor: "#FFFFFF", border: "1px solid #ced4da", color: "#000000" }} onClick={() => setOpenArea(true)}>
-                                <GeoFill className="me-3" />
-                                Position
+                            <Alert role="button" variant="light" 
+                                style={
+                                    { backgroundColor: "#FFFFFF", 
+                                    border: "1px solid #ced4da", 
+                                    color: "#000000" 
+                                    }
+                                } onClick={() => setOpenArea(true)}>
+                                <GeoFill className="me-3 mb-1" />
+                                {coord !== undefined ? "Position selected!" : "Position"}
                             </Alert>
 
                             <GallerySlider add={true} images={images} setImages={setImages}/>
@@ -147,6 +155,8 @@ function AddHutForm(props) {
                                 {/* <ArrowLeft role="button" className="me-3" onClick={() => navigate("/hut")}  size="20px" /> */}
                             </div>
                         </Form>
+                        </Col >
+
                     </div>
                 </Row>
             </Container>

@@ -11,7 +11,7 @@ const getHikeMoreData = async (item) => {
                 reject(err);
                 return;
             }
-            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:points.getGeoArea(r),coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
+            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:points.getGeoArea(r),coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint, description:r.Description})));
         })
     })
 
@@ -34,7 +34,7 @@ const getHike=async id=>new Promise((resolve,reject)=>{
         if(err) throw {status:503,message:err};
         else if(row===undefined) throw {status:404,message:"Hike not found!"};
         else{
-            getHikeMoreData(row).then(h=>resolve({ id: h.IDHike, name: h.Name, author: h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts:h.huts, description: h.Description, center: [h.CenterLat,h.CenterLon] })).catch(ret=>reject({status:ret.status,message:ret.message}));
+            getHikeMoreData(row).then(h=>resolve({ id: h.IDHike, name: h.Name, author: h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts:h.huts, description: h.description, center: [h.CenterLat,h.CenterLon] })).catch(ret=>reject({status:ret.status,message:ret.message}));
         }
     })
 })
@@ -96,7 +96,7 @@ getHikesList = async () => new Promise((resolve, reject) => {
         }
         //console.log("Before adding points rows were ",row);
         row = await getHikesMoreData(row);
-
+        console.log(row.map(h => h.referencePoints))
         const hikes = row.map((h) => ({ IDHike: h.IDHike, Name: h.Name, Author: h.Author, Length: h.Length, ExpectedTime: h.ExpectedTime, Ascent: h.Ascent, Difficulty: h.Difficulty, Description: h.Description, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts: h.huts, center: [h.CenterLat,h.CenterLon] }))
         //console.log("Returning hikes",hikes);
         resolve(hikes);
@@ -146,7 +146,7 @@ const getHikesMoreData = async (row) => {
                 reject({status:503,message:err});
                 return;
             }
-            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:points.getGeoArea(r),coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint})));
+            resolve(rows.map(r=>({id:r.IDPoint,name:r.Name,geographicalArea:points.getGeoArea(r),coordinates:[r.Latitude,r.Longitude],typeOfPoint:r.TypeOfPoint, description:r.Description})));
         })
     })
 
@@ -154,8 +154,8 @@ const getHikesMoreData = async (row) => {
         //console.log("Getting more data for row",item);
         const start=await points.getPointById(item.StartPoint);
         const end=await points.getPointById(item.EndPoint);
-        item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:points.getGeoArea(start),coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint};
-        item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:points.getGeoArea(end),coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint};
+        item.startPoint = {id:start.IDPoint,name:start.Name,geographicalArea:points.getGeoArea(start),coordinates:[start.Latitude,start.Longitude],typeOfPoint:start.TypeOfPoint, description:start.Description};
+        item.endPoint = {id:end.IDPoint,name:end.Name,geographicalArea:points.getGeoArea(end),coordinates:[end.Latitude,end.Longitude],typeOfPoint:end.TypeOfPoint, description:end.Description};
         //console.log("Got more data for row",item);
         const linkedPoints = await getLinkedPoints(item.IDHike);
         item.referencePoints=linkedPoints.filter(p=>p.typeOfPoint=="referencePoint" || p.typeOfPoint=="hikePoint");

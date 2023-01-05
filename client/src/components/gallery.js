@@ -17,30 +17,30 @@ function Gallery(props){
     }
     const addFile = file => {
         //console.log("Files",files,"files.len",files.length);
-        props.setImages([...props.images,file]);
-        const arr=[...props.imagesUrls,{name:file.name,url:URL.createObjectURL(file)}];
+        props.setImages([...props.images, file]);
+        const arr = [...props.imagesUrls, { name: file.name, url: URL.createObjectURL(file) }];
         props.setImagesUrls([...arr]);
     };
-    const multipleUpload= files=>{
+    const multipleUpload = files => {
         props.setImages([...files]);
-        const arr=[];
-        [...files].forEach(f=>arr.push({name:f.name,url:URL.createObjectURL(f)}));;
+        const arr = [];
+        [...files].forEach(f => arr.push({ name: f.name, url: URL.createObjectURL(f) }));;
         props.setImagesUrls([...arr]);
     }
-    const removeImage=img=>{
-        const imgs=props.images.filter(i=>i.name!==img.name);
+    const removeImage = img => {
+        const imgs = props.images.filter(i => i.name !== img.name);
         props.setImages([...imgs]);
-        const arr=[];
+        const arr = [];
         URL.revokeObjectURL(img.url);
-        props.imagesUrls.forEach(f=>{
-            if(f.name!==img.name)    arr.push(f)
+        props.imagesUrls.forEach(f => {
+            if (f.name !== img.name) arr.push(f)
         });
         props.setImagesUrls([...arr]);
     }
-    const imageUpload=f=>{
+    const imageUpload = f => {
         addFile(f.target.files[0]);
     }
-    return(
+    return (
         <Container>
             <Row>
                 <Col xs={props.addImage?8:12}>

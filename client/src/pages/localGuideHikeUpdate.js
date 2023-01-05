@@ -13,7 +13,7 @@ function LocalGuideHikeUpdate(props){
     const navigate=useNavigate();
     return(
         <>
-        <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/hikes")} size="20px" />
+        {/* <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/hikes")} size="20px" /> */}
         <Routes>
             <Route path="linkstartend" element={hike===undefined?<Spinner animation="grow"/>:<LinkPointStartEnd hike={hike} refreshHikes={props.refreshHikes} updateStartEndPoint={props.updateStartEndPoint}/>}/>
             <Route path="linkhut" element={hike===undefined?<Spinner animation="grow"/>:<LinkHut hike={hike} refreshHikes={props.refreshHikes} updateStartEndPoint={props.updateStartEndPoint}/>}/>

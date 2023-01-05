@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Row, Col, Form, Image } from 'react-bootstrap';
+import { Row, Col, Form, Image, Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import api from '../lib/api';
 
@@ -33,7 +33,7 @@ function Dashboard() {
         </svg>
     </p>);
 
-    return(<>
+    return(<Row>
         <Row>
             <Col>
                 <h1 className="my-4">Dashboard</h1>
@@ -62,7 +62,7 @@ function Dashboard() {
                 <Form.Control disabled type="text" value={phoneNumber}/>
             </Form.Group>
         </Form>
-    </>);
+    </Row>);
 }
 
 export default Dashboard;

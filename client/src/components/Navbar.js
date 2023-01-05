@@ -21,7 +21,7 @@ function Header(props) {
         
         {/* <Navbar bg="black" variant="dark" fixed="top"> */}
         <Navbar sticky='top' collapseOnSelect bg="black" expand='md' variant="dark" >
-            <Container>
+            <Container fluid>
             {props.logged ? <>
                 <Navbar.Brand as={Link} to="/hikes">
                     <Image className="mb-1" fluid roundedCircle src={process.env.PUBLIC_URL + "/favicon.ico"} style={{"width":"20%"}}/>

@@ -141,7 +141,7 @@ function HikesList(props) {
               <div className='text-center'> <strong>
             {changeStart?'Select the date and time when you started the hike!':timeStartingHike!==''?'Update the starting time!':'Did you start the hike earlier?'}</strong>
           {!changeStart &&
-            <svg  onClick={e=>{
+            <svg onClick={e=>{
               e.preventDefault();
               e.stopPropagation();
               setChangeStart(true);
@@ -452,14 +452,14 @@ function HikeRow(props) {
                 e.preventDefault();
                 e.stopPropagation();
                 setActive('images');
-              }} className={"material-icons-round hikeselectimage"+(active==='images'?' active':'')}>
+              }} className={"material-icons-round hikeselectimage"+(active==='images'?' active':'')} role="button">
                 collections
               </span>
               <span onClick={e=>{
                 e.preventDefault();
                 e.stopPropagation();
                 if(props.logged) setActive('map');
-              }} className={"material-icons-round ms-1 hikeselectmap"+(active==='map'?' active':'')+(props.logged?'': ' disabled')}>
+              }} className={"material-icons-round ms-1 hikeselectmap"+(active==='map'?' active':'')+(props.logged?'': ' disabled')} role="button">
                 map
               </span>
             </div>
