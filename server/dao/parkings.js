@@ -1,6 +1,8 @@
 const db = require('./dao');
 const { insertPoint, getGeoArea } = require('./points');
 const points = require('../services/points');
+
+
 exports.getParkingsList = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM PARKINGS AS P JOIN POINTS AS M ON P.IDPoint = M.IDPoint'
     db.all(sql, [], (err, row) => {
