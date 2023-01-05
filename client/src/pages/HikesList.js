@@ -455,13 +455,23 @@ function HikeRow(props) {
               }} className={"material-icons-round hikeselectimage"+(active==='images'?' active':'')} role="button">
                 collections
               </span>
+              {!props.logged? <OverlayTrigger placement="top" delay={{ show: 250, hide: 400 }} overlay = {<Tooltip>Log in to see the map</Tooltip>}>
               <span onClick={e=>{
                 e.preventDefault();
                 e.stopPropagation();
                 if(props.logged) setActive('map');
-              }} className={"material-icons-round ms-1 hikeselectmap"+(active==='map'?' active':'')+(props.logged?'': ' disabled')} role="button">
+              }} className={"material-icons-round ms-1 hikeselectmap"+(active==='map'?' active':'')+' disabled'} role="button">
                 map
               </span>
+              </OverlayTrigger> :
+                <span onClick={e=>{
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if(props.logged) setActive('map');
+                }} className={"material-icons-round ms-1 hikeselectmap"+(active==='map'?' active':'')} role="button">
+                  map
+                </span>
+              }
             </div>
           </Col>
         </Row>
