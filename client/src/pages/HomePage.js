@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Carousel, Image } from 'react-bootstrap';
 import "./rotatingBorder.css";
 
-function HomePage(props) {
+
+function HomePage() {
 
   const [isHover, setIsHover] = useState(false);
 

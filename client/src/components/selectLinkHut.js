@@ -3,12 +3,14 @@ import { Button, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import icons from "../lib/iconspoint";
 import ServerReply from "./serverReply";
 
+
 function SelectLinkHut(props) {
     const [link, setLink] = useState(props.hike.huts.map(p => p.id).includes(props.point.id));
     const [error, setError] = useState();
     const [success, setSuccess] = useState(false);
     const [waiting, setWaiting] = useState(false);
-    useEffect(() => {
+    
+    useEffect((props) => {
         setLink(props.hike.huts.map(p => p.id).includes(props.point.id))
     }, [props.point])
     const submitHandler = async () => {

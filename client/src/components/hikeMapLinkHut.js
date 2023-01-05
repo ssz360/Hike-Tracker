@@ -9,8 +9,9 @@ import globalVariables from "../lib/globalVariables";
 
 function HikeMapLinkHut(props) {
     const [coordinates, setCoordinates] = useState([]);
-    const [center, setCenter] = useState([0.05, 0.05]);
-    useEffect(() => {
+    const [ , setCenter] = useState([0.05, 0.05]);
+
+    useEffect((props) => {
         const getMapDetails = async () => {
             try {
                 const mapdets = await api.getHikeMap(props.hike.id);

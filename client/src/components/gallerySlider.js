@@ -53,7 +53,7 @@ function GallerySlider(props){
             {props.add &&
                 <Col xs={6} sm={4} className='justify-content-center mx-auto my-2'>
                     <div className="addimagecontainer">
-                        <img src="/images/brown.png" className="img-fluid addimageimg"/>
+                        <img src="/images/brown.png" alt="alt" className="img-fluid addimageimg"/>
                         <span class="material-icons-round md-36 addimagelogo" onClick={e=>{
                             e.preventDefault();
                             e.stopPropagation();
@@ -70,7 +70,7 @@ function GallerySlider(props){
                 {
                     props.images.map(i=>
                         <div key={i.url} className="slidecont">
-                            <img src={i.url} id={i.url} className='img-fluid slideimg'/>
+                            <img alt="alt" src={i.url} id={i.url} className='img-fluid slideimg'/>
                             <div className="slideoverlay">
                                 <span class="material-icons-round md-36 slidefullscreen" onClick={e=>{
                                         e.preventDefault();

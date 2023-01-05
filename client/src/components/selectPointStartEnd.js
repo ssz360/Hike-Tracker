@@ -5,7 +5,6 @@ import ServerReply from "./serverReply";
 
 
 function SelectPointStartEnd(props) {
-
     const isStart = props.point.id === props.startPoint.id;
     const isEnd = props.point.id === props.endPoint.id;
     console.log("IN SELECTPOINTSTARTEND WITH ", props.point, "linkable start?", props.linkableStart, "linkable end?", props.linkableEnd, "is start?", isStart, "is end?", isEnd);

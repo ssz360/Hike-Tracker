@@ -14,12 +14,13 @@ import { GallerySlider } from "../components";
 import { ArrowLeft, CheckCircle, XCircle, XCircleFill, CheckCircleFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
+
 function AddReferencePointMap(props) {
     const [bounds, setBounds] = useState([[0, 0], [0.1, 0.1]]);
     const [coordinates, setCoordinates] = useState([]);
-    const [center, setCenter] = useState([0.05, 0.05]);
+    const [ , setCenter] = useState([0.05, 0.05]);
 
-    useEffect(() => {
+    useEffect((props) => {
         const getMapDetails = async () => {
             try {
                 const mapdets = await api.getHikeMap(props.hike.id);
@@ -97,7 +98,7 @@ function AddReferencePointMap(props) {
 }
 
 function ReferencePoint(props) {
-    useEffect(() => {
+    useEffect((props) => {
         const getImages = async () => {
             try {
                 props.setWaiting(true);
@@ -245,7 +246,7 @@ function AddReferencePoint(props) {
             setTimeout(() => setError(), 3000);
         }
     }
-    useEffect(() => {
+    useEffect((cleanup) => {
         if (pointCoord !== undefined) setSelectedPoint(-1);
         cleanup();
         return (() => cleanup());

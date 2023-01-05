@@ -41,6 +41,7 @@ function HikesList(props) {
     <path d="M16 8A8 8 0 1 0 0 8a8 8 0 0 0 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z" />
   </svg>);
 
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     await props.filtering(center !== undefined ? { center: center, radius: radius / 1000 } : undefined,
@@ -82,9 +83,9 @@ function HikesList(props) {
   };
 
   //if we get again in this page no filter should be on and we should see again all hikes
-  useEffect(() => {
-    if (center === undefined && radius === 0 && lenMin === null && lenMax === null
-      && dif === null && ascMin === null && ascMax === null && timeMin === null && timeMax === null) props.setAllHikesShow();
+  useEffect((center, radius, lenMin, lenMax, dif, ascMin, ascMax, timeMin, timeMax, props) => {
+    if (center === undefined && radius === 0 && lenMin === null && lenMax === null && dif === null && ascMin === null && ascMax === null && timeMin === null && timeMax === null) 
+      props.setAllHikesShow();
     window.addEventListener('resize', manageUpdates);
     return (() => window.removeEventListener('resize', manageUpdates));
   }, [])
@@ -105,7 +106,7 @@ function HikesList(props) {
     }
   }
 
-  useEffect(() => {
+  useEffect((props) => {
     const getUnfinishedHike = async () => {
       try {
         if (props.logged) {
@@ -402,7 +403,7 @@ function HikeRow(props) {
     )
   },[]);*/
   //get images if the active state is that and the card is visible
-  useEffect(() => {
+  useEffect((props) => {
     const getImgs = async () => {
       try {
         const ret = await api.getImagesHike(props.hike.id);

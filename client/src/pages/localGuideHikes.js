@@ -5,6 +5,7 @@ import HikeMap from '../components/hikeMap';
 import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons'
 
 
+
 function LocalGuideHikes(props) {
 
   return (

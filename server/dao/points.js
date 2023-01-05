@@ -1,17 +1,5 @@
 const db = require('./dao');
 
-// getParkingsList = async () => new Promise((resolve, reject) => {
-//     const sql = 'SELECT * FROM HIKES'
-//     db.all(sql, [], (err, row) => {
-//         if (err) {
-//             reject(err);
-//             return;
-//         }
-//         const hikes = row.map((p) => ({ IDPoint: p.IDPoint, Name: p.Name, Coordinates: [p.Latitude,p.Longitude], GeographicalArea: getGeoArea(p) }))
-//         resolve(hikes);
-//     });
-// });
-
 const linkPointToHike= (hikeId,pointId)=>new Promise((resolve,reject)=>{
     const sql="INSERT INTO LINKEDPOINTS(IDPoint,IDHike) VALUES(?,?)";
     db.run(sql,[pointId,hikeId],err=>{
@@ -65,7 +53,6 @@ const getPointById = (id) => new Promise((resolve, reject) => {
     })
 });
 const getGeoArea= p=>{
-    //console.log("IN geo get area with",p);
     let ret=p.Province;
     if(p.Province!=="" && (p.Region!=="" || p.Country!=="")) ret+=", ";
     ret+=p.Region;
@@ -82,21 +69,17 @@ const getPointsInBounds= async (minLat,maxLat,minLon,maxLon,startLat,startLon,en
 });
 
 const linkableStartPoints= async (startLat,startLon,startId,hikeName) =>new Promise((resolve, reject) => {
-    //console.log("Name of hike",hikeName);
     const sql = "SELECT * FROM POINTS WHERE (TypeOfPoint='hut' OR TypeOfPoint='parking' OR Description=? OR Description=?) AND 2 * 6371 * sqrt(pow(sin((radians(?) - radians(Latitude)) / 2), 2)+ cos(radians(Latitude))* cos(radians(?))* pow(sin((radians(?) - radians(Longitude)) / 2), 2))<=5 AND NOT IDPoint=?";
     db.all(sql, ["Default starting point of hike "+hikeName,"Default starting and arrival point of hike "+hikeName,startLat,startLat,startLon,startId], (err, rows) => {
         if (err)    reject({status:503,message:"Internal error"});
-        //console.log("GET START POINTS",rows);
         resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint, description:p.Description})));
     })
 });
 
 const linkableEndPoints= async (endLat,endLon,endId,hikeName) =>new Promise((resolve, reject) => {
-    //console.log("Name of hike",hikeName);
     const sql = "SELECT * FROM POINTS WHERE (TypeOfPoint='hut' OR TypeOfPoint='parking' OR Description=? OR Description=?) AND 2 * 6371 * sqrt(pow(sin((radians(?) - radians(Latitude)) / 2), 2)+ cos(radians(Latitude))* cos(radians(?))* pow(sin((radians(?) - radians(Longitude)) / 2), 2))<=5 AND NOT IDPoint=?";
     db.all(sql, ["Default arrival point of hike "+hikeName,"Default starting and arrival point of hike "+hikeName,endLat,endLat,endLon,endId], (err, rows) => {
         if (err)    reject({status:503,message:"Internal error"});
-        //console.log("GET END POINTS",rows);
         resolve(rows.map(p=>({id: p.IDPoint, name: p.Name, coordinates: [p.Latitude,p.Longitude], geographicalArea: getGeoArea(p), typeOfPoint: p.TypeOfPoint, description:p.Description})));
     })
 });

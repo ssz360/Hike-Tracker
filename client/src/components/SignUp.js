@@ -5,8 +5,7 @@ import React from 'react';
 import api from "../lib/api";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
-
-function SignUp(props) {
+function SignUp() {
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -15,7 +14,7 @@ function SignUp(props) {
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [success, ] = useState('');
 
     const [isHover, setIsHover] = useState(false);
 
@@ -98,9 +97,7 @@ function SignUp(props) {
 
                         else {
                             try {
-                                const usr = await api.register(email, password, name, surname, phoneNumber);
-                                //props.setLogged(true);
-                                //navigate('/' + usr.type + '/' + usr.username);
+                                await api.register(email, password, name, surname, phoneNumber);
                                 navigate('/CheckEmail');
                             } catch (error) {
                                 if (error.toString().includes("SyntaxError"))
@@ -145,8 +142,8 @@ function SignUp(props) {
                             </FloatingLabel>
                         </Form.Group>
 
-                        {error != '' ? <Alert className="my-3" variant="danger">{error}</Alert> : <></>}
-                        {success != '' ? <Alert className="my-3" variant="success">{error}</Alert> : <></>}
+                        {error !== '' && <Alert className="my-3" variant="danger">{error}</Alert>}
+                        {success !== '' && <Alert className="my-3" variant="success">{error}</Alert>}
                         <div className="d-grid gap-2">
                             <Button type="submit"  className="rounded-pill"
                                 style={{ 

@@ -20,7 +20,7 @@ const describeArc = (x, y, radius, startAngle, endAngle) => {
 }
 
 function StopWatch(props) {
-    const [time, setTime] = useState(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
+    const [ , setTime] = useState(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
 
     useEffect(() => {
         const interval = setInterval(() => setTime(dayjs().format('YYYY-MM-DDTHH:mm:ss')), 1000);

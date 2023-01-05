@@ -5,16 +5,18 @@ import { XLg, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons
 import api from '../lib/api';
 import { GallerySlider } from '../components';
 
+
 function Hut(props) {
 
   const [filterName, setFilterName] = useState(null);
   const [filterCountry, setFilterCountry] = useState(null);
-  const [filterGuests, setFilterGuests] = useState(null);
+  const [ , setFilterGuests] = useState(null);
   const [filterBeds, setFilterBeds] = useState(null);
   const [, setIsHover] = useState(false);
   const [searchHover, setSearchHover] = useState(false);
   const [clearHover, setClearHover] = useState(false);
-  useEffect(() => {
+
+  useEffect((filterName, filterCountry, filterGuests, filterBeds, props) => {
     const getHuts = async () => {
       const huts = await api.getHutsListWithFilters(null, null, null, null, null, null);
       props.setHuts(huts);
@@ -138,7 +140,7 @@ function DisplayHut(props) {
 function HutRow(props) {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
-  useEffect(() => {
+  useEffect((props) => {
     const getImgs = async () => {
       try {
         const ret = await api.getImagesPoint(props.hut.id);

@@ -4,8 +4,6 @@ import AddReferencePoint from "./addReferencePoint";
 import LinkHut from "./linkHut";
 import LinkPointStartEnd from "./linkPointStartEnd";
 
-
-
 function LocalGuideHikeUpdate(props) {
     const hikeid = parseInt(useParams().hikeid);
     const hike = props.hikes.find(h => h.id === hikeid);

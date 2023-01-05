@@ -1,24 +1,21 @@
 import { useState } from 'react';
 import { Row, Col, Form, FloatingLabel, Alert, Container } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import api from '../lib/api';
 import { PointMap } from '.';
 import services from '../lib/services';
 import { GeoFill, CheckCircle, XCircle } from 'react-bootstrap-icons'
 import ServerReply from "./serverReply";
 
-function AddParkingLot({ setParkings }) {
+function AddParkingLot() {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [totalSlots, setTotalSlots] = useState("");
     const [geographicalArea, setGeographicalArea] = useState('');
     const [openArea, setOpenArea] = useState(false);
     const [coord, setCoord] = useState();
-
     const [error, setError] = useState();
     const [success, setSuccess] = useState(false);
     const [waiting, setWaiting] = useState(false);
-    const navigate = useNavigate();
 
     const resetFields = () => {
         setName("");

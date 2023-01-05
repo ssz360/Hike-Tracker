@@ -5,7 +5,6 @@ import { ProfileDashboard, ProfilePreferences } from '../components';
 import ProfileHikes from '../components/profileHikes';
 
 function Sidebar() {
-
     const location = useLocation();
     const path = location.pathname;
 

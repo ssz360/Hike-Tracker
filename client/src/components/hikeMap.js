@@ -8,11 +8,13 @@ import getMarkerForPoint from "../lib/markerPoint";
 import globalVariables from "../lib/globalVariables";
 import Glossary from "./glossary";
 
+
 function HikeMap(props) {
     const [bounds, setBounds] = useState([[0, 0], [0.1, 0.1]]);
     const [coordinates, setCoordinates] = useState([]);
-    const [center, setCenter] = useState([0.05, 0.05]);
-    useEffect(() => {
+    const [ , setCenter] = useState([0.05, 0.05]);
+
+    useEffect((props) => {
         const getMapDetails = async () => {
             try {
                 const mapdets = await api.getHikeMap(props.hike.id);

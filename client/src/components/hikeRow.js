@@ -4,7 +4,6 @@ import { Button, Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import globalVariables from "../lib/globalVariables";
 
-
 function HikeRow(props) {
     const limeOptions = { color: 'red' }
     const [map, setMap] = useState(false);

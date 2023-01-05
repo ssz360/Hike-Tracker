@@ -4,7 +4,6 @@ import api from "../lib/api";
 import icons from "../lib/iconspoint";
 import GallerySlider from "./gallerySlider";
 
-
 function SelectedPoint(props){
     const [waiting,setWaiting]=useState(false);
     const [imagesUrls,setImagesUrls]=useState([]);
