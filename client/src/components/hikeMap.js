@@ -6,7 +6,7 @@ import api from "../lib/api";
 import SelectedPoint from "./selectedPoint";
 import getMarkerForPoint from "../lib/markerPoint";
 import globalVariables from "../lib/globalVariables";
-import Glossary from "./glossary";
+import Glossary from "./Glossary";
 import React from 'react';
 
 function HikeMap(props) {
