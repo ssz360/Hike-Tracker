@@ -4,6 +4,7 @@ import api from "../lib/api";
 import ServerReply from "./serverReply";
 import { CheckCircle, XCircle } from 'react-bootstrap-icons'
 import GallerySlider from "./gallerySlider";
+import React from 'react';
 
 function AddHikeForm(props) {
     const [error, setError] = useState();

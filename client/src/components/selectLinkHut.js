@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import icons from "../lib/iconspoint";
 import ServerReply from "./serverReply";
+import React from 'react';
 
 
 function SelectLinkHut(props) {

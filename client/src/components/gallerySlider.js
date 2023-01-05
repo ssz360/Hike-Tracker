@@ -3,6 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Col, Row } from "react-bootstrap";
 import { useEffect } from "react";
+import React from 'react';
 
 function openFileUpload() {
   document.getElementById('addimageupload').click();

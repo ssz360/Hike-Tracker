@@ -6,6 +6,8 @@ import { HikesList, Hut, HomePage, Profile } from './pages';
 import api from './lib/api';
 import { Header, Login, SignUp, CheckEmail } from './components';
 import { useEffect, useState } from 'react';
+import React from 'react';
+
 
 function App() {
 
@@ -19,7 +21,7 @@ function App() {
   const navigate = useNavigate();
   const [dirty, setDirty] = useState(false);
 
-  useEffect(() => {
+  useEffect((hikes, path) => {
     const getHikesUseEff = async () => {
       try {
         const h = await api.getHikesList();

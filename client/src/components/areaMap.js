@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, useMap, Circle } from 'react-leaflet'
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
 import globalVariables from "../lib/globalVariables";
+import React from 'react';
 
 const POSITION_CLASSES = {
     bottomleft: 'leaflet-bottom leaflet-left',

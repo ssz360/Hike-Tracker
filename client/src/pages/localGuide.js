@@ -1,3 +1,4 @@
+import React from 'react';
 import { Route, Routes } from "react-router-dom";
 import AddHikeForm from "../components/addHikeForm";
 import LocalGuideHikes from "./localGuideHikes";

@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Polyline } from 'react-leaflet'
 import { Button, Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import globalVariables from "../lib/globalVariables";
+import React from 'react';
 
 function HikeRow(props) {
     const limeOptions = { color: 'red' }

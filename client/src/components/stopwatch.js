@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { useEffect, useState } from 'react';
 import { Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
+import React from 'react';
 dayjs.extend(duration);
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {

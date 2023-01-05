@@ -12,6 +12,8 @@ import duration from 'dayjs/plugin/duration';
 import "flatpickr/dist/themes/material_green.css";
 import Flatpickr from "react-flatpickr";
 import { GallerySlider } from '../components';
+import React from 'react';
+
 dayjs.extend(duration);
 
 function HikesList(props) {

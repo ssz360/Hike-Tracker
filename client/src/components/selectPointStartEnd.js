@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button, OverlayTrigger, Tooltip, Row, Col } from "react-bootstrap";
 import icons from "../lib/iconspoint";
 import ServerReply from "./serverReply";
+import React from 'react';
 
 
 function SelectPointStartEnd(props) {

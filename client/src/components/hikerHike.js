@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import api from '../lib/api';
 import StopWatch from './stopwatch';
+import React from 'react';
 
 const DIFFICULTIES = { 'TOURIST': 'success', 'HIKER': 'info', 'PROFESSIONAL HIKER': 'danger' };
 

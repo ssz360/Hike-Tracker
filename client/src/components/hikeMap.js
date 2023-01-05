@@ -7,7 +7,7 @@ import SelectedPoint from "./selectedPoint";
 import getMarkerForPoint from "../lib/markerPoint";
 import globalVariables from "../lib/globalVariables";
 import Glossary from "./glossary";
-
+import React from 'react';
 
 function HikeMap(props) {
     const [bounds, setBounds] = useState([[0, 0], [0.1, 0.1]]);

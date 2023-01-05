@@ -13,6 +13,7 @@ import globalVariables from "../lib/globalVariables"
 import { GallerySlider } from "../components";
 import { ArrowLeft, CheckCircle, XCircle, XCircleFill, CheckCircleFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import React from 'react';
 
 
 function AddReferencePointMap(props) {

@@ -5,6 +5,7 @@ import api from "../lib/api";
 import { Spinner } from "react-bootstrap";
 import getMarkerForPoint from "../lib/markerPoint";
 import globalVariables from "../lib/globalVariables";
+import React from 'react';
 
 
 function HikeMapLinkHut(props) {

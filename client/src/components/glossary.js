@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Card, Table, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { QuestionCircle } from 'react-bootstrap-icons';
+import React from 'react';
 
 function Glossary(){
     const [hover, setHover] = useState(false);

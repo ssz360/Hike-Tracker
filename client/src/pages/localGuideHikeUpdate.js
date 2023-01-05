@@ -1,3 +1,4 @@
+import React from 'react';
 import { Spinner } from "react-bootstrap";
 import { Route, Routes, useParams } from "react-router-dom";
 import AddReferencePoint from "./addReferencePoint";

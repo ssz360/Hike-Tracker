@@ -3,8 +3,7 @@ import { Col, Container, Row, Card, Collapse, OverlayTrigger, Tooltip } from "re
 import { useNavigate } from "react-router-dom";
 import HikeMap from '../components/hikeMap';
 import { PinMapFill, FlagFill, HouseDoorFill, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons'
-
-
+import React from 'react';
 
 function LocalGuideHikes(props) {
 

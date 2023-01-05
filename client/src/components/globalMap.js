@@ -4,6 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { useEffect,useState } from 'react';
 import Hike from '../lib/hike';
 import globalVariables from "../lib/globalVariables";
+import React from 'react';
 
 function GlobalMap(){
     const [hikes,setHikes]=useState([]);

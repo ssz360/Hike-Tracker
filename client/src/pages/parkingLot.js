@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Row, Card, Container, Collapse, Col } from 'react-bootstrap';
 import api from '../lib/api';

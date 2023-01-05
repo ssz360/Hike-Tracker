@@ -3,6 +3,7 @@ import { Spinner } from "react-bootstrap";
 import api from "../lib/api";
 import icons from "../lib/iconspoint";
 import GallerySlider from "./gallerySlider";
+import React from 'react';
 
 function SelectedPoint(props){
     const [waiting,setWaiting]=useState(false);

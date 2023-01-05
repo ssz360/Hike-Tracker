@@ -1,5 +1,6 @@
 import {Table} from 'react-bootstrap';
 import HikeRow from './hikeRow';
+import React from 'react';
 
 function HikesTable(props){
     return (

@@ -4,6 +4,7 @@ import services from '../lib/services';
 import { CheckCircle, GeoFill, XCircle } from 'react-bootstrap-icons'
 import { useState } from 'react';
 import ServerReply from "../components/serverReply";
+import React from 'react';
 
 function AddHutForm(props) {
     const [openArea, setOpenArea] = useState(false);

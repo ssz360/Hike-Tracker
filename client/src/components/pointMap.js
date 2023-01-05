@@ -7,6 +7,7 @@ import icons from "../lib/iconspoint";
 import api from '../lib/api';
 import getColor from '../lib/hikeColor';
 import globalVariables from "../lib/globalVariables";
+import React from 'react';
 
 function GetPointAndNewHikes(props) {
     const [dragging, setDragging] = useState(false);

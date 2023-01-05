@@ -3,6 +3,7 @@ import { Row, Col, ListGroup, Container } from 'react-bootstrap';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import { ProfileDashboard, ProfilePreferences } from '../components';
 import ProfileHikes from '../components/profileHikes';
+import React from 'react';
 
 function Sidebar() {
     const location = useLocation();

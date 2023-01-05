@@ -5,6 +5,7 @@ import SelectPointStartEnd from "../components/selectPointStartEnd";
 import api from "../lib/api";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import React from 'react';
 
 function LinkPointStartEnd(props) {
     console.log("IN LINKPOINTSTARTEND WITH", props.hike);

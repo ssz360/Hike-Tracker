@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
+import React from 'react';
 
 const POSITION_CLASSES = {
   bottomleft: 'leaflet-bottom leaflet-left',

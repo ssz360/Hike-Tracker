@@ -1,6 +1,7 @@
 import { divIcon } from "leaflet";
 import { Marker } from "react-leaflet";
 import icons from "./iconspoint";
+import React from 'react';
 
 const getMarkerForPoint = (point, start, end, selected, selectable, selectedPoint, setSelectedPoint) => {
     let imgtype = "";

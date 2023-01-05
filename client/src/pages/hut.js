@@ -4,7 +4,7 @@ import { Search } from 'react-bootstrap-icons';
 import { XLg, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons';
 import api from '../lib/api';
 import { GallerySlider } from '../components';
-
+import React from 'react';
 
 function Hut(props) {
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Row, Col, Form } from 'react-bootstrap';
 import api from '../lib/api';
+import React from 'react';
 
 const types = { 'localGuide': 'Local guide', 'hiker': 'Hiker', 'hutWorker': 'Hut worker', 'friend': 'Friend' };
 

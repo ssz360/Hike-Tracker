@@ -5,6 +5,7 @@ import { PointMap } from '.';
 import services from '../lib/services';
 import { GeoFill, CheckCircle, XCircle } from 'react-bootstrap-icons'
 import ServerReply from "./serverReply";
+import React from 'react';
 
 function AddParkingLot() {
     const [name, setName] = useState("");

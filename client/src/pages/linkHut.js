@@ -5,6 +5,7 @@ import SelectLinkHut from "../components/selectLinkHut";
 import api from "../lib/api";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import React from 'react';
 
 
 function LinkHut(props) {
