@@ -134,7 +134,7 @@ function ReferencePoint(props){
                             <Spinner animation="grow" />
                         </div>
                         :
-                        <Gallery preview={false} addImage={false} imagesUrls={props.imagesUrls} />}
+                        <Gallery preview={false} addImage={false}  />}
                 </div>
             </Col>
             <div className="ms-3">
@@ -171,8 +171,6 @@ function AddNewReferencePoint(props) {
                                             props.setName('');
                                             props.setDescription('');
                                             props.setImages([]);
-                                            props.imagesUrls.forEach(img => URL.revokeObjectURL(img.url))
-                                            props.setImagesUrls([]);
                                         }} size="20px"
                                         onMouseEnter={() => setHoverX(true)}
                                         onMouseLeave={() => setHoverX(false)} />
@@ -187,8 +185,6 @@ function AddNewReferencePoint(props) {
                                             props.setName('');
                                             props.setDescription('');
                                             props.setImages([]);
-                                            props.imagesUrls.forEach(img => URL.revokeObjectURL(img.url))
-                                            props.setImagesUrls([]);
                                         }} size="20px"
                                         onMouseEnter={() => setHoverX(true)}
                                         onMouseLeave={() => setHoverX(false)} />
@@ -297,8 +293,7 @@ function AddReferencePoint(props) {
                                     <div className="my-4 mx-4">
                                         <h4>Reference points - Add new point</h4>
                                         <AddNewReferencePoint waiting={waiting} setWaiting={setWaiting} error={error} setError={setError} success={success} setSuccess={setSuccess}
-                                            name={name} setName={setName} submitHandler={submitHandler} images={images} setImages={setImages} imagesUrls={imagesUrls}
-                                            setImagesUrls={setImagesUrls} />
+                                            name={name} setName={setName} submitHandler={submitHandler} images={images} setImages={setImages} />
                                     </div>
                                 </Card>
                             </Col>
@@ -315,7 +310,7 @@ function AddReferencePoint(props) {
                                     <div className="my-4 mx-4">
                                         {console.log(props.hike)}
                                         <h4>Reference points - <strong>{props.hike.referencePoints.find(p => p.id === selectedPoint).name}</strong></h4>
-                                        <ReferencePoint waiting={waiting} setWaiting={setWaiting} imagesUrls={imagesUrls} setImagesUrls={setImagesUrls} point={props.hike.referencePoints.find(p => p.id === selectedPoint)} />
+                                        <ReferencePoint waiting={waiting} setWaiting={setWaiting}  point={props.hike.referencePoints.find(p => p.id === selectedPoint)} />
                                     </div>
                                 </Card>
                             </Col>

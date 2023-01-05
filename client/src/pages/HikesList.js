@@ -141,12 +141,12 @@ function HikesList(props) {
               <div className='text-center'> <strong>
             {changeStart?'Select the date and time when you started the hike!':timeStartingHike!==''?'Update the starting time!':'Did you start the hike earlier?'}</strong>
           {!changeStart &&
-            <svg className='mx-3' onClick={e=>{
+            <svg onClick={e=>{
               e.preventDefault();
               e.stopPropagation();
               setChangeStart(true);
               if(timeStartingHike==='') setTimeStartingHike(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
-            }} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" className="bi bi-chevron-double-down" viewBox="0 0 16 16">
+            }} xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" className=" mx-3 bi bi-chevron-double-down" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M1.646 6.646a.5.5 0 0 1 .708 0L8 12.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
               <path fill-rule="evenodd" d="M1.646 2.646a.5.5 0 0 1 .708 0L8 8.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
             </svg>
@@ -452,14 +452,14 @@ function HikeRow(props) {
                 e.preventDefault();
                 e.stopPropagation();
                 setActive('images');
-              }} className={"material-icons-round hikeselectimage"+(active==='images'?' active':'')}>
+              }} className={"material-icons-round hikeselectimage"+(active==='images'?' active':'')} role="button">
                 collections
               </span>
               <span onClick={e=>{
                 e.preventDefault();
                 e.stopPropagation();
                 if(props.logged) setActive('map');
-              }} className={"material-icons-round ms-1 hikeselectmap"+(active==='map'?' active':'')+(props.logged?'': ' disabled')}>
+              }} className={"material-icons-round ms-1 hikeselectmap"+(active==='map'?' active':'')+(props.logged?'': ' disabled')} role="button">
                 map
               </span>
             </div>

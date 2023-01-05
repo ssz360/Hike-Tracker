@@ -77,7 +77,7 @@ function AddParkingLot({ setParkings }) {
             // const pks = await api.getParkings();
             // setParkings(pks);
             resetFields();
-        } catch(err) {
+        } catch (err) {
             setWaiting(false);
             setSuccess(false);
             setError(err);
@@ -85,10 +85,10 @@ function AddParkingLot({ setParkings }) {
         }
     }
 
-    
+
     const setCoordinateAndGetAddress = (coordinate) => {
         setCoord(coordinate);
-        services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setGeographicalArea(`${x.address.city}, ${x.address.state}, ${x.address.country}`.replace('undefined,','')));
+        services.GetAddressFromPoint(coordinate[0], coordinate[1]).then(x => setGeographicalArea(`${x.address.city}, ${x.address.state}, ${x.address.country}`.replace('undefined,', '')));
     }
 
     return (<>
@@ -112,48 +112,52 @@ function AddParkingLot({ setParkings }) {
                 <Row>
                     <div className="d-flex align-items-center justify-content-center not-found-container mt-4"
                         style={{ opacity: "90%" }}>
-                        {openArea && <PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoordinateAndGetAddress} coord={coord} />}
-                        <Form className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: "40%" }}>
-                            <FloatingLabel className="mb-3" controlId="floatingInput" label="Parking name">
-                                <Form.Control type="text" value={name} onChange={ev => setName(ev.target.value)} placeholder="Name" />
-                            </FloatingLabel>
-                            <FloatingLabel className="mb-3" controlId="floatingTextarea" label="Parking description">
-                                <Form.Control as="textarea" value={description} onChange={ev => setDescription(ev.target.value)} placeholder="Description" style={{ height: "120px" }} />
-                            </FloatingLabel>
-                            <FloatingLabel className="mb-3" controlId="floatingInput" label="Total slots">
-                                <Form.Control type="number" data-test="total-cost" value={totalSlots} onChange={ev => setTotalSlots(ev.target.value)} min={0} placeholder="Total slots" />
-                            </FloatingLabel>
-                            <Alert role="button" variant="light" 
-                                style={
-                                    { backgroundColor: "#FFFFFF", 
-                                    border: "1px solid #ced4da", 
-                                    color: "#000000" 
-                                    }
-                                } onClick={() => setOpenArea(true)}>
-                                <GeoFill className="me-3 mb-1" />
-                                {coord !== undefined ? "Position selected!" : "Position"}
-                            </Alert>
+                        <Col md={5} xs={12} sm={10} >
 
-                            {/* <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical area">
+                            {openArea && <PointMap openArea={openArea} setOpenArea={setOpenArea} setCoord={setCoordinateAndGetAddress} coord={coord} />}
+                            <Form className="shadow-lg p-3 mb-5 bg-white rounded">
+                                <FloatingLabel className="mb-3" controlId="floatingInput" label="Parking name">
+                                    <Form.Control type="text" value={name} onChange={ev => setName(ev.target.value)} placeholder="Name" />
+                                </FloatingLabel>
+                                <FloatingLabel className="mb-3" controlId="floatingTextarea" label="Parking description">
+                                    <Form.Control as="textarea" value={description} onChange={ev => setDescription(ev.target.value)} placeholder="Description" style={{ height: "120px" }} />
+                                </FloatingLabel>
+                                <FloatingLabel className="mb-3" controlId="floatingInput" label="Total slots">
+                                    <Form.Control type="number" data-test="total-cost" value={totalSlots} onChange={ev => setTotalSlots(ev.target.value)} min={0} placeholder="Total slots" />
+                                </FloatingLabel>
+                                <Alert role="button" variant="light"
+                                    style={
+                                        {
+                                            backgroundColor: "#FFFFFF",
+                                            border: "1px solid #ced4da",
+                                            color: "#000000"
+                                        }
+                                    } onClick={() => setOpenArea(true)}>
+                                    <GeoFill className="me-3 mb-1" />
+                                    {coord !== undefined ? "Position selected!" : "Position"}
+                                </Alert>
+
+                                {/* <FloatingLabel className="mb-3" controlId="floatingInput" label="Geographical area">
                                 <Form.Control disabled={true} type="text" data-test="geo-area" value={geographicalArea} onChange={ev => setGeographicalArea(ev.target.value)} placeholder="Geographical Area" />
                             </FloatingLabel> */}
 
 
-                            {/* ERROR HANDLING */}
-                            <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new parking"} successMessage={"New parking lot added correctly!"} />
-                            
-                            {/* ICONS */}
-                            <div className="d-flex flex-row-reverse">
-                                <CheckCircle role="button" className="me-3" onClick={e => {
-                                    if (!waiting) {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        handleSubmit();
-                                    }
-                                }} type="submit" size="20px" />
-                                <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
-                            </div>
-                        </Form>
+                                {/* ERROR HANDLING */}
+                                <ServerReply error={error} success={success} waiting={waiting} errorMessage={"Error while adding a new parking"} successMessage={"New parking lot added correctly!"} />
+
+                                {/* ICONS */}
+                                <div className="d-flex flex-row-reverse">
+                                    <CheckCircle role="button" className="me-3" onClick={e => {
+                                        if (!waiting) {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleSubmit();
+                                        }
+                                    }} type="submit" size="20px" />
+                                    <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
+                                </div>
+                            </Form>
+                        </Col  >
                     </div>
                 </Row>
             </Container>
