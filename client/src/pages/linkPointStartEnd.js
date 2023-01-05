@@ -4,7 +4,8 @@ import HikeMapLink from "../components/hikeMapLink";
 import SelectPointStartEnd from "../components/selectPointStartEnd";
 import api from "../lib/api";
 import { ArrowLeft } from "react-bootstrap-icons";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import React from 'react';
 
 function LinkPointStartEnd(props) {
     console.log("IN LINKPOINTSTARTEND WITH", props.hike);
@@ -14,6 +15,8 @@ function LinkPointStartEnd(props) {
     const [linkableStartPoints, setLinkableStartPoints] = useState([]);
     const [linkableEndPoints, setLinkableEndPoints] = useState([]);
     const navigate = useNavigate();
+    
+
     useEffect(() => {
         const linkableHuts = async () => {
             try {
@@ -29,19 +32,16 @@ function LinkPointStartEnd(props) {
         }
         linkableHuts();
     }, []);
-    console.log("IN LINK POINT START END WITH HIKE", props.hike, "selected point", selectedPoint, "points", [...linkableStartPoints, ...linkableEndPoints, ...props.hike.referencePoints, ...props.hike.huts, props.hike.startPoint, props.hike.endPoint]);
+
     const linkPoint = async linkType => {
         try {
             await api.linkStartArrival(props.hike.id, linkType === "start" ? selectedPoint : undefined, linkType === "end" ? selectedPoint : undefined);
-            await props.refreshHikes();//props.hike,points.find(p=>p.id===selectedPoint),linkType);
+            await props.refreshHikes();
             const linkableStartPoints=await api.getLinkableStartPoints(props.hike.id);
             const linkableEndPoints=await api.getLinkableEndPoints(props.hike.id);
-            //console.log("Linkable start points",linkableStartPoints);
-            //onsole.log("Linkable end points",linkableEndPoints);
             setLinkableStartPoints([...linkableStartPoints]);
             setLinkableEndPoints([...linkableEndPoints]);
         } catch (error) {
-            //console.log("Error in linkpoint",error);
             throw error;
         }
     }

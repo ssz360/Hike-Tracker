@@ -3,9 +3,9 @@ import { Row, Col, ListGroup, Container } from 'react-bootstrap';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import { ProfileDashboard, ProfilePreferences } from '../components';
 import ProfileHikes from '../components/profileHikes';
+import React from 'react';
 
 function Sidebar() {
-
     const location = useLocation();
     const path = location.pathname;
 
@@ -24,11 +24,6 @@ function Profile(props) {
     },[]);
 
     return(<>
-        {/* <Row className="px-0 mx-0 ">
-            <Col>
-                <h1 className="mx-4 my-4">Profile settings</h1>
-            </Col>
-        </Row> */}
         <Container fluid>
             <Row style={{height:"100vh"}}>
                 <Col sm={2} xs={12}  style={{background:"#e0e3e5"}}>

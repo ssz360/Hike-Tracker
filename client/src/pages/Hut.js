@@ -1,29 +1,28 @@
-import { Container, Row, Col, Form, Button, Card, Collapse, Spinner, Placeholder } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Form, Button, Card, Collapse, Placeholder } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import { Search, PlusLg } from 'react-bootstrap-icons';
-import { PlusCircle, XLg, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons';
+import { Search } from 'react-bootstrap-icons';
+import { XLg, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons';
 import api from '../lib/api';
 import { GallerySlider } from '../components';
+import React from 'react';
 
 function Hut(props) {
 
   const [filterName, setFilterName] = useState(null);
   const [filterCountry, setFilterCountry] = useState(null);
-  const [filterGuests, setFilterGuests] = useState(null);
+  const [filterGuests , setFilterGuests] = useState(null);
   const [filterBeds, setFilterBeds] = useState(null);
-  const [isHover, setIsHover] = useState(false);
+  const [, setIsHover] = useState(false);
   const [searchHover, setSearchHover] = useState(false);
   const [clearHover, setClearHover] = useState(false);
+
   useEffect(() => {
     const getHuts = async () => {
-        const huts = await api.getHutsListWithFilters(null, null, null, null, null, null);
-        props.setHuts(huts);
+      const huts = await api.getHutsListWithFilters(null, null, null, null, null, null);
+      props.setHuts(huts);
     }
-    if (filterName==null && filterCountry==null && filterGuests==null && filterBeds==null) {getHuts(); console.log(props.user)};
+    if (filterName == null && filterCountry == null && filterGuests == null && filterBeds == null) { getHuts(); console.log(props.user) };
   }, []);
-
-  const navigate = useNavigate();
 
   const filterHutSubmit = (event) => {
     event.preventDefault();
@@ -42,7 +41,7 @@ function Hut(props) {
     setSearchHover(false);
     setClearHover(false);
     const huts = await api.getHutsListWithFilters(null, null, null, null, null, null);
-        props.setHuts(huts);
+    props.setHuts(huts);
   }
 
   return (<>
@@ -88,7 +87,7 @@ function Hut(props) {
           </div>
 
           {/***** Submit button *****/}
-            <Row>
+          <Row>
             <div className="mt-3">
               <Form>
                 <div className="d-grid gap-2">
@@ -97,7 +96,6 @@ function Hut(props) {
                       backgroundColor: !searchHover ? '#006666' : '#009999',
                       borderColor: '#e0e3e5',
                       height: '70%',
-                      // width: '80%'
                     }}
                     onMouseEnter={() => setSearchHover(true)}
                     onMouseLeave={() => setSearchHover(false)}><strong>Search</strong> <Search className='mb-1' size={"18px"} />
@@ -109,43 +107,23 @@ function Hut(props) {
 
           {/* Clear filters  */}
           <Row>
-              <Form>
-                <div className="d-grid gap-2">
-                    <Button className='rounded-pill mt-4'
-                      // onClick={() => window.location.reload(false)}
-                      onClick={() => resetFields()}
-                      style={{
-                        backgroundColor: !clearHover ? '#800000' : '#cc0000',
-                        borderColor: '#e0e3e5',
-                        height: '70%',
-                      }}
-                      onMouseEnter={() => setClearHover(true)}
-                      onMouseLeave={() => setClearHover(false)}><strong>Clear filters</strong> <XLg className='mb-1' size={'18px'} /></Button>
-                </div>
-              </Form>
+            <Form>
+              <div className="d-grid gap-2">
+                <Button className='rounded-pill mt-4'
+                  onClick={() => resetFields()}
+                  style={{
+                    backgroundColor: !clearHover ? '#800000' : '#cc0000',
+                    borderColor: '#e0e3e5',
+                    height: '70%',
+                  }}
+                  onMouseEnter={() => setClearHover(true)}
+                  onMouseLeave={() => setClearHover(false)}><strong>Clear filters</strong> <XLg className='mb-1' size={'18px'} /></Button>
+              </div>
+            </Form>
           </Row>
 
         </Col>
         <Col sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
-          {/* BUTTON */}
-          {/* {console.log(props.user)} */}
-          {/* {1 == 1 ? <Row className="mt-3">
-            <div className="d-grid gap-2">
-              <Button className="rounded-pill" style={
-                {
-                  width: "fit-content",
-                  // width: "20%",
-                  // display: "inline-block",
-                  height: "45px",
-                  borderColor: "white",
-                  backgroundColor: !isHover ? '#006666' : '#009999'
-                }
-              }
-                onMouseEnter={() => setIsHover(true)}
-                onMouseLeave={() => setIsHover(false)}
-                onClick={() => navigate("/localGuide/newHut")}><strong><PlusCircle size={"20px"} className="mb-1" /> Add new hut</strong> </Button>
-            </div>
-          </Row> : <Row className="mt-3"/>} */}
           <Row>
             {<DisplayHut displayedHuts={props.huts} />}
           </Row>
@@ -161,28 +139,28 @@ function DisplayHut(props) {
 
 function HutRow(props) {
   const [open, setOpen] = useState(false);
-  const [images,setImages] = useState([]);
-  useEffect(()=>{
-    const getImgs=async()=>{
+  const [images, setImages] = useState([]);
+  useEffect(() => {
+    const getImgs = async () => {
       try {
-        const ret=await api.getImagesPoint(props.hut.id);
+        const ret = await api.getImagesPoint(props.hut.id);
         setImages([...ret]);
       } catch (error) {
         setImages([]);
       }
     }
     getImgs();
-  },[])
+  }, [])
   return (
     <><Col xs={12} sm={6} md={4} className="mt-2"><Card className="shadow mt-3">
       <Card.Header><h4>{props.hut.name}</h4>
       </Card.Header>
       <Card.Body>
-        {images.length>0?
-          <GallerySlider add={false} images={images}/>
+        {images.length > 0 ?
+          <GallerySlider add={false} images={images} />
           :
           <Placeholder as="p" animation="glow">
-            <Placeholder xs={12} bg='warning' size='lg'/>
+            <Placeholder xs={12} bg='warning' size='lg' />
           </Placeholder>
         }
         <Card.Text className='mt-2'><strong>Country: </strong>{props.hut.country}<br></br>
@@ -193,53 +171,31 @@ function HutRow(props) {
 
         </Card.Text>
         <Card.Text >{!open ? (
-                        <div className="d-flex flex-row-reverse">
-
-                            < ChevronCompactDown role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
-                                onClick={() => setOpen(!open)}
-                                aria-controls="example-collapse-text"
-                                aria-expanded={open} />
-                        </div>)
-                        :
-                        (<div className="d-flex flex-row-reverse">
-                            < ChevronCompactUp role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
-                                onClick={() => setOpen(!open)}
-                                aria-controls="example-collapse-text"
-                                aria-expanded={open} />
-                        </div>)}
-                        {/* Text in expanded selection */}
-                        <Collapse in={open}>
-                            <div id="example-collapse-text">
-                                <Card className="bg-light text-dark">
-                                    <Card.Body><strong>Description: </strong>{props.hut.description}</Card.Body>
-                                </Card>
-                            </div>
-                        </Collapse>
-                    </Card.Text>
+          <div className="d-flex flex-row-reverse">
+            < ChevronCompactDown role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
+              onClick={() => setOpen(!open)}
+              aria-controls="example-collapse-text"
+              aria-expanded={open} />
+          </div>)
+          :
+          (<div className="d-flex flex-row-reverse">
+            < ChevronCompactUp role="button" className="text-decoration-none" style={{ fontSize: "20px" }}
+              onClick={() => setOpen(!open)}
+              aria-controls="example-collapse-text"
+              aria-expanded={open} />
+          </div>)}
+          {/* Text in expanded selection */}
+          <Collapse in={open}>
+            <div id="example-collapse-text">
+              <Card className="bg-light text-dark">
+                <Card.Body><strong>Description: </strong>{props.hut.description}</Card.Body>
+              </Card>
+            </div>
+          </Collapse>
+        </Card.Text>
       </Card.Body>
     </Card>
     </Col></>);
 }
-
-const validateInfo = (name, country, numberOfBedrooms, coordinate, setMessage) => {
-  if ([name, country, numberOfBedrooms, coordinate, setMessage].some(t => t.length === 0)) {
-    setMessage("All fields should to be filled");
-    return false;
-  }
-  if (name.match(/^\s+$/)) {
-    setMessage("Invalid hut name.");
-    return false;
-  }
-  if (!country.match(/^[a-zA-Z]{0,9}[a-zA-Z]{0,9}$/)) {
-    setMessage("Invalid country name.");
-    return false;
-  }
-  if (!(coordinate.split(",").length === 2 && coordinate.split(",").every(t => t.match(/^([0-9]*[.])?[0-9]+$/)))) {
-    setMessage("The coordinates should be two numbers separated by comma");
-    return false;
-  }
-  return true;
-};
-
 
 export default Hut;

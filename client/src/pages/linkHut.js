@@ -5,6 +5,8 @@ import SelectLinkHut from "../components/selectLinkHut";
 import api from "../lib/api";
 import { ArrowLeft } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import React from 'react';
+
 
 function LinkHut(props) {
     const [selectedPoint, setSelectedPoint] = useState(-1);
@@ -28,7 +30,7 @@ function LinkHut(props) {
     const linkHut = async linkType => {
         try {
             await api.linkHut(props.hike.id, selectedPoint, linkType);
-            await props.refreshHikes();//props.hike,points.find(p=>p.id===selectedPoint),linkType);
+            await props.refreshHikes();
             const newPoints = await api.getLinkableHuts(props.hike.id);
             setLinkableHuts([...newPoints]);
         } catch (error) {

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Alert, Button, Container, Form, Spinner, Row, FloatingLabel, Col } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Container, Form, Row, FloatingLabel, Col } from "react-bootstrap";
 import api from "../lib/api";
 import ServerReply from "./serverReply";
-import { CheckCircle, XCircle, ArrowLeft } from 'react-bootstrap-icons'
+import { CheckCircle, XCircle } from 'react-bootstrap-icons'
 import GallerySlider from "./gallerySlider";
+import React from 'react';
+
 function AddHikeForm(props) {
     const [error, setError] = useState();
     const [success, setSuccess] = useState(false);
@@ -15,7 +16,8 @@ function AddHikeForm(props) {
     const [fileName, setFileName] = useState('');
     const [waiting, setWaiting] = useState(false);
     const [images, setImages] = useState([]);
-    const navigate = useNavigate();
+
+
     const resetFields = () => {
         setName('');
         setDifficulty();
@@ -25,6 +27,8 @@ function AddHikeForm(props) {
         images.forEach(i => URL.revokeObjectURL(i.url));
         setImages([]);
     }
+
+
     const submitHandler = async () => {
         try {
             let err = "";
@@ -34,16 +38,13 @@ function AddHikeForm(props) {
             if (images.length === 0) err += "You must provide at least one image to insert a new hike!";
             if (err !== "") throw err;
             setWaiting(true);
-            //console.log("Trying to send an api call")
             await api.addHike(file, name, desc, difficulty, images.map(i => i.image));
             setWaiting(false);
-            //console.log("Success in api call");
             setSuccess(true);
             resetFields();
             setTimeout(() => setSuccess(false), 3000);
             await props.refreshHikes();
         } catch (error) {
-            //console.log("Error in try catch",error);
             setWaiting(false);
             setSuccess(false);
             setError(error);
@@ -53,7 +54,6 @@ function AddHikeForm(props) {
     return (
         <>
             <div style={{
-                //height: '100vh',
                 backgroundImage: "url(/images/pexels-yaroslav-shuraev-8968134.jpg)",
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover',
@@ -73,11 +73,11 @@ function AddHikeForm(props) {
                     </div>
                     <Row fluid className='d-flex align-items-center'>
 
-                            <div className="d-flex align-items-center justify-content-center not-found-container mt-4"
-                                style={{
-                                    opacity: "90%"
-                                }}>
-                                    <Col md={5} xs={12} sm={10} >
+                        <div className="d-flex align-items-center justify-content-center not-found-container mt-4"
+                            style={{
+                                opacity: "90%"
+                            }}>
+                            <Col md={5} xs={12} sm={10} >
 
                                 <Form className="shadow-lg p-3 mb-5 bg-white rounded ">
                                     <Form.Group className="mb-3">
@@ -132,8 +132,8 @@ function AddHikeForm(props) {
                                         </div>
                                     </Form.Group>
                                 </Form>
-                        </Col>
-                            </div>
+                            </Col>
+                        </div>
                     </Row>
                 </Container>
             </div>

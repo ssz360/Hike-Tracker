@@ -1,4 +1,5 @@
 import { Alert, Spinner } from "react-bootstrap";
+import React from 'react';
 
 function ServerReply(props){
     return(

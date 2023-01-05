@@ -1,6 +1,6 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import HikerHike from "./hikerHike";
-
+import React from 'react';
 
 function ProfileHikes(props){
 

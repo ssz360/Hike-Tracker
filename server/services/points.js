@@ -33,8 +33,6 @@ const getAltitudePoint=async(lat,lng,errs)=>{
 const checkLatitudeLongitude=(lat,lng)=>{
     if(!isFinite(lat) || !isFinite(lng)) throw {status:422,message:"Bad parameters"};
     if(lat<-90 || lat>90 || lng<-180 || lng>180) throw {status:422,message:"Invalid coordinates, latitude should be between -90 and 90 degrees and longitude should be between -180 and 180 degrees"};
-    //else if(lat<-90 || lat>90) throw {status:422,message:"Invalid latitude, it should be between -90 and 90 degrees"}
-    //else if(lng<-180 || lng>180) throw {status:422,message:"Invalid longitude, it should be between -180 and 180 degrees"}
 }
 
 
