@@ -1,9 +1,10 @@
-import { Container, Row, Col, Form, Button, Card, Collapse } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Card, Collapse, Spinner, Placeholder } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Search, PlusLg } from 'react-bootstrap-icons';
 import { PlusCircle, XLg, ChevronCompactDown, ChevronCompactUp } from 'react-bootstrap-icons';
 import api from '../lib/api';
+import { GallerySlider } from '../components';
 
 function Hut(props) {
 
@@ -155,18 +156,36 @@ function Hut(props) {
 }
 
 function DisplayHut(props) {
-  return props.displayedHuts.map((hut) => <HutRow hut={hut} />)
+  return props.displayedHuts.map((hut) => <HutRow key={hut.coordinate} hut={hut} />)
 }
 
 function HutRow(props) {
   const [open, setOpen] = useState(false);
-
+  const [images,setImages] = useState([]);
+  useEffect(()=>{
+    const getImgs=async()=>{
+      try {
+        const ret=await api.getImagesPoint(props.hut.id);
+        setImages([...ret]);
+      } catch (error) {
+        setImages([]);
+      }
+    }
+    getImgs();
+  },[])
   return (
-    <><Col xs={4} className="mt-2"><Card className="shadow mt-3">
+    <><Col xs={12} sm={6} md={4} className="mt-2"><Card className="shadow mt-3">
       <Card.Header><h4>{props.hut.name}</h4>
       </Card.Header>
       <Card.Body>
-        <Card.Text><strong>Country: </strong>{props.hut.country}<br></br>
+        {images.length>0?
+          <GallerySlider add={false} images={images}/>
+          :
+          <Placeholder as="p" animation="glow">
+            <Placeholder xs={12} bg='warning' size='lg'/>
+          </Placeholder>
+        }
+        <Card.Text className='mt-2'><strong>Country: </strong>{props.hut.country}<br></br>
           <strong>Number of Bedrooms: </strong>{props.hut.numberOfBedrooms}<br></br>
           <strong>Phone: </strong>{props.hut.phone}<br></br>
           <strong>Email: </strong>{props.hut.email}<br></br>

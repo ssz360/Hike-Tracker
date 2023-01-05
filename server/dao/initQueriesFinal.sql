@@ -49,6 +49,12 @@ CREATE TABLE IF NOT EXISTS "POINTSIMAGES" (
 	"name"	VARCHAR NOT NULL,
 	PRIMARY KEY("pointId","path")
 );
+CREATE TABLE IF NOT EXISTS "HIKESIMAGES" (
+	"hikeId"	INTEGER NOT NULL,
+	"path"	VARCHAR NOT NULL,
+	"name"	VARCHAR NOT NULL,
+	PRIMARY KEY("hikeId","path")
+);
 CREATE TABLE IF NOT EXISTS "HUTS" (
 	"IDPoint"	INTEGER NOT NULL,
 	"NumberOfBedrooms"	INTEGER NOT NULL,
@@ -79,13 +85,19 @@ CREATE TABLE IF NOT EXISTS "LINKEDPOINTS" (
 	FOREIGN KEY("IDHike") REFERENCES "HIKES"("IDHike"),
 	FOREIGN KEY("IDPoint") REFERENCES "POINTS"("IDPoint")
 );
+
 CREATE TABLE IF NOT EXISTS "PREFERENCES" (
 	"IDUser"	VARCHAR NOT NULL,
-	"LENGTH"	INTEGER,
-	"ASCENT"	INTEGER,
-	"TIME"	INTEGER,
+	"MIN_LENGTH"	INTEGER,
+	"MAX_LENGTH"	INTEGER,
+	"MIN_ASCENT" INTEGER,
+	"MAX_ASCENT" INTEGER,
+	"MIN_TIME" INTEGER,
+	"MAX_TIME" INTEGER,
 	FOREIGN KEY("IDUser") REFERENCES "USERS"("Username")
 );
+
+
 INSERT INTO "HIKES" ("IDHike","Name","Author","Length","ExpectedTime","Ascent","Difficulty","StartPoint","EndPoint","CenterLat","CenterLon","Description") VALUES (1,'Rocciamelone','davidwallace@gmail.com',4.56489292313034,2.28244646156517,1353.053467,'PROFESSIONAL HIKER',1,2,45.1906585,7.079086,'La montagna più alta di tutta la Val di Susa e una delle più importanti di tutto il Piemonte il cui indistinguibile profilo è ben visibile dalla pianura e sovrastra l’abitato di Susa con un dislivello dalla fondovalle alla cima di oltre 3000m in meno di 10km, caso unico in Europa. Noi affronteremo la salita dal Rifugio La Riposa, seguendo la via normale, un percorso per escursionisti esperti con un buon allenamento, che garantisce soddisfazioni uniche e visuali veramente superlative.'),
  (2,'Borgo San Paolo - Borgo Cina','davidwallace@gmail.com',7.52227318688168,3.76113659344084,25.08,'TOURIST',6,6,45.045665,7.642385,'Experience this 7.6-km loop trail near Torino, Piedmont. Generally considered a moderately challenging route, it takes an average of 1 h 52 min to complete. This is a popular trail for road biking, but you can still enjoy some solitude during quieter times of day.'),
  (3,'Via Francigena Variante Valle di Susa, Segment 5: Collegno - Turin','davidwallace@gmail.com',13.2799202562651,6.63996012813255,76.48,'HIKER',7,8,45.08169,7.629895,'Get to know this 14.2-km point-to-point trail near Rivoli, Piedmont. Generally considered a moderately challenging route, it takes an average of 2 h 43 min to complete. This is a popular trail for backpacking, hiking, and mountain biking, but you can still enjoy some solitude during quieter times of day.'),
@@ -45459,4 +45471,3 @@ INSERT INTO "LINKEDPOINTS" ("IDPoint","IDHike") VALUES (1,1),
  (66,49),
  (67,50),
  (68,50);
-INSERT INTO "PREFERENCES" ("IDUser","LENGTH","ASCENT","TIME") VALUES ('davidwallace@gmail.com',2,2700,7);

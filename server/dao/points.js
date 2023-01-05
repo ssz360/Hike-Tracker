@@ -12,7 +12,7 @@ const db = require('./dao');
 //     });
 // });
 
-const linkPointToHike=(hikeId,pointId)=>new Promise((resolve,reject)=>{
+const linkPointToHike= (hikeId,pointId)=>new Promise((resolve,reject)=>{
     const sql="INSERT INTO LINKEDPOINTS(IDPoint,IDHike) VALUES(?,?)";
     db.run(sql,[pointId,hikeId],err=>{
         if(err){
@@ -38,7 +38,7 @@ function insertPoint(name, latitude, longitude, altitude, GeographicalArea, Type
     return new Promise((res, rej) => {
         console.log("In insert point with name",name,"lat",latitude,"long",longitude,"geoarea",GeographicalArea,"type",TypeOfPoint)
         if (!name || !latitude || !longitude || !GeographicalArea || !TypeOfPoint) {
-            rej("All of the 'name, coordinates, GeographicalArea, TypeOfPoint' are required.");
+            rej({status:503,message:"All of the 'name, coordinates, GeographicalArea, TypeOfPoint' are required."});
             return;
         }
 
@@ -46,7 +46,7 @@ function insertPoint(name, latitude, longitude, altitude, GeographicalArea, Type
 
         db.run(query, [name, latitude, longitude, altitude, GeographicalArea.province, GeographicalArea.region, GeographicalArea.country, TypeOfPoint, description], function (err) {
             if (err) {
-                rej(err);
+                reject({status:503,message:"Internal error"});
                 return;
             }
             res(this.lastID);
@@ -58,7 +58,7 @@ const getPointById = (id) => new Promise((resolve, reject) => {
     let sql = "SELECT * FROM POINTS WHERE IDPoint = ?";
     db.get(sql, [id], (err, row) => {
         if (err) {
-            reject(err);
+            reject({status:503,message:"Internal error"});
             return;
         }
         resolve(row);
@@ -120,7 +120,7 @@ const insertImageForPoint=async (pointId,image)=>new Promise((resolve,reject)=>{
             console.log("ERROR IN INSERT NEW IMAGE",err," FOR POINT",pointId,"WITH IMAGE",image);
             reject({status:503,message:err});
         }
-        else resolve();
+        else resolve(true);
     })
 })
 

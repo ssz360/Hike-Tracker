@@ -11,6 +11,7 @@ import { getDistance } from "geolib";
 import ServerReply from "../components/serverReply";
 import getMarkerForPoint from "../lib/markerPoint";
 import globalVariables from "../lib/globalVariables"
+import { GallerySlider } from "../components";
 import { ArrowLeft, CheckCircle, XCircle, XCircleFill, CheckCircleFill } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
@@ -108,22 +109,17 @@ function AddReferencePointMap(props) {
     )
 }
 
-
-// TODO: Add point description, add coordinates
-function ReferencePoint(props) {
-    console.log("IN REFERENCE POINT WITH", props.point)
-    useEffect(() => {
-        const getImages = async () => {
+function ReferencePoint(props){
+    useEffect(()=>{
+        const getImages=async()=>{
             try {
                 props.setWaiting(true);
-                //console.log("GETTING IMAGES");
-                const imgs = await api.getImagesPoint(props.point.id);
-                //console.log("GOT IMGS",imgs);
+                const imgs=await api.getImagesPoint(props.point.id);
                 props.setWaiting(false);
-                props.setImagesUrls([...imgs]);
+                props.setImages([...imgs]);
             } catch (error) {
                 props.setWaiting(false);
-                props.setImagesUrls([]);
+                props.setImages([]);
             }
         }
         getImages();
@@ -164,7 +160,7 @@ function AddNewReferencePoint(props) {
                             <Form.Control as="textarea" placeholder={"Description"} value={props.description} onChange={e => { props.setDescription(e.target.value); props.setOpenImages(e.target.value !== ""); }} />
                         </FloatingLabel>
 
-                        <Gallery addImage={true} preview={true} images={props.images} setImages={props.setImages} imagesUrls={props.imagesUrls} setImagesUrls={props.setImagesUrls} />
+                        <GallerySlider add={true} images={props.images} setImages={props.setImages}/>
                         <Form.Group className="my-5">
                             <div className="mx-auto my-3 d-flex flex-row-reverse">
                                 {!hoverX ?
@@ -233,30 +229,32 @@ function AddNewReferencePoint(props) {
 function AddReferencePoint(props) {
     const [pointCoord, setPointCoord] = useState();
     const [images, setImages] = useState([]);
-    const [imagesUrls, setImagesUrls] = useState([]);
     const [selectedPoint, setSelectedPoint] = useState(-1);
     const navigate = useNavigate();
     // data
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [waiting, setWaiting] = useState(false);
-    const [error, setError] = useState();
-    const [success, setSuccess] = useState(false);
-    const submitHandler = async () => {
+    const [name,setName]=useState('');
+    const [description,setDescription]=useState('');
+    const [openDescription,setOpenDescription]=useState(false);
+    const [openImages,setOpenImages]=useState(false);
+    const [waiting,setWaiting]=useState(false);
+    const [error,setError]=useState();
+    const [success,setSuccess]=useState(false);
+    const cleanup=()=>{
+        setName('');
+        setDescription('');
+        if(pointCoord!==undefined && selectedPoint===-1)    images.forEach(img=>URL.revokeObjectURL(img.url))
+        setImages([]);
+        setOpenDescription(false);
+        setOpenImages(false);
+    }
+    const submitHandler=async ()=>{
         try {
             setWaiting(true);
-            await api.addReferencePoint(props.hike.id, name, pointCoord, description, images);
+            await api.addReferencePoint(props.hike.id,name,pointCoord,description,images.map(i=>i.image));
             setWaiting(false);
             setError();
             setSuccess(true);
-            setTimeout(() => {
-                setSuccess(false);
-                setName('');
-                setDescription('');
-                setImages([]);
-                imagesUrls.forEach(img => URL.revokeObjectURL(img.url))
-                setImagesUrls([]);
-            }, 3000);
+            setTimeout(cleanup,1500);
             props.refreshHikes();
         } catch (error) {
             setWaiting(false);
@@ -265,16 +263,12 @@ function AddReferencePoint(props) {
             setTimeout(() => setError(), 3000);
         }
     }
-    useEffect(() => {
-        if (pointCoord !== undefined)
-            setSelectedPoint(-1);
-        setName('');
-        setDescription('');
-        setImages([]);
-        imagesUrls.forEach(img => URL.revokeObjectURL(img.url))
-        setImagesUrls([]);
-    }, [pointCoord, selectedPoint])
-    return (
+    useEffect(()=>{
+        if(pointCoord!==undefined) setSelectedPoint(-1);
+        cleanup();
+        return(()=>cleanup());
+    },[pointCoord,selectedPoint]);
+    return(
         <Container fluid style={{ backgroundColor: "#e0e3e5" }}>
             <Row>
                 {pointCoord === undefined && selectedPoint === (-1) ?

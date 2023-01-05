@@ -1,5 +1,5 @@
 import { Row, Col, Form, FloatingLabel, Button, Alert, Container } from 'react-bootstrap';
-import { PointMap } from '../components';
+import { GallerySlider, PointMap } from '../components';
 import services from '../lib/services';
 import { CheckCircle, GeoFill, XCircle } from 'react-bootstrap-icons'
 import { useState } from 'react';
@@ -16,19 +16,19 @@ function AddHutForm(props) {
     const [email, setEmail] = useState("");
     const [website, setWebsite] = useState("");
     const [coord, setCoord] = useState();
-    const [message, setMessage] = useState("");
     const [err, setErr] = useState();
     const [done, setDone] = useState(false);
     const [waiting, setWaiting] = useState(false);
+    const [images,setImages] = useState([]);
     const navigate = useNavigate();
     var emailValidator = require("node-email-validation");
 
     const handleSubmit = (event) => {
         event.preventDefault();
         try {
-            if (validateInfo(name, numBeds, coord, phone, email, website, setErr, emailValidator)) {
+            if (validateInfo(name, numBeds, coord, phone, email, website, setErr, emailValidator,images)) {
                 setWaiting(true);
-                props.newHut(name, description, country, numBeds, coord, phone, email, website);
+                props.newHut(name, description, country, numBeds, coord, phone, email, website,images.map(i=>i.image));
                 setWaiting(false);
                 setDone(true);
                 setTimeout(() => setDone(false), 3000);
@@ -57,6 +57,8 @@ function AddHutForm(props) {
         setPhone("");
         setEmail("");
         setWebsite("");
+        images.forEach(i=>URL.revokeObjectURL(i.url));
+        setImages([]);
     }
 
     const setCoordinateAndGetCountry = (coordinate) => {
@@ -92,7 +94,7 @@ function AddHutForm(props) {
 
 
                         {/* FORM */}
-                        <Form className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: "40%" }}>
+                        <Form className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: "60%" }}>
 
                             {/* Hut name */}
                             <FloatingLabel controlId="floatingInput" label="Name" className="mb-3">
@@ -136,6 +138,7 @@ function AddHutForm(props) {
                                 {coord !== undefined ? "Position selected!" : "Position"}
                             </Alert>
 
+                            <GallerySlider add={true} images={images} setImages={setImages}/>
                             
 
 
@@ -144,7 +147,7 @@ function AddHutForm(props) {
 
                             
                             {/* BUTTONS */}
-                            <div className="d-flex flex-row-reverse">
+                            <div className="d-flex flex-row-reverse my-3">
                                 <CheckCircle role="button" className="me-3" onClick={(handleSubmit)} type="submit" size="20px" />
                                 <XCircle role="button" className="me-3 " onClick={resetFields} variant="outline-secondary" size="20px" />
                                 {/* <ArrowLeft role="button" className="me-3" onClick={() => navigate("/hut")}  size="20px" /> */}
@@ -166,7 +169,7 @@ function isValidUrl(string) {
     }
   }
 
-const validateInfo = (name, numberOfBedrooms, coordinate, phone, email, website, setErr, emailValidator) => {
+const validateInfo = (name, numberOfBedrooms, coordinate, phone, email, website, setErr, emailValidator, images) => {
 
     if ([name, numberOfBedrooms, coordinate, phone, email].some(t => t === "" || t === undefined)) {
         setErr("All fields should be filled");
@@ -203,6 +206,11 @@ const validateInfo = (name, numberOfBedrooms, coordinate, phone, email, website,
         setErr("The coordinates should be two numbers separated by comma");
         return false;
     }*/
+
+    if(images.length===0){
+        setErr('To insert a new hut you must provide at least one image!');
+        return false;
+    }
 
     return true;
 };
