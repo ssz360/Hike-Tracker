@@ -23,11 +23,14 @@ function HikerHike(props) {
                 console.log('IN GET HIKE');
                 const hikeDetails = await api.getUnfinishedHike();
                 console.log("Received ", hikeDetails);
-                setHikeId(hikeDetails.hikeId);
-                setStartedAt(hikeDetails.start);
-                setStopped(hikeDetails.stopped);
-                setStoppedAt(hikeDetails.stoppedAt);
-                setSecsFromLastStop(hikeDetails.secsFromLastStop);
+                if(hikeDetails){
+                    setHikeId(hikeDetails.hikeId);
+                    setStartedAt(hikeDetails.start);
+                    setStopped(hikeDetails.stopped);
+                    setStoppedAt(hikeDetails.stoppedAt);
+                    setSecsFromLastStop(hikeDetails.secsFromLastStop);
+                }
+                else setHikeId(undefined)
             } catch (error) {
                 setHikeId(-1);
                 setStartedAt('');
@@ -93,9 +96,9 @@ function HikerHike(props) {
     return (
         <Alert variant='info'>
             <Alert.Heading>
-                You have an unfinished hike to complete!
+                {hikeId?'You have an unfinished hike to complete!':"You don't have any hike to complete!"}
             </Alert.Heading>
-            <Row>
+            {hikeId &&<Row>
                 <Col xs={12} md={6}>
                     <Slider className='mx-auto' {...sliderSettings} style={{ width: "85%" }}>
                         <div>
@@ -123,7 +126,7 @@ function HikerHike(props) {
                 <Col xs={12} md={6}>
                     {stoppedAt !== '' && <StopWatch stopStopwatch={stopStopwatch} resumeStopwatch={resumeStopwatch} startedAt={startedAt} stoppedAt={stoppedAt} setStoppedAt={setStoppedAt} stopped={stopped} setStopped={setStopped} secsFromLastStop={secsFromLastStop} setSecsFromLastStop={setSecsFromLastStop} />}
                 </Col>
-            </Row>
+            </Row>}
         </Alert>
     )
 }

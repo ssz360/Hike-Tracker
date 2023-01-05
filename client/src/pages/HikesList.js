@@ -1,4 +1,4 @@
-import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container, OverlayTrigger, Tooltip, Modal, Alert } from 'react-bootstrap';
+import { Col, Row, Form, Button, Card, Collapse, InputGroup, Container, OverlayTrigger, Tooltip, Modal, Alert, Placeholder } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import AreaMap from '../components/areaMap';
 import HikeMap from '../components/hikeMap';
@@ -81,7 +81,7 @@ function HikesList(props) {
   const manageUpdates = () => {
     clearTimeout(updateTimeout);// setTimeout returns the numeric ID which is used by
     // clearTimeOut to reset the timer
-    updateTimeout = setTimeout(updateCallback, 500);
+    updateTimeout = setTimeout(updateCallback, 300);
   };
 
   //if we get again in this page no filter should be on and we should see again all hikes
@@ -91,13 +91,11 @@ function HikesList(props) {
     window.addEventListener('resize', manageUpdates);
     return (() => window.removeEventListener('resize', manageUpdates));
   }, [])
-  const sleep = async ms => new Promise((resolve, reject) => setTimeout(() => resolve(), ms));
   const startHike = id => setStartingHike(id);
   const submitStartHike = async () => {
     try {
       setWaitingStartHike(true);
-      await sleep(2000);
-      await api.startHike(startingHike);
+      await api.startHike(startingHike,timeStartingHike!==''?timeStartingHike:dayjs().format('YYYY-MM-DDTHH:mm:ss'));
       setWaitingStartHike(false);
       setErrorStartHike();
       navigate('/profile/hikes');
@@ -422,7 +420,7 @@ function HikeRow(props) {
     manageUpdates();
   }, [props.updateCard]);
 
-  return (
+  if(visible) return (
     <Card className="shadow mt-3 hikes-card">
       <Card.Header className='hikecardheader'>
         <Row className='m-3 hikecardcont'>
@@ -525,6 +523,21 @@ function HikeRow(props) {
         :
         <></>}
     </Card>);
+    else return (
+      <Card className="shadow mt-3">
+        <Card.Img src='/images/placeholder.png'/>
+        <Card.Body>
+          <Placeholder as={Card.Title} animation="glow">
+            <Placeholder xs={6} />
+          </Placeholder>
+          <Placeholder as={Card.Text} animation="glow">
+            <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} />{' '}
+            <Placeholder xs={6} /> <Placeholder xs={8} />
+          </Placeholder>
+          <Placeholder.Button variant="primary" xs={6} />
+        </Card.Body>
+      </Card>
+    )
 }
 
 export default HikesList;

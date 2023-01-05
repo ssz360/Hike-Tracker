@@ -391,15 +391,16 @@ const getImagesHike = async hikeId => {
     else throw ret;
 }
 
-const startHike = async id => {
+const startHike = async (id,startTime) => {
     //throw "Cannot start hike "+id;
+    console.log()
 	const response = await fetch(APIBASE + "trip", {
 		method: "POST",
 		credentials: "include",
 		headers: {
 			"Content-type": "application/json"
 		},
-		body: JSON.stringify({ IDHike: id })
+		body: JSON.stringify({ IDHike: id,startTime:startTime })
 	});
 	const res = await response.json();
 	if (response.ok) return res;

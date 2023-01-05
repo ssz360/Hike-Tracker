@@ -1,9 +1,9 @@
 const db = require("../dao/dao");
 
-exports.addTrip = (IDHike, IDUser, ID_start_point) => {
+exports.addTrip = (IDHike, startTime, IDUser, ID_start_point) => {
 	const sql =
-		"INSERT INTO TRIPS(IDHike,IDUser,start_time,ID_last_ref,last_seg_duration,last_seg_end_time,status) VALUES(?,?,dateTime(),?,?,dateTime(),?)";
-	const params = [IDHike, IDUser, ID_start_point, 0, "Ongoing"];
+		"INSERT INTO TRIPS(IDHike,IDUser,start_time,ID_last_ref,last_seg_duration,last_seg_end_time,status) VALUES(?,?,?,?,?,?,?)";
+	const params = [IDHike, IDUser, startTime, ID_start_point, 0, startTime, "Ongoing"];
 	return new Promise((resolve, reject) => {
 		db.run(sql, params, function (err) {
 			if (err) {

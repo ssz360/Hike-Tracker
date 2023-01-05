@@ -30,12 +30,12 @@ exports.getTripsByHike = (req, res) => {
 		.catch(err => res.status(err.status).send(err.message));
 };
 
-// req.body => { IDHike }
+// req.body => { IDHike, startTime }
 exports.addTrip = async (req, res) => {
 	const ID_start_point = await DAOHikes.getHike(req.body.IDHike).then(
 		hike => hike.startPoint.id
 	);
-	DAOTrips.addTrip(req.body.IDHike, req.user.username, ID_start_point)
+	DAOTrips.addTrip(req.body.IDHike, req.body.startTime, req.user.username, ID_start_point)
 		.then(trip => res.status(200).json(trip))
 		.catch(err => {
 			res.status(err.status).send(err.message);
