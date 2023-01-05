@@ -22,7 +22,7 @@ function Glossary(props){
     </OverlayTrigger>
     </div>
     </Card.Header>
-    {!open && 
+    {open && 
         <Card.Body><h5>Glossary:</h5>
         <Table striped bordered hover style={{width: "70%"}}>
         <thead>
