@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes } from "react-router-dom";
 import AddHikeForm from "../components/addHikeForm";
 import LocalGuideHikes from "./localGuideHikes";
-import ParkingLot from "./parkingLot";
+import ParkingLot from "./ParkingLot";
 import LocalGuideHikeUpdate from './localGuideHikeUpdate';
 import AddHutForm from "./addHutForm";
 import { AddParkingLot } from "../components";
