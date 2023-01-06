@@ -20,13 +20,21 @@ describe('parkings dao', () => {
         expect(pks.length).equal(1);
     });
 
-    test('get all parking lots', async () => {
-        let p = {
-            name: 'name', coordinates: [45.0704363,7.6650265], desc: 'desc',slots:5
-        }
-        const pks = await parkings.addParking(p);
-        expect(pks).to.be.greaterThan(1);
-    })
+    test("get all parking lots", async () => {
+		let p = {
+			name: "name",
+			coordinates: [45.0704363, 7.6650265],
+			desc: "desc",
+			slots: 5,
+			description: "For Testing"
+		};
+		const pks = await parkings.addParking(p, {
+			altitude: 45.0704363,
+			geopos: { province: "Turin", region: "Piedmont", country: "Italy" }
+		});
+		// GeographicalArea.province, GeographicalArea.region, GeographicalArea.country
+		expect(pks).to.be.greaterThan(1);
+	});
 })
 
 // describe('parkings dao', () => {
