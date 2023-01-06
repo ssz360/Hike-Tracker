@@ -416,26 +416,33 @@ const startHike = async (id, startTime) => {
 };
 
 const getUnfinishedHike = async () => {
-    return {
-        hikeId: 1,
-        start: '2022-12-23 17:50:10',
-        stoppedAt: '2022-12-23 17:50:10',
-        stopped: false,
-        secsFromLastStop: 0
-    }
-}
+    const response = await fetch(APIBASE + "trip/ongoing", {
+        credentials: "include"
+    });
+    const res = await response.json();
+    if (response.ok) return res;
+    else throw res;
+};
 
-const stopResumeHike = async (stoppedAt, secsFromLastStop, stopped) => {
-    return {
-        hikeId: 1,
-        start: '2022-12-23 17:50:10',
-        'stoppedAt': stoppedAt,
-        'stopped': stopped,
+const stopResumeHike = async (stoppedAt, secsFromLastStop, stopping) => {
+    const response = await fetch(
+        APIBASE + "trip/" + (stopping ? "pause" : "resume"),
+        {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                stoppedAt: stoppedAt.replace("T", " "),
         secsFromLastStop: secsFromLastStop
+            })
     }
-}
-
-
+    );
+    const res = await response.json();
+    if (response.ok) return await getUnfinishedHike();
+    else throw res;
+};
 
 const finishHikeApi = async (stoppedAt, secsFromLastStop, timeEnded) => {
     const response = await fetch(APIBASE + 'trip/finish', {
