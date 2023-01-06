@@ -26,7 +26,6 @@ function App() {
       try {
         const h = await api.getHikesList();
         setHikes([...h]);
-        console.log(hikes);
         const usr = await api.isLogged();
         setUser(usr);
         setLogged(true);

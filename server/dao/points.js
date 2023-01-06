@@ -34,7 +34,7 @@ function insertPoint(name, latitude, longitude, altitude, GeographicalArea, Type
 
         db.run(query, [name, latitude, longitude, altitude, GeographicalArea.province, GeographicalArea.region, GeographicalArea.country, TypeOfPoint, description], function (err) {
             if (err) {
-                reject({status:503,message:"Internal error"});
+                rej({status:503,message:"Internal error"});
                 return;
             }
             res(this.lastID);

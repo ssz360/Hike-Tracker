@@ -64,7 +64,7 @@ function ParkingLot() {
 
     return (<>
         <Container fluid style={{ height: "93vh"}} >
-        <Row id="first-row" fluid style={{ height: "93vh" }}>
+        <Row id="first-row" style={{ height: "93vh" }}>
             <Col sm={2} style={{ height: "93vh", backgroundColor: "#e0e3e5" }}></Col>
             <Col  sm={10} style={{overflowY:'scroll', height:'93vh'}} >
                 <Row >

@@ -34,6 +34,7 @@ function AddParkingLot() {
             if (!coord) err += "The position was not provided. ";
             if (!geographicalArea) err += "The geographical area was not provided. ";
             if (err !== "") throw err;
+            
             const pk = {
                 "name": name,
                 "desc": description,
@@ -47,10 +48,11 @@ function AddParkingLot() {
             setSuccess(true);
             setTimeout(() => setSuccess(false), 3000);
             resetFields();
+
         } catch (err) {
             setWaiting(false);
             setSuccess(false);
-            setError(err);
+            setError(true);
             setTimeout(() => setError(false), 3000);
         }
     }

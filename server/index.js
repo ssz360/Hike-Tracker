@@ -3,10 +3,11 @@ const express = require('express');
 const fs=require('fs');
 const hikesdao = require('./dao/hikes');
 const hikes = require('./services/hikes');
-const parkings = require('./dao/parkings');
+const parkingsdao = require('./dao/parkings');
 const multer = require('multer');
 const hutsdao = require('./dao/huts');
 const huts = require('./services/huts');
+const parkings = require('./services/parkings');
 const uuid = require('uuid');
 const path = require('path');
 const app = express();
@@ -174,17 +175,6 @@ app.post('/api/newHike', isLoggedIn, upload.fields([{name:'file',maxCount:1},{na
 //     "coordinates":"41.000144, 14.534893"
 //  }
 
-/*app.post('/api/huts', async (req, res) => {
-    try {
-        const { name, description, numberOfBedrooms, coordinate, phone, email, website } = req.body;
-        const geodata = await points.getGeoAndLatitude(coordinate[0], coordinate[1]);
-        const ret = await hutsdao.insertHut(name, description, numberOfBedrooms, coordinate, geodata.geopos, geodata.altitude, phone, email, website);
-        return res.status(201).json(ret);
-    } catch (error) {
-        console.log(error);
-        res.status(error.status).json(error.message);
-    }
-});*/
 
 app.post('/api/huts',isLoggedIn, upload.array('images'), async (req, res) => {
     try {
@@ -235,9 +225,14 @@ app.post('/api/huts/list', async (req, res) => {
 // Returns the list of parkings
 
 app.get('/api/parkings', async (req, res) => {
-    parkings.getParkingsList()
-        .then(pks => { res.json(pks) })
-        .catch(() => res.status(500).json({ error: `Database error fetching the services list.` }).end());
+    try {
+        console.log(req.user)
+        const p = await parkings.getParkings(req.user);
+        return res.status(201).json(p);
+    } catch (error) {
+        console.log("Error in index new hike",error);
+        res.status(error.status).json(error.message);
+    }
 });
 
 // DESCRIPTION ===========================================================================================================
@@ -260,10 +255,11 @@ app.post('/api/parking', async (req, res) => {
     try {
         //     await parkings.addParking(pk);
         console.log("IN POST PARKING WITH ", req.body);
-        await parkings.addParking(req.body);
+        console.log(req.user);
+        await parkings.addParking(req.user, req.body);
         res.status(201).end();
     } catch (err) {
-        res.status(503).json({ error: `Database error during the creation of the parking lot` });
+        res.status(err.status).json(err.message);
     }
 });
 
@@ -401,12 +397,9 @@ app.get('/api/point/:pointId/images', async (req, res) => {
 
 app.get('/api/hike/:hikeId/images', async (req, res) => {
     try {
-        // console.log("Trying to get images for hike",req.params.hikeId);
         const ret = await hikes.getImages(req.params.hikeId);
-        // console.log("Images for hike",req.params.hikeId,"are",ret);
         return res.status(200).json(ret);
     } catch (error) {
-        // console.log("Error in getting images for hike",req.params.hikeId,"error",error);
         res.status(error.status).json(error.message);
     }
 })

@@ -7,7 +7,7 @@ import GallerySlider from "./gallerySlider";
 import React from 'react';
 
 function AddHikeForm(props) {
-    const [error, setError] = useState();
+    const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
     const [name, setName] = useState('');
     const [difficulty, setDifficulty] = useState();
@@ -47,7 +47,7 @@ function AddHikeForm(props) {
         } catch (error) {
             setWaiting(false);
             setSuccess(false);
-            setError(error);
+            setError(true);
             setTimeout(() => setError(false), 3000);
         }
     }

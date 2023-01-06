@@ -53,7 +53,10 @@ const logout = async () => {
 }
 
 async function getParkings() {
-    const response = await fetch(APIBASE + 'parkings');
+    const response = await fetch(APIBASE + 'parkings', {
+        method: 'GET',
+        credentials: 'include'
+    });
     const pks = await response.json();
     if (response.ok) return pks;
     else throw pks;
@@ -63,10 +66,13 @@ async function addParking(pk) {
     const response = await fetch(APIBASE + 'parking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pk)
+        body: JSON.stringify(pk),
+        credentials: 'include'
     });
-    if (response.ok) return;
-    else throw pk;
+    if (response.ok) 
+    return;
+    else {
+        throw response.status};
 };
 
 async function getPreferences() {
@@ -391,49 +397,49 @@ const getImagesHike = async hikeId => {
     else throw ret;
 }
 
-const startHike = async (id,startTime) => {
+const startHike = async (id, startTime) => {
     //throw "Cannot start hike "+id;
     console.log()
-	const response = await fetch(APIBASE + "trip", {
-		method: "POST",
-		credentials: "include",
-		headers: {
-			"Content-type": "application/json"
-		},
-		body: JSON.stringify({ IDHike: id,startTime:startTime })
-	});
-	const res = await response.json();
-	if (response.ok) return res;
-	else throw new Error("Cannot start hike " + id);
+    const response = await fetch(APIBASE + "trip", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify({ IDHike: id, startTime: startTime })
+    });
+    const res = await response.json();
+    if (response.ok) return res;
+    else throw new Error("Cannot start hike " + id);
 };
 
 const getUnfinishedHike = async () => {
-	const response = await fetch(APIBASE + "trip/ongoing", {
-		credentials: "include"
-	});
-	const res = await response.json();
-	if (response.ok) return res;
-	else throw res;
+    const response = await fetch(APIBASE + "trip/ongoing", {
+        credentials: "include"
+    });
+    const res = await response.json();
+    if (response.ok) return res;
+    else throw res;
 };
 
 const stopResumeHike = async (stoppedAt, secsFromLastStop, stopping) => {
-	const response = await fetch(
-		APIBASE + "trip/" + (stopping ? "pause" : "resume"),
-		{
-			method: "PUT",
-			credentials: "include",
-			headers: {
-				"Content-type": "application/json"
-			},
-			body: JSON.stringify({
-				stoppedAt: stoppedAt.replace("T", " "),
-				secsFromLastStop: secsFromLastStop
-			})
-		}
-	);
-	const res = await response.json();
-	if (response.ok) return await getUnfinishedHike();
-	else throw res;
+    const response = await fetch(
+        APIBASE + "trip/" + (stopping ? "pause" : "resume"),
+        {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                stoppedAt: stoppedAt.replace("T", " "),
+                secsFromLastStop: secsFromLastStop
+            })
+        }
+    );
+    const res = await response.json();
+    if (response.ok) return await getUnfinishedHike();
+    else throw res;
 };
 
 const api = {
