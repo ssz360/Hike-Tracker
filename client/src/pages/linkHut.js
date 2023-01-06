@@ -1,63 +1,68 @@
 import { useEffect, useState } from "react";
-import { Container, Row,Col } from "react-bootstrap";
-import HikeMapLink from "../components/hikeMapLink";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import HikeMapLinkHut from "../components/hikeMapLinkHut";
 import SelectLinkHut from "../components/selectLinkHut";
-import SelectPointStartEnd from "../components/selectPointStartEnd";
 import api from "../lib/api";
-import Hike from "../lib/hike";
+import { ArrowLeft } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
+import React from 'react';
 
 
-function LinkHut(props){
-    const [selectedPoint,setSelectedPoint]=useState(-1);
-    const [submit,setSubmit]=useState(false);
-    const [bounds,setBounds]=useState([[0,0],[0.1,0.1]]);
-    const [linkableHuts,setLinkableHuts]=useState([]);
-    useEffect(()=>{
-        const linkableHuts=async ()=>{
+function LinkHut(props) {
+    const [selectedPoint, setSelectedPoint] = useState(-1);
+    const [submit, setSubmit] = useState(false);
+    const [bounds, setBounds] = useState([[0, 0], [0.1, 0.1]]);
+    const [linkableHuts, setLinkableHuts] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const linkableHuts = async () => {
             try {
-                const newPoints=await api.getLinkableHuts(props.hike.id);
+                const newPoints = await api.getLinkableHuts(props.hike.id);
                 setLinkableHuts([...newPoints]);
             } catch (error) {
-                console.log("ERROR IN USEEFFECT GET POINTS IN BOUNDS",error);
+                console.log("ERROR IN USEEFFECT GET POINTS IN BOUNDS", error);
             }
         }
         linkableHuts();
-    },[]);
-    console.log("IN LINK POINT START END WITH HIKE",props.hike,"selected point",selectedPoint,"linkable huts",linkableHuts);
-    const linkHut=async linkType=>{
+    }, []);
+    console.log("IN LINK POINT START END WITH HIKE", props.hike, "selected point", selectedPoint, "linkable huts", linkableHuts);
+    const linkHut = async linkType => {
         try {
-            await api.linkHut(props.hike.id,selectedPoint,linkType);
-            await props.refreshHikes();//props.hike,points.find(p=>p.id===selectedPoint),linkType);
-            const newPoints=await api.getLinkableHuts(props.hike.id);
+            await api.linkHut(props.hike.id, selectedPoint, linkType);
+            await props.refreshHikes();
+            const newPoints = await api.getLinkableHuts(props.hike.id);
             setLinkableHuts([...newPoints]);
         } catch (error) {
-            console.log("Error in linkpoint",error);
+            console.log("Error in linkpoint", error);
         }
     }
-    if(submit || selectedPoint===(-1)){
-        return(
-            <div className="justify-content-center my-4">
-                <HikeMapLinkHut setBounds={setBounds} bounds={bounds} hike={props.hike} height={"70vh"} selectedPoint={selectedPoint} setSelectedPoint={setSelectedPoint} linkableHuts={linkableHuts}/>
-            </div>
-        )
-    }
-    else{
-        return(
-            <div className="justify-content-center my-4">
-                <Container fluid>
-                    <Row>
-                        <Col xs={12} md={8}>
-                            <HikeMapLinkHut hike={props.hike} height={"70vh"} selectedPoint={selectedPoint} setSelectedPoint={setSelectedPoint} setBounds={setBounds} bounds={bounds} linkableHuts={linkableHuts}/>
-                        </Col>
-                        <Col xs={12} md={4}>
-                            <SelectLinkHut linkHut={linkHut} hike={props.hike} startPoint={props.hike.startPoint} endPoint={props.hike.endPoint} point={[...linkableHuts,...props.hike.huts].find(p=>p.id===selectedPoint)} setSubmit={setSubmit}/>
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
-        )
-    }
+
+    return (
+        <Container fluid style={{ backgroundColor: "#e0e3e5" }}>
+            <Row>
+                <Col xs={12} md={4}>
+                    <ArrowLeft role="button" className="me-3" onClick={() => navigate("/localGuide/hikes")} size="20px" />
+                    <Card className="shadow my-4">
+                        <div className="my-4 mx-4">
+                            <h4>Link hut</h4>
+                            {
+                                (submit || selectedPoint === (-1)) ?
+                                    <span>
+                                        <i>Select a hut to link (or unlink) it to this hike</i>
+                                    </span>
+                                    :
+                                    <SelectLinkHut linkHut={linkHut} hike={props.hike} startPoint={props.hike.startPoint} endPoint={props.hike.endPoint} point={[...linkableHuts, ...props.hike.huts].find(p => p.id === selectedPoint)} setSubmit={setSubmit} />
+                            }
+                        </div>
+                    </Card>
+                </Col>
+                <Col xs={12} md={8}>
+                    <HikeMapLinkHut hike={props.hike} height={"70vh"} selectedPoint={selectedPoint} setSelectedPoint={setSelectedPoint} setBounds={setBounds} bounds={bounds} linkableHuts={linkableHuts} />
+                </Col>
+            </Row>
+        </Container>
+    )
 }
 
 export default LinkHut;

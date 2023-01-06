@@ -75,6 +75,7 @@
   overflow: hidden;
   border-radius: 10px 10px 0 0;
 }
+
 .imggallerybody {
   height: 100%;
   width: 100%;
@@ -93,12 +94,12 @@
 
 #imggallery {
   display: flex;
-  gap: 4vmin;
+  gap: 1vmin;
 }
 
 #imggallery > .cardimages > .image {
-  width: 14vmin;
-  height: 20vmin;
+  width: 18vmin;
+  height: 15vmin;
   object-fit: cover;
   object-position: center;
 }
@@ -120,7 +121,7 @@
 
 .cardimages:hover .cardimagesoverlay {
   display: block;
-  box-shadow: 0 0 1rem red;
+  /* box-shadow: 0 0 1rem grey; */
 }
 
 .cardimages {
@@ -151,15 +152,17 @@
 }
 
 .cardoverlayimageremove {
-  width: 100%;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }
 
 .cardoverlayimageremove > .bi {
   fill: red;
 }
 
-.cardoverlayimageremove:hover > .bi {
-  fill: white;
+.cardoverlayimageremove:hover {
+  color: rgba(255, 255, 255, 0.699);
 }
 
 .cardoverlayimagezoom > .bi {

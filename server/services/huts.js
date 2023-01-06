@@ -16,7 +16,6 @@ const addHut=async (user,body,images)=>{
         }
         return ret;
     } catch (error) {
-        //console.log("Error in add hut",error);
         throw {status:error.status,message:error.message};
     }
 }

@@ -1,7 +1,8 @@
 const db = require('./dao');
 const { insertPoint, getGeoArea } = require('./points');
-const points = require('../services/points');
-exports.getParkingsList = async () => new Promise((resolve, reject) => {
+
+
+const getParkingsList = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM PARKINGS AS P JOIN POINTS AS M ON P.IDPoint = M.IDPoint'
     db.all(sql, [], (err, row) => {
         if (err) {
@@ -13,18 +14,20 @@ exports.getParkingsList = async () => new Promise((resolve, reject) => {
     });
 });
 
-exports.addParking = async (pk) => {
+const addParking = async (pk, geodata) => {
+    console.log("IN ADDPARKING DAO");
+    console.log(pk);
+    console.log(geodata);
     try {
-        const geodata=await points.getGeoAndLatitude(pk.coordinates[0],pk.coordinates[1]);
         return new Promise((resolve, reject) => {
 
 
             const sql = 'INSERT INTO PARKINGS(IDPoint,SlotsTot,SlotsFull) VALUES(?,?,?)';
     
-            insertPoint(pk.name, pk.coordinates[0],pk.coordinates[1], geodata.altitude, geodata.geopos, 'parking',pk.desc).then(pointId => {
+            insertPoint(pk.name, pk.coordinates[0],pk.coordinates[1], geodata.altitude, geodata.geopos, 'parking', pk.description).then(pointId => {
                 db.run(sql, [pointId, pk.slots, 0], function (err) {
                     if (err) {
-                        reject(err);
+                        reject({status: 500, message: err.toString()});
                         return;
                     }
                     resolve(this.lastID);
@@ -35,3 +38,6 @@ exports.addParking = async (pk) => {
         throw error;
     }
 };
+
+const parkings = {addParking, getParkingsList}
+module.exports = parkings;

@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Row, Col, Form, ListGroup, Container } from 'react-bootstrap';
+import { useEffect } from 'react';
+import { Row, Col, ListGroup, Container } from 'react-bootstrap';
 import { Link, Routes, Route, useLocation } from 'react-router-dom';
-import api from '../lib/api';
 import { ProfileDashboard, ProfilePreferences } from '../components';
 import ProfileHikes from '../components/profileHikes';
+import React from 'react';
 
 function Sidebar() {
-
     const location = useLocation();
     const path = location.pathname;
 
@@ -25,22 +24,17 @@ function Profile(props) {
     },[]);
 
     return(<>
-        {/* <Row className="px-0 mx-0 ">
-            <Col>
-                <h1 className="mx-4 my-4">Profile settings</h1>
-            </Col>
-        </Row> */}
         <Container fluid>
             <Row style={{height:"100vh"}}>
-                <Col xs={12} sm={2} style={{background:"#dde"}}>
+                <Col sm={2} xs={12}  style={{background:"#e0e3e5"}}>
                     <Row>
-                        <Col>
+                        <Col className='my-4'>
                             <h3 className="mx-auto my-2">Profile settings</h3>
                         </Col>
                     </Row>
                     <Sidebar/>
                 </Col>
-                <Col xs={12} sm={10} className="mx-auto mb-4">
+                <Col sm={10} xs={12} md={6} className="mx-auto mb-4">
                     <Routes>
                         <Route path="/dashboard" element={<ProfileDashboard/>}/>
                         <Route path="/preferences" element={<ProfilePreferences/>}/>

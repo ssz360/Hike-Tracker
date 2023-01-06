@@ -122,9 +122,5 @@ const getImages = async hikeId => {
     }
 }
 
-const finishHike = async (time, timeOnClock) => {
-    console.log(time);
-}
-
-const hikes = { newHike, hikesInBounds, addReferencePoint, getMap, getHikes, getHikesFilters, getImages, finishHike };
+const hikes = { newHike, hikesInBounds, addReferencePoint, getMap, getHikes, getHikesFilters, getImages };
 module.exports = hikes;

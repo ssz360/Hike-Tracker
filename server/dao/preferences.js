@@ -19,7 +19,6 @@ exports.addUpdateReference = (obj) => {
         let sql = 'INSERT INTO PREFERENCES(IDUser,MIN_LENGTH,MAX_LENGTH,MIN_ASCENT,MAX_ASCENT,MIN_TIME,MAX_TIME) VALUES(?,?,?,?,?,?,?)';
 
         if (!oldPreferences) {
-            // check if user exists
             userDao.getUserType(obj.IDUser).then((type) => {
                 if (!type) {
                     reject({ status: 404, message: 'user not found' });

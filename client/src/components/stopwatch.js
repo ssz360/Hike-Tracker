@@ -1,9 +1,8 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { useEffect, useState } from 'react';
-import { Button, Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
-import api from "../lib/api";
-
+import { Col, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
+import React from 'react';
 dayjs.extend(duration);
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
@@ -22,7 +21,7 @@ const describeArc = (x, y, radius, startAngle, endAngle) => {
 }
 
 function StopWatch(props) {
-    const [time, setTime] = useState(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
+    const [ , setTime] = useState(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
 
     useEffect(() => {
         const interval = setInterval(() => setTime(dayjs().format('YYYY-MM-DDTHH:mm:ss')), 1000);
@@ -37,19 +36,6 @@ function StopWatch(props) {
     const getMinutes = () => dayjs.duration(dayjs(props.stopped ? props.stoppedAt : dayjs()).diff(dayjs(props.stoppedAt), 'seconds'), 'seconds').add(props.secsFromLastStop, 'seconds').minutes();
     const getSeconds = () => dayjs.duration(dayjs(props.stopped ? props.stoppedAt : dayjs()).diff(dayjs(props.stoppedAt), 'seconds'), 'seconds').add(props.secsFromLastStop, 'seconds').seconds();
     const getTotalSeconds = () => dayjs.duration(dayjs(props.stopped ? props.stoppedAt : dayjs()).diff(dayjs(props.stoppedAt), 'seconds'), 'seconds').add(props.secsFromLastStop, 'seconds').asSeconds();
-
-    async function finishHike(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const time = dayjs().format('YYYY-MM-DDTHH:mm:ss');
-        if (!props.stopped) {
-            const timeOnClock = getTotalSeconds();
-            props.stopStopwatch(time, timeOnClock);
-
-            await api.finishHikeApi(time, timeOnClock);
-        }
-    }
-
     return (
         <Row>
             <Col>
@@ -105,8 +91,8 @@ function StopWatch(props) {
             <Col>
                 <div className='text-center'><strong>Time spent on breaks:</strong></div>
                 <div className='text-center mt-2'><svg width="100" height="100" viewBox="0 0 300 300">
-                    <path stroke="#2c3e50" strokeWidth="9" d={!props.stopped?"M 150 15 L 150 15 150 25":"M 150 5 L 150 5 150 25"} />
-                    <path stroke="#2c3e50" strokeWidth="9" d={describeArc(150, 150, !props.stopped?135:145, 351, 9)} />
+                    <path stroke="#2c3e50" strokeWidth="9" d={!props.stopped ? "M 150 15 L 150 15 150 25" : "M 150 5 L 150 5 150 25"} />
+                    <path stroke="#2c3e50" strokeWidth="9" d={describeArc(150, 150, !props.stopped ? 135 : 145, 351, 9)} />
                     <path fill="#85c1e9" stroke="#d35400" strokeWidth="7" d={describeArc(150, 150, 125, 0, 359.99)} />
                     <path fill="none" stroke="#2c3e50" strokeWidth="5" d={describeArc(150, 150, 100, 0, getBreakSeconds() * 360 / 60)} />
                     <path fill="none" stroke="#16a085" strokeWidth="7" d={describeArc(150, 150, 112, 0, getBreakMinutes() * 360 / 60)} />

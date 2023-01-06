@@ -1,11 +1,9 @@
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, useMap,useMapEvents,Circle } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap, Circle } from 'react-leaflet'
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
-import { getDistance } from 'geolib';
 import globalVariables from "../lib/globalVariables";
-
-const KMFROLAT=110574;
+import React from 'react';
 
 const POSITION_CLASSES = {
     bottomleft: 'leaflet-bottom leaflet-left',
@@ -16,37 +14,12 @@ const POSITION_CLASSES = {
 
 function CenterMapDrag(props){
     const [edit,setEdit]=useState(false);
-    const [control,setControl]=useState(false);
+    const [ ,setControl]=useState(false);
     const map=useMap();
     if(edit)    map.dragging.disable();
     else    map.dragging.enable();
-    const [selecting,setSelecting]=useState(false);
-    const mapev=useMapEvents({
-        mousedown: e =>{
-            if(edit && !control){
-                if(props.center!==undefined && !selecting){
-                    props.setRadius(0);
-                    props.setCenter(e.latlng);
-                    setSelecting(true);
-                }
-                else if(props.center===undefined && !selecting){
-                    props.setCenter(e.latlng);
-                    setSelecting(true);
-                }
-            }
-        },
-        mousemove: e =>{
-            if(edit && props.center!==undefined && selecting){
-                props.setRadius(Math.abs(e.latlng.lat-props.center.lat)*KMFROLAT);
-            }
-        },
-        mouseup: e=>{
-            if(edit) setSelecting(false);
-        },
-        mouseout: e=>{
-            if(edit) setSelecting(false);
-        }
-    });
+    const [selecting, ]=useState(false);
+    
     return (<>
         <div className={POSITION_CLASSES.topleft}>
             <div className="leaflet-control">
@@ -80,42 +53,12 @@ function CenterMapDrag(props){
 
 function CenterMapClick(props){
     const [edit,setEdit]=useState(false);
-    const [control,setControl]=useState(false);
+    const [ ,setControl]=useState(false);
     const map=useMap();
     if(edit)    map.dragging.disable();
     else    map.dragging.enable();
-    const [selecting,setSelecting]=useState(false);
-    const mapev=useMapEvents({
-        mousedown: e =>{
-            if(edit && !control){
-                if(props.center!==undefined && !selecting){
-                    props.setRadius(0);
-                    props.setCenter(e.latlng);
-                }
-                else if(props.center===undefined && !selecting){
-                    props.setCenter(e.latlng);
-                }
-                else if(selecting){
-                    setSelecting(false);
-                    setEdit(false);
-                }
-            }
-        },
-        mousemove: e =>{
-            if(edit && props.center!==undefined && selecting){
-                props.setRadius(getDistance({latitude:e.latlng.lat,longitude:e.latlng.lng},{latitude:props.center.lat,longitude:props.center.lng}));
-            }
-        },
-        mouseup: e=>{
-            if(edit && !selecting) setSelecting(true);
-        },
-        mouseout: e=>{
-            if(edit && selecting){
-                setSelecting(false);
-                setEdit(false);
-            }
-        }
-    });
+    const [selecting, ]=useState(false);
+
     return (<>
         <div className={POSITION_CLASSES.topright}>
             <div className="leaflet-control">

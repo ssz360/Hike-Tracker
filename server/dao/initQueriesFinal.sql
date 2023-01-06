@@ -96,8 +96,21 @@ CREATE TABLE IF NOT EXISTS "PREFERENCES" (
 	"MAX_TIME" INTEGER,
 	FOREIGN KEY("IDUser") REFERENCES "USERS"("Username")
 );
-
-
+CREATE TABLE "TRIPS" (
+	"IDTrip"	INTEGER NOT NULL UNIQUE,
+	"IDHike"	INTEGER NOT NULL,
+	"IDUser"	TEXT NOT NULL,
+	"start_time"	TEXT NOT NULL,
+	"end_time"	TEXT,
+	"ID_last_ref"	INTEGER NOT NULL,
+	"status"	TEXT NOT NULL,
+	"last_seg_duration"	INTEGER NOT NULL,
+	"last_seg_end_time"	TEXT NOT NULL,
+	PRIMARY KEY("IDTrip" AUTOINCREMENT),
+	FOREIGN KEY("IDUser") REFERENCES "USERS"("Username"),
+	FOREIGN KEY("ID_last_ref") REFERENCES "POINTS"("IDPoint"),
+	FOREIGN KEY("IDHike") REFERENCES "HIKES"("IDHike")
+);
 INSERT INTO "HIKES" ("IDHike","Name","Author","Length","ExpectedTime","Ascent","Difficulty","StartPoint","EndPoint","CenterLat","CenterLon","Description") VALUES (1,'Rocciamelone','davidwallace@gmail.com',4.56489292313034,2.28244646156517,1353.053467,'PROFESSIONAL HIKER',1,2,45.1906585,7.079086,'La montagna più alta di tutta la Val di Susa e una delle più importanti di tutto il Piemonte il cui indistinguibile profilo è ben visibile dalla pianura e sovrastra l’abitato di Susa con un dislivello dalla fondovalle alla cima di oltre 3000m in meno di 10km, caso unico in Europa. Noi affronteremo la salita dal Rifugio La Riposa, seguendo la via normale, un percorso per escursionisti esperti con un buon allenamento, che garantisce soddisfazioni uniche e visuali veramente superlative.'),
  (2,'Borgo San Paolo - Borgo Cina','davidwallace@gmail.com',7.52227318688168,3.76113659344084,25.08,'TOURIST',6,6,45.045665,7.642385,'Experience this 7.6-km loop trail near Torino, Piedmont. Generally considered a moderately challenging route, it takes an average of 1 h 52 min to complete. This is a popular trail for road biking, but you can still enjoy some solitude during quieter times of day.'),
  (3,'Via Francigena Variante Valle di Susa, Segment 5: Collegno - Turin','davidwallace@gmail.com',13.2799202562651,6.63996012813255,76.48,'HIKER',7,8,45.08169,7.629895,'Get to know this 14.2-km point-to-point trail near Rivoli, Piedmont. Generally considered a moderately challenging route, it takes an average of 2 h 43 min to complete. This is a popular trail for backpacking, hiking, and mountain biking, but you can still enjoy some solitude during quieter times of day.'),

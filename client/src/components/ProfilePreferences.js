@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Form, Row, Col, InputGroup, Card, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
-import { } from 'react-router-dom';
+import {Row, Col, InputGroup, Card, Button } from 'react-bootstrap';
 import api from '../lib/api';
-import { MultiRangeSliderHooked } from './';
+import { MultiRangeSliderHooked } from '.';
+import React from 'react';
 
 function Preferences() {
     const [lenMin, setLenMin] = useState(0);
@@ -52,16 +52,6 @@ function Preferences() {
             </Row>
             <Row className="mb-4">
                 <InputGroup className="mb-4">
-                    {/* <MultiRangeSlider
-                        min={0}
-                        max={40}
-                        onChange={({ min, max }) => {setLenMin(min); setLenMax(max);}}
-                    /> */}
-                    {/* <Form.Label>0</Form.Label>
-                    <Form.Label className="ms-auto">40</Form.Label> */}
-                    {/* <OverlayTrigger placement="top" overlay={<Tooltip>{lenMax}</Tooltip>}> */}
-                        {/* <Form.Range min={0} max={40} value={lenMax} onChange={(val) => setLenMax(val.target.value)} title={lenMax}/> */}
-                    {/* </OverlayTrigger> */}
                     <MultiRangeSliderHooked
                         defaultMin={0}
                         defaultMax={40}
@@ -77,16 +67,6 @@ function Preferences() {
             </Row>
             <Row className="mb-4">
                 <InputGroup className="mb-4">
-                    {/* <MultiRangeSlider
-                        min={0}
-                        max={4000}
-                        onChange={({ min, max }) => {setAscMin(min); setAscMax(max);}}
-                    /> */}
-                    {/* <Form.Label>0</Form.Label>
-                    <Form.Label className="ms-auto">4000</Form.Label> */}
-                    {/* <OverlayTrigger placement="top" overlay={<Tooltip>{ascMax}</Tooltip>}> */}
-                        {/* <Form.Range min={0} max={4000} step={50} value={ascMax} onChange={(val) => setAscMax(val.target.value)} title={ascMax}/> */}
-                    {/* </OverlayTrigger> */}
                     <MultiRangeSliderHooked
                         defaultMin={0}
                         defaultMax={4000}
@@ -102,16 +82,6 @@ function Preferences() {
             </Row>
             <Row className="mb-4">
                 <InputGroup className="mb-4">
-                    {/* <MultiRangeSlider
-                        min={0}
-                        max={15}
-                        onChange={({ min, max }) => {setTimeMin(min); setTimeMax(max);}}
-                    /> */}
-                    {/* <Form.Label>0</Form.Label>
-                    <Form.Label className="ms-auto">15</Form.Label> */}
-                    {/* <OverlayTrigger placement="top" overlay={<Tooltip>{timeMax}</Tooltip>}> */}
-                        {/* <Form.Range min={0} max={15} value={timeMax} onChange={(val) => setTimeMax(val.target.value)} title={timeMax}/> */}
-                    {/* </OverlayTrigger> */}
                     <MultiRangeSliderHooked
                         defaultMin={0}
                         defaultMax={24}
