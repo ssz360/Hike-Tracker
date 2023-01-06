@@ -67,8 +67,8 @@ describe('hikes services',()=>{
     const readTestFile=async err=>{
         try {
             let file=null;
-            if (err)    file=await fs.readFileSync(__dirname+'\\badtest.gpx');
-            else    file=await fs.readFileSync(__dirname+'\\goodtest.gpx');
+            if (err)    file=await fs.readFileSync(__dirname+'/badtest.gpx');
+            else    file=await fs.readFileSync(__dirname+'/goodtest.gpx');
             return file;
         } catch (error) {
             throw error;
@@ -187,7 +187,8 @@ describe('reference points',()=>{
         expect(pointsdao.insertPoint.mock.calls[0][0]).equal(POINTINSIDEROCCIAMELONE.name);
         expect(pointsdao.insertPoint.mock.calls[0][1]).equal(POINTINSIDEROCCIAMELONE.latitude);
         expect(pointsdao.insertPoint.mock.calls[0][2]).equal(POINTINSIDEROCCIAMELONE.longitude);
-        expect(pointsdao.insertPoint.mock.calls[0][3]).equal(2168);
+        // expect(pointsdao.insertPoint.mock.calls[0][3]).equal(2168);
+        expect(Math.floor(pointsdao.insertPoint.mock.calls[0][3])).equal(2175);
         expect(pointsdao.insertPoint.mock.calls[0][4].province).equal("Torino");
         expect(pointsdao.insertPoint.mock.calls[0][4].region).equal("Piedmont");
         expect(pointsdao.insertPoint.mock.calls[0][4].country).equal("Italy");

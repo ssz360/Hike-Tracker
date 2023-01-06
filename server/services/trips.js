@@ -25,7 +25,7 @@ exports.getTripsByUser = (req, res) => {
 
 // req.params.idHike
 exports.getTripsByHike = (req, res) => {
-	DAOTrips.getTripsByHike(req.params.idHike)
+	DAOTrips.getAllTripsByHike(req.params.idHike)
 		.then(trips => res.status(200).json(trips))
 		.catch(err => res.status(err.status).send(err.message));
 };

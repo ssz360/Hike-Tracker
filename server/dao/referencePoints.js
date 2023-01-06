@@ -6,7 +6,7 @@ exports.getReferencesPoints = IDHike => {
 	return new Promise((resolve, reject) => {
 		const query = "SELECT * FROM LINKEDPOINTS WHERE IDHike = ?";
 		db.all(query, [IDHike], function (err, rows) {
-			if (err) reject(err);
+			if (err) reject({ status: 500, message: err.toString() });
 			else
 				resolve(
 					rows.map(row => {
@@ -21,23 +21,26 @@ exports.createReferencePoint = (IDPoint, IDHike) => {
 	return new Promise((resolve, reject) => {
 		const query = "INSERT INTO LINKEDPOINTS(IDPoint, IDHike) VALUES (?, ?)";
 		db.run(query, [IDPoint, IDHike], function (err) {
-			if (err) reject(err);
+			if (err) reject({ status: 500, message: err.toString() });
 			else resolve(this.lastID);
 		});
 	});
 };
 
-exports.getHikeById = async IDHike => {
+exports.deleteReferencePoint = (IDPoint, IDHike) => {
 	return new Promise((resolve, reject) => {
-		const query = "SELECT * FROM HIKES WHERE IDHike = ?";
-		db.get(query, [IDHike], function (err, row) {
-			if (err) {
-				reject(err);
-				return;
-			} else if (!row) {
-				reject(404);
-				return;
-			} else resolve(row);
+		const query =
+			"DELETE FROM LINKEDPOINTS WHERE IDPoint = ? AND IDHike = ?";
+		db.run(query, [IDPoint, IDHike], function (err) {
+			if (err) reject({ status: 500, message: err.toString() });
+			else {
+				if (this.changes === 0)
+					reject({
+						status: 404,
+						message: "Reference point not found."
+					});
+				else resolve(this.changes);
+			}
 		});
 	});
 };

@@ -39,7 +39,7 @@ const newHike = async (user, body, file, images) => {
         console.log('NEW HIKE   user', user, 'body', body, 'gpx file', file, 'images', images);
         if (user.type !== "localGuide") throw { status: 401, message: "This type of user can't describe a new hike" };
         if (typeof (body.name) !== "string" || typeof (body.description) !== "string" || typeof (body.difficulty) !== "string") throw { status: 422, message: "Bad parameters" };
-        if (images.length === 0) throw { status: 422, message: "To insert a new hike you must provide at least one image!" };
+        if (!Array.isArray(images) || images.length === 0) throw { status: 422, message: "To insert a new hike you must provide at least one image!" };
         const bufffile = fs.readFileSync(__dirname + '/../tmp/' + file.filename);
         const gpx = new gpxParser(); gpx.parse(bufffile);
         if (gpx.tracks[0] === undefined) throw { status: 422, message: "The gpx file provided is not a valid one" }

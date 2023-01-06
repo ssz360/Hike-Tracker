@@ -3,7 +3,15 @@ const db = require("../dao/dao");
 exports.addTrip = (IDHike, startTime, IDUser, ID_start_point) => {
 	const sql =
 		"INSERT INTO TRIPS(IDHike,IDUser,start_time,ID_last_ref,last_seg_duration,last_seg_end_time,status) VALUES(?,?,?,?,?,?,?)";
-	const params = [IDHike, IDUser, startTime, ID_start_point, 0, startTime, "Ongoing"];
+	const params = [
+		IDHike,
+		IDUser,
+		startTime,
+		ID_start_point,
+		0,
+		startTime,
+		"Ongoing"
+	];
 	return new Promise((resolve, reject) => {
 		db.run(sql, params, function (err) {
 			if (err) {
@@ -63,7 +71,7 @@ exports.getAllTripsByUser = IDUser => {
 	});
 };
 
-exports.getTripsByHike = IDHike => {
+exports.getAllTripsByHike = IDHike => {
 	const sql = "SELECT * FROM TRIPS WHERE IDHike = ?";
 	return new Promise((resolve, reject) => {
 		db.all(sql, [IDHike], (err, rows) => {
@@ -86,7 +94,12 @@ exports.pauseTrip = (IDTrip, lastSegDuration, lastSegEndTime) => {
 				if (err) {
 					reject({ status: 500, message: err.toString() });
 					return;
-				} else resolve(this.lastID);
+				} else {
+					if (this.changes === 0) {
+						reject({ status: 404, message: "Trip not found" });
+						return;
+					} else resolve(this.lastID);
+				}
 			}
 		);
 	});
@@ -100,7 +113,12 @@ exports.resumeTrip = (IDTrip, lastSegEndTime) => {
 			if (err) {
 				reject({ status: 500, message: err.toString() });
 				return;
-			} else resolve(this.lastID);
+			} else {
+				if (this.changes === 0) {
+					reject({ status: 404, message: "Trip not found" });
+					return;
+				} else resolve(this.lastID);
+			}
 		});
 	});
 };

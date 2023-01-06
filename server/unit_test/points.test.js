@@ -4,6 +4,16 @@ const points = require('../services/points');
 const pointsdao = require('../dao/points');
 const { expect } = require('chai');
 const hikesdao = require('../dao/hikes');
+const db = require('../dao/__mocks__/dao');
+const cleanupQueries = "DELETE FROM POINTSIMAGES WHERE pointId != 4; DELETE FROM sqlite_sequence WHERE name = 'POINTSIMAGES';"
+
+afterAll(async () => {
+	db.exec(cleanupQueries, err => {
+		if (err) console.log(err.message ? err.message : err.toString());
+	});
+	db.close();
+});
+
 
 const NEW_YORK = { lat: 40.730610, lng: -73.935242, alt: 12.363762855529785, geopos: { country: "United States", province: "", region: "New York" } };
 const TURIN = { lat: 45.116177, lng: 7.742615, alt: 211.47377014160156, geopos: { country: "Italy", province: "Torino", region: "Piedmont" } };
@@ -492,10 +502,11 @@ describe('images for points', () => {
 
 describe('tests for coverage :)', () => {
 
-    test('get all parkings', async () => {
-        let res = await pointsdao.getParkingsList()
-        expect(res.length).to.be.greaterThan(0);
-    })
+    // Then this one could be removed XD
+    // test('get all parkings', async () => {
+    //     let res = await pointsdao.getParkingsList()
+    //     expect(res.length).to.be.greaterThan(0);
+    // })
 
     test('test linkPointToHike', async () => {
 

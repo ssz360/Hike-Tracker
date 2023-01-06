@@ -3,7 +3,7 @@ const { insertPoint, getGeoArea } = require('./points');
 
 
 
-getHutsList = async () => new Promise((resolve, reject) => {
+const getHutsList = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint'
     db.all(sql, [], (err, row) => {
         if (err) {
@@ -15,7 +15,7 @@ getHutsList = async () => new Promise((resolve, reject) => {
     });
 });
 
-getHutsListWithFilters = async (name, country, numberOfBedrooms, geographicalArea) => new Promise((resolve, reject) => {
+const getHutsListWithFilters = async (name, country, numberOfBedrooms, geographicalArea) => new Promise((resolve, reject) => {
     console.log("IN HUTS FILTERS WITH NAME",name,"COUNTRY",country,"NUMBEROFBEDS",numberOfBedrooms,"Geogr",geographicalArea);
     let thisName = name==null? '%' : "%" + name + "%";
     let thisCountry = country==null? '%' : country;
@@ -23,7 +23,7 @@ getHutsListWithFilters = async (name, country, numberOfBedrooms, geographicalAre
     let thisProvince = geographicalArea==null? '%' : geographicalArea;
     let thisRegion= geographicalArea==null? '%' : geographicalArea;
         
-    const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint AND UPPER(P.Name) LIKE UPPER(?) AND UPPER(Country) LIKE UPPER(?) AND UPPER(TypeOfPoint) = UPPER(?) AND NumberOfBedrooms>=? AND UPPER(Province) LIKE UPPER(?) AND UPPER(Region) LIKE UPPER(?)'
+    const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint AND UPPER(P.Name) LIKE UPPER(?) AND UPPER(Country) LIKE UPPER(?) AND UPPER(TypeOfPoint) = UPPER(?) AND NumberOfBedrooms>=? AND (UPPER(Province) LIKE UPPER(?) OR UPPER(Region) LIKE UPPER(?))'
 
     db.all(sql, [thisName, thisCountry, "hut", thisNumberOfBedrooms, thisProvince, thisRegion], (err, row) => {
         if (err) {
