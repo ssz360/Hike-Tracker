@@ -55,7 +55,7 @@ function GallerySlider(props){
                 <Col xs={6} sm={4} className='justify-content-center mx-auto my-2'>
                     <div className="addimagecontainer">
                         <img src="/images/brown.png" alt="alt" className="img-fluid addimageimg"/>
-                        <span class="material-icons-round md-36 addimagelogo" onClick={e=>{
+                        <span className="material-icons-round md-36 addimagelogo" onClick={e=>{
                             e.preventDefault();
                             e.stopPropagation();
                             openFileUpload();
@@ -73,7 +73,7 @@ function GallerySlider(props){
                         <div key={i.url} className="slidecont">
                             <img alt="alt" src={i.url} id={i.url} className='img-fluid slideimg'/>
                             <div className="slideoverlay">
-                                <span class="material-icons-round md-36 slidefullscreen" onClick={e=>{
+                                <span className="material-icons-round md-36 slidefullscreen" onClick={e=>{
                                         e.preventDefault();
                                         e.stopPropagation();
                                         setFullScreenUrl(i.url)
@@ -81,7 +81,7 @@ function GallerySlider(props){
                                     open_in_full
                                 </span>
                                 {props.add && 
-                                    <span class="material-icons-round md-36 slidedelete" onClick={e=>{
+                                    <span className="material-icons-round md-36 slidedelete" onClick={e=>{
                                         e.preventDefault();
                                         e.stopPropagation();
                                         removeImage(i.url)

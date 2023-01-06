@@ -61,3 +61,16 @@ exports.resumeTrip = async (req, res) => {
 		.then(trip => res.status(200).json(trip))
 		.catch(err => res.status(err.status).send(err.message));
 };
+
+// req.body.secsFromLastStop,
+// req.body.stoppedAt,
+// req.body.timeEnded
+exports.finishTrip = async (req, res) => {
+	const currentTrip = await DAOTrips.getCurrentTrip(req.user.username);
+	DAOTrips.finishTrip(currentTrip.IDTrip,
+		req.body.secsFromLastStop,
+		req.body.stoppedAt,
+		req.body.timeEnded)
+		.then(trip => res.status(200).json(trip))
+		.catch(err => res.status(err.status).send(err.message));
+};

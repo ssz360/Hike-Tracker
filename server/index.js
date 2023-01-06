@@ -460,6 +460,7 @@ app.get('/api/trips/tripId/:idTrip', isLoggedIn, routerTrips.getTripById);
 app.get('/api/trips/userId/:idUser', isLoggedIn, routerTrips.getTripsByUser);
 app.put('/api/trip/pause', isLoggedIn, routerTrips.pauseTrip);
 app.put('/api/trip/resume', isLoggedIn, routerTrips.resumeTrip);
+app.put('/api/trip/finish', isLoggedIn, routerTrips.finishTrip);
 
 app.listen(port, () =>
     console.log(`Server started at http://localhost:${port}.`)

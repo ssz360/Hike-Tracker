@@ -69,10 +69,11 @@ async function addParking(pk) {
         body: JSON.stringify(pk),
         credentials: 'include'
     });
-    if (response.ok) 
-    return;
+    if (response.ok)
+        return;
     else {
-        throw response.status};
+        throw response.status
+    };
 };
 
 async function getPreferences() {
@@ -218,9 +219,9 @@ const getHikeMap = async id => {
     const res = await fetch(APIBASE + 'hikes/' + id + '/map', {
         credentials: "include"
     });
-    const ret=await res.json();
+    const ret = await res.json();
     //console.log("RECEIVED",ret);
-    if(res.ok) return ret;
+    if (res.ok) return ret;
     else throw ret;
 }
 
@@ -414,34 +415,34 @@ const startHike = async (id, startTime) => {
     else throw new Error("Cannot start hike " + id);
 };
 
-const getUnfinishedHike=async ()=>{
+const getUnfinishedHike = async () => {
     return {
-        hikeId:1,
-        start:'2022-12-23 17:50:10',
-        stoppedAt:'2022-12-23 17:50:10',
-        stopped:false,
-        secsFromLastStop:0
+        hikeId: 1,
+        start: '2022-12-23 17:50:10',
+        stoppedAt: '2022-12-23 17:50:10',
+        stopped: false,
+        secsFromLastStop: 0
     }
 }
 
-const stopResumeHike=async (stoppedAt,secsFromLastStop,stopped)=>{
+const stopResumeHike = async (stoppedAt, secsFromLastStop, stopped) => {
     return {
-        hikeId:1,
-        start:'2022-12-23 17:50:10',
-        'stoppedAt':stoppedAt,
-        'stopped':stopped,
-        secsFromLastStop:secsFromLastStop
+        hikeId: 1,
+        start: '2022-12-23 17:50:10',
+        'stoppedAt': stoppedAt,
+        'stopped': stopped,
+        secsFromLastStop: secsFromLastStop
     }
 }
 
 
 
-const finishHikeApi = async (time, timeOnClock) => {
-    const response = await fetch(APIBASE + 'finishHike', {
-        method: 'POST',
+const finishHikeApi = async (stoppedAt, secsFromLastStop, timeEnded) => {
+    const response = await fetch(APIBASE + 'trip/finish', {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: "include",
-        body: JSON.stringify({ time, timeOnClock })
+        body: JSON.stringify({ secsFromLastStop: secsFromLastStop, stoppedAt: stoppedAt, timeEnded: timeEnded })
     });
     if (response.ok) return;
     else throw Error('error on finishing the hike');

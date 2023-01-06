@@ -79,6 +79,26 @@ function HikerHike(props) {
             setSecsFromLastStop(0);
         }
     }
+
+    async function submitFinish(stopTime, timeOnClock,endTime) {
+        try {
+            console.log('\tIN STOP STOPWATCH');
+            const hikeDetails = await api.finishHikeApi(stopTime, timeOnClock, endTime);
+            console.log('STOP STOPWATCH RECEIVED ', hikeDetails)
+            setHikeId(hikeDetails.hikeId);
+            setStartedAt(hikeDetails.start);
+            setStopped(hikeDetails.stopped);
+            setStoppedAt(hikeDetails.stoppedAt);
+            setSecsFromLastStop(hikeDetails.secsFromLastStop);
+        } catch (error) {
+            setHikeId(-1);
+            setStartedAt('');
+            setStopped(false);
+            setStoppedAt('');
+            setSecsFromLastStop(0);
+        }
+    }
+    
     const sliderSettings = {
         infinite: true,
         slidesToShow: 1,
@@ -124,7 +144,7 @@ function HikerHike(props) {
                     </Slider>
                 </Col>
                 <Col xs={12} md={6}>
-                    {stoppedAt !== '' && <StopWatch stopStopwatch={stopStopwatch} resumeStopwatch={resumeStopwatch} startedAt={startedAt} stoppedAt={stoppedAt} setStoppedAt={setStoppedAt} stopped={stopped} setStopped={setStopped} secsFromLastStop={secsFromLastStop} setSecsFromLastStop={setSecsFromLastStop} />}
+                    {stoppedAt !== '' && <StopWatch submitFinish={submitFinish} stopStopwatch={stopStopwatch} resumeStopwatch={resumeStopwatch} startedAt={startedAt} stoppedAt={stoppedAt} setStoppedAt={setStoppedAt} stopped={stopped} setStopped={setStopped} secsFromLastStop={secsFromLastStop} setSecsFromLastStop={setSecsFromLastStop} />}
                 </Col>
             </Row>}
         </Alert>

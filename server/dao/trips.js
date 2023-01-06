@@ -105,6 +105,23 @@ exports.resumeTrip = (IDTrip, lastSegEndTime) => {
 	});
 };
 
+exports.finishTrip = (IDTrip, lastSegDuration, lastSegEndTime,timeEnded) => {
+	const sql =
+		"UPDATE TRIPS SET status = ?, last_seg_duration = ?, last_seg_end_time = ?, end_time = ? WHERE IDTrip = ?";
+	return new Promise((resolve, reject) => {
+		db.run(
+			sql,
+			["Ended", lastSegDuration, lastSegEndTime, timeEnded, IDTrip],
+			function (err) {
+				if (err) {
+					reject({ status: 500, message: err.toString() });
+					return;
+				} else resolve(this.lastID);
+			}
+		);
+	});
+};
+
 // exports.updateLastReference = (IDTrip, ID_last_ref) => {
 // 	const sql = "UPDATE TRIPS SET ID_last_ref = ? WHERE IDTrip = ?";
 // 	return new Promise((resolve, reject) => {

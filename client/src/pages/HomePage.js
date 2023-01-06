@@ -40,8 +40,8 @@ function HomePage() {
           }}
             onMouseEnter={() => setIsHover(true)}
             onMouseLeave={() => setIsHover(false)}>
-            {!isHover ? <div class="box"><h5 className="v-c">See all the hikes</h5></div> :
-              <div class="box"><h5 className="v-c">See all the hikes {right_arr}</h5></div>
+            {!isHover ? <div className="box"><h5 className="v-c">See all the hikes</h5></div> :
+              <div className="box"><h5 className="v-c">See all the hikes {right_arr}</h5></div>
             }</a></p>
 
         </Carousel.Caption>
@@ -73,8 +73,8 @@ function HomePage() {
           }}
             onMouseEnter={() => setIsHover(true)}
             onMouseLeave={() => setIsHover(false)}>
-            {!isHover ? <div class="box"><h5 className="v-c">Click to sign up</h5></div> :
-              <div class="box"><h5 className="v-c">Click to sign up {right_arr}</h5></div>
+            {!isHover ? <div className="box"><h5 className="v-c">Click to sign up</h5></div> :
+              <div className="box"><h5 className="v-c">Click to sign up {right_arr}</h5></div>
             }</a></p>
         </Carousel.Caption>
       </Carousel.Item>
@@ -105,8 +105,8 @@ function HomePage() {
           }}
             onMouseEnter={() => setIsHover(true)}
             onMouseLeave={() => setIsHover(false)}>
-            {!isHover ? <div class="box"><h5 className="v-c">Click to login!</h5></div> :
-              <div class="box"><h5 className="v-c">Click to login! {right_arr}</h5></div>
+            {!isHover ? <div className="box"><h5 className="v-c">Click to login!</h5></div> :
+              <div className="box"><h5 className="v-c">Click to login! {right_arr}</h5></div>
             }</a></p>
         </Carousel.Caption>
       </Carousel.Item>
