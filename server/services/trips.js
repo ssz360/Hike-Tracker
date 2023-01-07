@@ -32,10 +32,19 @@ exports.getTripsByHike = (req, res) => {
 
 // req.body => { IDHike, startTime }
 exports.addTrip = async (req, res) => {
+	if (isNaN(Date.parse(req.body.startTime))) {
+		res.status(400).send("Invalid date");
+		return;
+	}
 	const ID_start_point = await DAOHikes.getHike(req.body.IDHike).then(
 		hike => hike.startPoint.id
 	);
-	DAOTrips.addTrip(req.body.IDHike, req.body.startTime, req.user.username, ID_start_point)
+	DAOTrips.addTrip(
+		req.body.IDHike,
+		req.body.startTime,
+		req.user.username,
+		ID_start_point
+	)
 		.then(trip => res.status(200).json(trip))
 		.catch(err => {
 			res.status(err.status).send(err.message);
@@ -44,6 +53,10 @@ exports.addTrip = async (req, res) => {
 
 // req.body.stoppedAt, req.body.secsFromLastStop,
 exports.pauseTrip = async (req, res) => {
+	if (isNaN(Date.parse(req.body.stoppedAt))) {
+		res.status(400).send("Invalid date");
+		return;
+	}
 	const currentTrip = await DAOTrips.getCurrentTrip(req.user.username);
 	DAOTrips.pauseTrip(
 		currentTrip.IDTrip,
@@ -54,8 +67,12 @@ exports.pauseTrip = async (req, res) => {
 		.catch(err => res.status(err.status).send(err.message));
 };
 
-// req.body.idTrip
+// req.body.stoppedAt
 exports.resumeTrip = async (req, res) => {
+	if (isNaN(Date.parse(req.body.stoppedAt))) {
+		res.status(400).send("Invalid date");
+		return;
+	}
 	const currentTrip = await DAOTrips.getCurrentTrip(req.user.username);
 	DAOTrips.resumeTrip(currentTrip.IDTrip, req.body.stoppedAt)
 		.then(trip => res.status(200).json(trip))
