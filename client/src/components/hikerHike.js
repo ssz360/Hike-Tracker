@@ -85,11 +85,11 @@ function HikerHike(props) {
             console.log('\tIN STOP STOPWATCH');
             const hikeDetails = await api.finishHikeApi(stopTime, timeOnClock, endTime);
             console.log('STOP STOPWATCH RECEIVED ', hikeDetails)
-            setHikeId(hikeDetails.hikeId);
-            setStartedAt(hikeDetails.start);
-            setStopped(hikeDetails.stopped);
-            setStoppedAt(hikeDetails.stoppedAt);
-            setSecsFromLastStop(hikeDetails.secsFromLastStop);
+            setHikeId(undefined);
+            setStartedAt('');
+            setStopped(false);
+            setStoppedAt('');
+            setSecsFromLastStop(0);
         } catch (error) {
             setHikeId(-1);
             setStartedAt('');

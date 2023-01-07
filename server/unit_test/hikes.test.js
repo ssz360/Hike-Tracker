@@ -62,27 +62,18 @@ const ROCCIAMELONE={
     description: 'La montagna più alta di tutta la Val di Susa e una delle più importanti di tutto il Piemonte il cui indistinguibile profilo è ben visibile dalla pianura e sovrastra l’abitato di Susa con un dislivello dalla fondovalle alla cima di oltre 3000m in meno di 10km, caso unico in Europa. Noi affronteremo la salita dal Rifugio La Riposa, seguendo la via normale, un percorso per escursionisti esperti con un buon allenamento, che garantisce soddisfazioni uniche e visuali veramente superlative.',
     center: [ 45.1906585, 7.079086 ]
 }
-describe('hikes services',()=>{
 
-    const readTestFile=async err=>{
-        try {
-            let file=null;
-            if (err)    file=await fs.readFileSync(__dirname+'/badtest.gpx');
-            else    file=await fs.readFileSync(__dirname+'/goodtest.gpx');
-            return file;
-        } catch (error) {
-            throw error;
-        }
-    } 
+describe('hikes services',()=>{
 
     test('new hike',async()=>{
         hikesdao.newHike=jest.fn();
         hikesdao.newHike.mockReturnValue();
+        hikesdao.insertImageForHike=jest.fn();
+        hikesdao.insertImageForHike.mockReturnValue();
         pointsdao.insertPoint=jest.fn();
         pointsdao.insertPoint.mockReturnValue(9999);
-        const file=await readTestFile(false);
         const body={name:"Roccia Del Malgioglio",description:"Testing hike",difficulty:"Hiker"}
-        await hikes.newHike({username:"davidwallace@gmail.com",type:"localGuide"},body,{buffer:Buffer.from(file)});
+        await hikes.newHike({username:"davidwallace@gmail.com",type:"localGuide"},body,{filename:'goodtest.gpx'},IMAGES);
         expect(hikesdao.newHike.mock.calls[0][6]).equal("HIKER");
         expect(Math.ceil(hikesdao.newHike.mock.calls[0][2])).equal(1);
         expect(hikesdao.newHike.mock.calls[0][1]).equal("davidwallace@gmail.com");
@@ -91,15 +82,19 @@ describe('hikes services',()=>{
         expect(pointsdao.insertPoint.mock.calls.length).equal(2);
         expect(pointsdao.insertPoint.mock.calls[0][0]).equal("Point of hike Roccia Del Malgioglio");
         expect(pointsdao.insertPoint.mock.calls[0][4].country).equal("Italy");
+        expect(hikesdao.insertImageForHike.mock.calls[0][1].filename).equal(IMAGES[0].filename)
     })
 
     test('new hike fail',async()=>{
         try {
             hikesdao.newHike=jest.fn();
-            hikesdao.newHike.mockReturnValue("");
-            const file=await readTestFile(true);
+            hikesdao.newHike.mockReturnValue();
+            hikesdao.insertImageForHike=jest.fn();
+            hikesdao.insertImageForHike.mockReturnValue();
+            pointsdao.insertPoint=jest.fn();
+            pointsdao.insertPoint.mockReturnValue(9999);
             const body={name:"Roccia Del Malgioglio",description:"Testing hike",difficulty:"Hiker"}
-            await hikes.newHike({username:"davidwallace@gmail.com",type:"localGuide"},body,{buffer:Buffer.from(file)});
+            await hikes.newHike({username:"davidwallace@gmail.com",type:"localGuide"},body,{filename:'badtest.gpx'},IMAGES);
         } catch (error) {
             expect(error.status).equal(422);
         }
@@ -108,14 +103,33 @@ describe('hikes services',()=>{
     test('no auth',async()=>{
         try {
             hikesdao.newHike=jest.fn();
-            hikesdao.newHike.mockReturnValue("");
-            const file=await readTestFile(true);
+            hikesdao.newHike.mockReturnValue();
+            hikesdao.insertImageForHike=jest.fn();
+            hikesdao.insertImageForHike.mockReturnValue();
+            pointsdao.insertPoint=jest.fn();
+            pointsdao.insertPoint.mockReturnValue(9999);
             const body={name:"Roccia Del Malgioglio",description:"Testing hike",difficulty:"Hiker"}
-            await hikes.newHike({username:"jonhiker@gmail.com",type:"hiker"},body,{buffer:Buffer.from(file)});
+            await hikes.newHike({username:"jonhiker@gmail.com",type:"hiker"},body,{filename:'goodtest.gpx'},IMAGES);
         } catch (error) {
             expect(error.status).equal(401);
         }
     })
+
+    test('no images',async()=>{
+        try {
+            hikesdao.newHike=jest.fn();
+            hikesdao.newHike.mockReturnValue();
+            hikesdao.insertImageForHike=jest.fn();
+            hikesdao.insertImageForHike.mockReturnValue();
+            pointsdao.insertPoint=jest.fn();
+            pointsdao.insertPoint.mockReturnValue(9999);
+            const body={name:"Roccia Del Malgioglio",description:"Testing hike",difficulty:"Hiker"}
+            await hikes.newHike({username:"davidwallace@gmail.com",type:"localGuide"},body,{filename:'goodtest.gpx'},[]);
+        } catch (error) {
+            expect(error.status).equal(422);
+        }
+    })
+
 
     test('hikes in bounds Rocciamelone',async()=>{
         const hikeslist=await hikes.hikesInBounds(POINTINSIDEROCCIAMELONE.latitude+0.01,POINTINSIDEROCCIAMELONE.longitude+0.01,POINTINSIDEROCCIAMELONE.latitude,POINTINSIDEROCCIAMELONE.longitude);
