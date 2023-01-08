@@ -36,8 +36,8 @@ exports.addTrip = async (req, res) => {
 		res.status(400).send("Invalid date");
 		return;
 	}
-	const curr = this.getCurrentTrip(req, res);
-	if (curr == undefined){
+	const curr = await DAOTrips.getCurrentTrip(req.user.username);
+	if (curr) {
 		res.status(422).send("Impossible starting a new hike: a hike is already going on");
 		return;
 	}
