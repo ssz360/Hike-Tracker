@@ -3,7 +3,7 @@ const { insertPoint, getGeoArea } = require('./points');
 
 
 
-getHutsList = async () => new Promise((resolve, reject) => {
+const getHutsList = async () => new Promise((resolve, reject) => {
     const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint'
     db.all(sql, [], (err, row) => {
         if (err) {
@@ -15,25 +15,22 @@ getHutsList = async () => new Promise((resolve, reject) => {
     });
 });
 
-getHutsListWithFilters = async (name, country, numberOfBedrooms, geographicalArea) => new Promise((resolve, reject) => {
+const getHutsListWithFilters = async (name, country, numberOfBedrooms, geographicalArea) => new Promise((resolve, reject) => {
     console.log("IN HUTS FILTERS WITH NAME",name,"COUNTRY",country,"NUMBEROFBEDS",numberOfBedrooms,"Geogr",geographicalArea);
     let thisName = name==null? '%' : "%" + name + "%";
-    //let thisCoordinate = coordinate==null? '%' : coordinate;
     let thisCountry = country==null? '%' : country;
     let thisNumberOfBedrooms = numberOfBedrooms==null? 0 : numberOfBedrooms;
     let thisProvince = geographicalArea==null? '%' : geographicalArea;
     let thisRegion= geographicalArea==null? '%' : geographicalArea;
-    
-    //console.log(thisName + " " + thisCoordinate + " " + thisCountry + " " + thisNumberOfGuests + " " + thisNumberOfBedrooms + " ")
-    
-    const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint AND UPPER(P.Name) LIKE UPPER(?) AND UPPER(Country) LIKE UPPER(?) AND UPPER(TypeOfPoint) = UPPER(?) AND NumberOfBedrooms>=? AND UPPER(Province) LIKE UPPER(?) AND UPPER(Region) LIKE UPPER(?)'
+        
+    const sql = 'SELECT * FROM POINTS P, HUTS H WHERE P.IDPoint = H.IDPoint AND UPPER(P.Name) LIKE UPPER(?) AND UPPER(Country) LIKE UPPER(?) AND UPPER(TypeOfPoint) = UPPER(?) AND NumberOfBedrooms>=? AND (UPPER(Province) LIKE UPPER(?) OR UPPER(Region) LIKE UPPER(?))'
 
     db.all(sql, [thisName, thisCountry, "hut", thisNumberOfBedrooms, thisProvince, thisRegion], (err, row) => {
         if (err) {
             reject(err);
             return;
         }
-        const huts = row.map((h) => ({ IDPoint: h.IDPoint, Name: h.Name, Coordinates: [h.Latitude,h.Longitude], GeographicalArea: getGeoArea(h) , Country: h.Country, NumberOfBedrooms: h.NumberOfBedrooms, Phone: h.Phone, Email:h.Email, Website: h.Website  }))
+        const huts = row.map((h) => ({ IDPoint: h.IDPoint, Description: h.Description, Name: h.Name, Coordinates: [h.Latitude,h.Longitude], GeographicalArea: getGeoArea(h) , Country: h.Country, NumberOfBedrooms: h.NumberOfBedrooms, Phone: h.Phone, Email:h.Email, Website: h.Website  }))
         console.log("Returning huts",huts);
         resolve(huts);
     });
@@ -42,10 +39,6 @@ getHutsListWithFilters = async (name, country, numberOfBedrooms, geographicalAre
 function insertHut(name, description, numberOfBedrooms, coordinate, geopos, altitude, phone, email, website) {
     return new Promise((res, rej) => {
 
-        // if (!name || !description || !phone || !email) {
-        //     rej("All of the 'name, country, numberOfBedrooms, referencePointId, phone, email' are required");
-        //     return;
-        // }
         if (!name ) {
             rej("Name missing");
             return;

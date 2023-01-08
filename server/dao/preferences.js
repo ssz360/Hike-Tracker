@@ -19,7 +19,6 @@ exports.addUpdateReference = (obj) => {
         let sql = 'INSERT INTO PREFERENCES(IDUser,MinLength,MaxLength,MinAscent,MaxAscent,MinTime,MaxTime) VALUES(?,?,?,?,?,?,?)';
 
         if (!oldPreferences) {
-            // check if user exists
             userDao.getUserType(obj.IDUser).then((type) => {
                 if (!type) {
                     reject({ status: 404, message: 'user not found' });
@@ -38,13 +37,13 @@ exports.addUpdateReference = (obj) => {
 
         } else {
             userDao.getUserType(obj.IDUser).then((type) => {
-                sql = 'UPDATE PREFERENCES SET IDUser=?, MinLength=?, MaxLength=?, MinAscent=?, MaxAscent=?, MinTime=?, MaxTime=? WHERE IDUser=?';
+                sql = 'UPDATE PREFERENCES SET MinLength=?, MaxLength=?, MinAscent=?, MaxAscent=?, MinTime=?, MaxTime=? WHERE IDUser=?';
 
                 if (!type) {
                     reject({ status: 404, message: 'user not found' });
                     return;
                 }
-                db.run(sql, [obj.IDUser, obj.minLength, obj.maxLength, obj.minAscent, obj.maxAscent, obj.minTime, obj.maxTime, obj.IDUser], function (err) {
+                db.run(sql, [obj.minLength, obj.maxLength, obj.minAscent, obj.maxAscent, obj.minTime, obj.maxTime, obj.IDUser], function (err) {
                     if (err) {
                         reject(err);
                         return;

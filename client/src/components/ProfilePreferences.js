@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Form, Row, Col, InputGroup, Card, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
-import { } from 'react-router-dom';
+import {Row, Col, InputGroup, Card, Button } from 'react-bootstrap';
 import api from '../lib/api';
-import { MultiRangeSliderHooked } from './';
+import { MultiRangeSliderHooked } from '.';
+import React from 'react';
 
 function Preferences() {
     const [lenMin, setLenMin] = useState(0);

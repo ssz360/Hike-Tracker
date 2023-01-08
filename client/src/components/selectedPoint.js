@@ -1,22 +1,18 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import api from "../lib/api";
 import icons from "../lib/iconspoint";
-import Gallery from "./gallery";
-
+import GallerySlider from "./gallerySlider";
+import React from 'react';
 
 function SelectedPoint(props){
-    const isStart=props.point.id===props.startPoint.id;
-    const isEnd=props.point.id===props.endPoint.id;
     const [waiting,setWaiting]=useState(false);
     const [imagesUrls,setImagesUrls]=useState([]);
     useEffect(()=>{
         const getImages=async()=>{
             try {
                 setWaiting(true);
-                //console.log("GETTING IMAGES");
                 const imgs=await api.getImagesPoint(props.point.id);
-                //console.log("GOT IMGS",imgs);
                 setWaiting(false);
                 setImagesUrls([...imgs]);
             } catch (error) {
@@ -42,7 +38,7 @@ function SelectedPoint(props){
                     <Spinner animation="grow"/>
                 </div>
                 :
-                <Gallery preview={false} addImage={false} imagesUrls={imagesUrls}/>
+                <GallerySlider add={false} images={imagesUrls}/>
             }
         </>
     )

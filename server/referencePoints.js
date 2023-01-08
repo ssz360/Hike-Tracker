@@ -1,6 +1,7 @@
 "use strict";
 const DAOPoints = require("./dao/points");
 const DAORefs = require("./dao/referencePoints");
+const DAOHikes = require("./dao/hikes");
 
 // req.body {
 //     IDHike: number,
@@ -12,7 +13,7 @@ exports.addReferencePoint = async (req, res) => {
 		if (!req.body.coordinates.split(",").every(s => /[0-9]/.test(s)))
 			return res.status(400).send("Invalid Coordinates");
 		if (
-			(await DAORefs.getHikeById(req.body.IDHike).catch(err => {
+			(await DAOHikes.getHike(req.body.IDHike).catch(err => {
 				return err;
 			})) === 404
 		)

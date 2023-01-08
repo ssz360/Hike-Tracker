@@ -9,8 +9,8 @@ const initQueries = async () => {
 			if (query) {
 				query += ");";
 				db.run(query, err => {
-					//console.log("Query",query,"  err? ",err)
-					if (err)	throw err;
+					if (err)
+						throw err;
 				});
 			}
 		});
@@ -18,20 +18,21 @@ const initQueries = async () => {
 	});
 };
 let restart;
-if (fs.existsSync(__dirname + "/hiketrackerdb.sqlite")) restart = true;
-else restart = false;
+if (fs.existsSync(__dirname + "/hiketrackerdb.sqlite")) 
+	restart = true;
+else 
+	restart = false;
 const dataSql = fs.readFileSync(__dirname + "/initQueriesFinal.sql").toString();
 const db = new sqlite.Database(__dirname + "/hiketrackerdb.sqlite", async e => {
-	if (e)	throw { status: 500, message: {status:500,message:"Failed to create the database"} };
+	if (e) throw { status: 500, message: { status: 500, message: "Failed to create the database" } };
 	else {
-		db.loadExtension(__dirname+'/math',err=>{
-			if (err){
-				console.log("Err trying to load extension",err);
-				throw { status: 500, message: {status:500,message:"Failed to load an extension to the database"} };
+		db.loadExtension(__dirname + '/math', err => {
+			if (err) {
+				console.log("Err trying to load extension", err);
+				throw { status: 500, message: { status: 500, message: "Failed to load an extension to the database" } };
 			}
-			else{
-				console.log("Success!!");
-				if (!restart)	initQueries().then().catch(e=>{console.log("Error",e);throw {status:503,message: {status:503,message:"Failed to init queries"}}});
+			else {
+				if (!restart) initQueries().then().catch(e => { console.log("Error", e); throw { status: 503, message: { status: 503, message: "Failed to init queries" } } });
 			}
 		});
 	}

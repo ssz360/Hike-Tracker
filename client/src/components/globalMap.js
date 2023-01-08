@@ -1,11 +1,12 @@
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Polyline, useMap,useMapEvents , Marker,Popup,Tooltip } from 'react-leaflet'
-import { Container, Row, Col, Card, Alert, Button, OverlayTrigger, Modal, Form ,Table, Popover} from 'react-bootstrap';
+import { MapContainer, TileLayer, Polyline } from 'react-leaflet'
+import { Container, Row, Col } from 'react-bootstrap';
 import { useEffect,useState } from 'react';
 import Hike from '../lib/hike';
 import globalVariables from "../lib/globalVariables";
+import React from 'react';
 
-function GlobalMap(props){
+function GlobalMap(){
     const [hikes,setHikes]=useState([]);
     const limeOptions = { color: 'red' }
     useEffect(()=>{

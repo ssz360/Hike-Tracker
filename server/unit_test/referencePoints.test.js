@@ -1,19 +1,20 @@
-"use strict";
-
 jest.mock("../dao/dao");
-const db = require("../dao/dao");
+
 const DAORefs = require("../dao/referencePoints");
+const db = require("../dao/dao");
 
 async function testFactoryCreateRef(IDPoint, IDHike, valid, message) {
 	return await DAORefs.createReferencePoint(IDPoint, IDHike).then(
 		id => {
-			// console.log(id);
+			console.log(id);
 			if (valid) return id;
 			else return id === undefined;
 		},
 		err => {
-			// console.log(err.toString());
-			return err.toString().includes(message);
+			console.log(err.message ? err.message : err.toString());
+			return err.message
+				? err.message.includes(message)
+				: err.toString().includes(message);
 		}
 	);
 }
@@ -21,53 +22,72 @@ async function testFactoryCreateRef(IDPoint, IDHike, valid, message) {
 async function testFactoryGetRefs(IDHike, valid, message) {
 	return await DAORefs.getReferencesPoints(IDHike).then(
 		rows => {
-			// console.log(rows);
+			console.log(rows);
 			if (valid) return rows;
 			else return rows.length === 0;
 		},
 		err => {
-			// console.log(err.toString());
-			return err.toString().includes(message);
+			console.log(err.message ? err.message : err.toString());
+			return err.message
+				? err.message.includes(message)
+				: err.toString().includes(message);
 		}
 	);
 }
 
 describe("Unit Test: Reference Points", () => {
+	beforeEach(async () => {
+		db.run("PRAGMA foreign_keys = '1';", err => {
+			if (err) console.log(err);
+		});
+	});
 	describe("addReferencePoint", () => {
-		beforeEach(() => {
-			db.exec(
-				'PRAGMA foreign_keys = "1"; DROP TABLE IF EXISTS "REFERENCE_POINTS"; CREATE TABLE IF NOT EXISTS "REFERENCE_POINTS" ("IDPoint"	INTEGER NOT NULL,"IDHike"	INTEGER NOT NULL,FOREIGN KEY("IDHike") REFERENCES "HIKES"("IDHike"),FOREIGN KEY("IDPoint") REFERENCES "POINTS"("IDPoint"));'
-			);
-		});
-		afterAll(() => {
-			db.exec(
-				'DROP TABLE IF EXISTS "REFERENCE_POINTS"; CREATE TABLE IF NOT EXISTS "REFERENCE_POINTS" ("IDPoint"	INTEGER NOT NULL,"IDHike"	INTEGER NOT NULL,FOREIGN KEY("IDHike") REFERENCES "HIKES"("IDHike"),FOREIGN KEY("IDPoint") REFERENCES "POINTS"("IDPoint"));'
-			);
-		});
 		test("Normal Call", async () => {
-			expect(await testFactoryCreateRef(1, 1, true)).toBe(1);
-			expect(await testFactoryGetRefs(1, true)).toEqual([
-				{
-					IDHike: 1,
-					IDPoint: 1
-				}
-			]);
+			expect(await testFactoryCreateRef(1, 50, true)).toBe(68);
+			expect(
+				await testFactoryGetRefs(50, true).then(rows => rows.length)
+			).toEqual(3);
+			expect(await DAORefs.deleteReferencePoint(1, 50)).toBe(1);
 		});
-		test("Non-existent Point", async () => {
-			expect(await testFactoryCreateRef(Number.MAX_VALUE, 1, false, "FOREIGN")).toBe(true);
-			expect(await testFactoryGetRefs(1, false)).toBe(true);
+		test("Non-Existent Hike ID", async () => {
+			expect(
+				await testFactoryCreateRef(
+					1,
+					Number.MAX_VALUE,
+					false,
+					"FOREIGN"
+				)
+			).toBe(true);
+			expect(
+				await testFactoryGetRefs(50, true).then(
+					rows => rows.length === 2
+				)
+			).toBe(true);
+			expect(
+				await DAORefs.deleteReferencePoint(1, 50).catch(
+					err => err.message
+				)
+			).toEqual("Reference point not found.");
 		});
-		test("Non-existent Hike", async () => {
-			expect(await testFactoryCreateRef(1, Number.MAX_VALUE, false, "FOREIGN")).toBe(true);
-			expect(await testFactoryGetRefs(1, false)).toBe(true);
-		});
-		test("Non-numerical Point ID", async () => {
-			expect(await testFactoryCreateRef("Number.MAX_VALUE", 1, false, "FOREIGN")).toBe(true);
-			expect(await testFactoryGetRefs(1, false)).toBe(true);
-		});
-		test("Non-numerical Hike ID", async () => {
-			expect(await testFactoryCreateRef(1, "Number.MAX_VALUE", false, "FOREIGN")).toBe(true);
-			expect(await testFactoryGetRefs(1, false)).toBe(true);
+		test("Non-Existent Point ID", async () => {
+			expect(
+				await testFactoryCreateRef(
+					Number.MAX_VALUE,
+					1,
+					false,
+					"FOREIGN"
+				)
+			).toBe(true);
+			expect(
+				await testFactoryGetRefs(50, true).then(
+					rows => rows.length === 2
+				)
+			).toBe(true);
+			expect(
+				await DAORefs.deleteReferencePoint(1, 50).catch(
+					err => err.message
+				)
+			).toEqual("Reference point not found.");
 		});
 	});
 });

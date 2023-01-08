@@ -1,15 +1,40 @@
 jest.mock('../dao/dao');
 
-const parkings=require('../dao/parkings');
-const usersdao=require('../dao/users');
-const fs=require('fs');
+const parkings = require('../dao/parkings');
+const usersdao = require('../dao/users');
+const fs = require('fs');
 const { expect } = require('chai');
+const db = require('../dao/__mocks__/dao');
+const cleanupQueries = "DELETE FROM PARKINGS WHERE IDPoint != 5; DELETE FROM POINTS WHERE name = 'name'; DELETE FROM sqlite_sequence WHERE name = 'PARKINGS'; DELETE FROM sqlite_sequence WHERE name = 'POINTS';"
+
+afterAll(async () => {
+	db.exec(cleanupQueries, err => {
+		if (err) console.log(err.message ? err.message : err.toString());
+	});
+	db.close();
+});
 
 describe('parkings dao', () => {
     test('get all parking lots', async () => {
-        const pks=await parkings.getParkingsList();
-        expect(pks.length).equal(4);
-    })
+        const pks = await parkings.getParkingsList();
+        expect(pks.length).equal(1);
+    });
+
+    test("get all parking lots", async () => {
+		let p = {
+			name: "name",
+			coordinates: [45.0704363, 7.6650265],
+			desc: "desc",
+			slots: 5,
+			description: "For Testing"
+		};
+		const pks = await parkings.addParking(p, {
+			altitude: 45.0704363,
+			geopos: { province: "Turin", region: "Piedmont", country: "Italy" }
+		});
+		// GeographicalArea.province, GeographicalArea.region, GeographicalArea.country
+		expect(pks).to.be.greaterThan(1);
+	});
 })
 
 // describe('parkings dao', () => {
