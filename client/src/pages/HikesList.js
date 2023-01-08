@@ -74,7 +74,7 @@ function HikesList(props) {
   }
 
   function goToTop() {
-    document.getElementById('hikes-container').scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('hikescontainer').scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   const updateCallback = () => setUpdateCard(!updateCard);
@@ -314,7 +314,7 @@ function HikesList(props) {
         <Col onScroll={manageUpdates} className="hikes-container" id="hikescontainer" sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
           <Row>
             {unfinishedHikeId !== -1 &&
-              <Alert data-test="unfinished-hike" className='mt-4 justify-content-center mx-auto' style={{ width: '95%' }} variant='info' onClose={() => setUnfinishedHikeId(-1)} dismissible>
+              <Alert data-test="unfinished-hike" className='mt-4 justify-content-center mx-auto' style={{ width: '95%' }} variant='info' onClose={() => setUnfinishedHikeId(-1)}>
                 <Alert.Heading>You started a hike but still have to complete it!</Alert.Heading>
                 <strong>
                   You still have to complete hike <Alert.Link href={props.hikes ? '/profile/hikes' : '#'}>{props.hikes ? props.hikes.find(p => p.id === unfinishedHikeId).name : 'error'}</Alert.Link>
@@ -326,7 +326,7 @@ function HikesList(props) {
 
       </Row>
       {/***** Button to go up to carousel ******/}
-      <a onClick={() => goToTop()} href="#first-row" className='go-top-btn' color='#009999'>{icon}</a>
+      <a onClick={() => goToTop()} className='go-top-btn' color='#009999'>{icon}</a>
     </Container>
   )
 

@@ -434,7 +434,7 @@ const stopResumeHike = async (stoppedAt, secsFromLastStop, stopping) => {
                 "Content-type": "application/json"
             },
             body: JSON.stringify({
-                stoppedAt: stoppedAt.replace("T", " "),
+                stoppedAt: stoppedAt,
         secsFromLastStop: secsFromLastStop
             })
     }
