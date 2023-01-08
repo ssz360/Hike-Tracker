@@ -427,6 +427,15 @@ const getUnfinishedHike = async () => {
     else throw res;
 };
 
+const getFinishedHikes = async () => {
+    const response = await fetch(APIBASE + "trips/user", {
+        credentials: "include"
+    });
+    const res = await response.json();
+    if (response.ok) return res.filter(trip => trip.status === "Ended");
+    else throw res;
+};
+
 const stopResumeHike = async (stoppedAt, secsFromLastStop, stopping) => {
     const response = await fetch(
         APIBASE + "trip/" + (stopping ? "pause" : "resume"),
@@ -487,6 +496,7 @@ const api = {
     getImagesPoint,
     startHike,
     getUnfinishedHike,
+    getFinishedHikes,
     stopResumeHike,
     getImagesHike,
     finishHikeApi

@@ -11,7 +11,6 @@ const DIFFICULTIES = { 'TOURIST': 'success', 'HIKER': 'info', 'PROFESSIONAL HIKE
 
 function HikerHike(props) {
 
-    const [hikeId, setHikeId] = useState(-1);
     const [startedAt, setStartedAt] = useState('');
     const [stoppedAt, setStoppedAt] = useState('');
     const [secsFromLastStop, setSecsFromLastStop] = useState(0);
@@ -24,15 +23,15 @@ function HikerHike(props) {
                 const hikeDetails = await api.getUnfinishedHike();
                 console.log("Received ", hikeDetails);
                 if(hikeDetails){
-                    setHikeId(hikeDetails.hikeId);
+                    props.setHikeId(hikeDetails.hikeId);
                     setStartedAt(hikeDetails.start);
                     setStopped(hikeDetails.stopped);
                     setStoppedAt(hikeDetails.stoppedAt);
                     setSecsFromLastStop(hikeDetails.secsFromLastStop);
                 }
-                else setHikeId(undefined)
+                else props.setHikeId(undefined)
             } catch (error) {
-                setHikeId(-1);
+                props.setHikeId(-1);
                 setStartedAt('');
                 setStopped(false);
                 setStoppedAt('');
@@ -47,13 +46,13 @@ function HikerHike(props) {
             console.log('\tIN STOP STOPWATCH');
             const hikeDetails = await api.stopResumeHike(stopTime, timeOnClock, true);
             console.log('STOP STOPWATCH RECEIVED ', hikeDetails)
-            setHikeId(hikeDetails.hikeId);
+            props.setHikeId(hikeDetails.hikeId);
             setStartedAt(hikeDetails.start);
             setStopped(hikeDetails.stopped);
             setStoppedAt(hikeDetails.stoppedAt);
             setSecsFromLastStop(hikeDetails.secsFromLastStop);
         } catch (error) {
-            setHikeId(-1);
+            props.setHikeId(-1);
             setStartedAt('');
             setStopped(false);
             setStoppedAt('');
@@ -66,13 +65,13 @@ function HikerHike(props) {
             console.log('\tIN RESUME STOPWATCH');
             const hikeDetails = await api.stopResumeHike(resumeTime, secsFromLastStop, false);
             console.log('RESUME RECEIVED ', hikeDetails)
-            setHikeId(hikeDetails.hikeId);
+            props.setHikeId(hikeDetails.hikeId);
             setStartedAt(hikeDetails.start);
             setStopped(hikeDetails.stopped);
             setStoppedAt(hikeDetails.stoppedAt);
             setSecsFromLastStop(hikeDetails.secsFromLastStop);
         } catch (error) {
-            setHikeId(-1);
+            props.setHikeId(-1);
             setStartedAt('');
             setStopped(false);
             setStoppedAt('');
@@ -85,13 +84,13 @@ function HikerHike(props) {
             console.log('\tIN STOP STOPWATCH');
             const hikeDetails = await api.finishHikeApi(stopTime, timeOnClock, endTime);
             console.log('STOP STOPWATCH RECEIVED ', hikeDetails)
-            setHikeId(undefined);
+            props.setHikeId(undefined);
             setStartedAt('');
             setStopped(false);
             setStoppedAt('');
             setSecsFromLastStop(0);
         } catch (error) {
-            setHikeId(-1);
+            props.setHikeId(-1);
             setStartedAt('');
             setStopped(false);
             setStoppedAt('');
@@ -109,16 +108,16 @@ function HikerHike(props) {
         cssEase: "linear"
     };
    
-    const hike = hikeId !== -1 ? props.hikes.find(p => p.id === hikeId) : undefined;
+    const hike = props.hikeId !== -1 ? props.hikes.find(p => p.id === props.hikeId) : undefined;
     
     console.log("RERENDEREING HIKERHIKE with stoppedAt", stoppedAt, 'stopped', stopped);
     
     return (
         <Alert variant='info'>
             <Alert.Heading>
-                {hikeId?'You have an unfinished hike to complete!':"You don't have any hike to complete!"}
+                {props.hikeId?'You have an unfinished hike to complete!':"You don't have any hike to complete!"}
             </Alert.Heading>
-            {hikeId &&<Row>
+            {props.hikeId &&<Row>
                 <Col xs={12} md={6}>
                     <Slider className='mx-auto' {...sliderSettings} style={{ width: "85%" }}>
                         <div>

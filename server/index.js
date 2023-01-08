@@ -457,7 +457,7 @@ app.use(express.static('public'));
 app.post('/api/trip', isLoggedIn, routerTrips.addTrip);
 app.get('/api/trip/ongoing', isLoggedIn, routerTrips.getCurrentTrip);
 app.get('/api/trips/tripId/:idTrip', isLoggedIn, routerTrips.getTripById);
-app.get('/api/trips/userId/:idUser', isLoggedIn, routerTrips.getTripsByUser);
+app.get('/api/trips/user', isLoggedIn, routerTrips.getTripsByUser);
 app.put('/api/trip/pause', isLoggedIn, routerTrips.pauseTrip);
 app.put('/api/trip/resume', isLoggedIn, routerTrips.resumeTrip);
 app.put('/api/trip/finish', isLoggedIn, routerTrips.finishTrip);
