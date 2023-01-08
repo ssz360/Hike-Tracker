@@ -64,7 +64,7 @@ const linkableStartPoints=async (user,hikeId)=>{
     try {
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link points to a hike"};
         else if(!isFinite(hikeId)) throw {status:422,message:"Hike id should be an integer"};
-        const hike=await hikesdao.getHike(parseInt(hikeId));
+        const hike=await hikesdao.getHike(parseInt(hikeId)).catch(err => {throw err});
         const ret=await pointsdao.linkableStartPoints(hike.startPoint.coordinates[0],hike.startPoint.coordinates[1],hike.startPoint.id,hike.name);
         return ret;
     } catch (error) {
@@ -116,6 +116,7 @@ const linkableHuts=async (user,hikeId)=>{
     try {
         if(user.type!=="localGuide") throw {status:401,message:"This type of user can't link huts to a hike"};
         else if(!isFinite(hikeId)) throw {status:422,message:"The hike identifier should be an integer"};
+        await hikesdao.getHike(parseInt(hikeId)).catch(err => {throw err});
         const ret=await pointsdao.linkableHuts(parseInt(hikeId));
         return ret;
     } catch (error) {

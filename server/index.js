@@ -224,9 +224,9 @@ app.post('/api/huts/list', async (req, res) => {
 // DESCRIPTION ===========================================================================================================
 // Returns the list of parkings
 
-app.get('/api/parkings', async (req, res) => {
+app.get('/api/parkings', isLoggedIn, async (req, res) => {
     try {
-        console.log(req.user)
+        // console.log(req.user)
         const p = await parkings.getParkings(req.user);
         return res.status(201).json(p);
     } catch (error) {

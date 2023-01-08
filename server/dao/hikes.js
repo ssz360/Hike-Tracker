@@ -29,8 +29,8 @@ const getHikeMoreData = async (item) => {
 const getHike = async id => new Promise((resolve, reject) => {
     const sql = "SELECT * FROM HIKES WHERE IDHike=?";
     db.get(sql, [id], (err, row) => {
-        if (err) throw { status: 503, message: err };
-        else if (row === undefined) throw { status: 404, message: "Hike not found!" };
+        if (err) reject({ status: 503, message: err });
+        else if (row === undefined) reject({ status: 404, message: "Hike not found!" });
         else {
             getHikeMoreData(row).then(h => resolve({ id: h.IDHike, name: h.Name, author: h.Author, length: h.Length, expectedTime: h.ExpectedTime, ascent: h.Ascent, difficulty: h.Difficulty, startPoint: h.startPoint, endPoint: h.endPoint, referencePoints: h.referencePoints, huts: h.huts, description: h.description, center: [h.CenterLat, h.CenterLon] })).catch(ret => reject({ status: ret.status, message: ret.message }));
         }
@@ -207,7 +207,7 @@ const addReferenceToHike = async (IDHike, IDPoint) => new Promise((resolve, reje
                 return;
             }
 
-            const sqlPoint = "INSERT INTO REFERENCE_POINTS (IDHike, IDPoint) VALUES(?,?)";
+            const sqlPoint = "INSERT INTO linkedPoints (IDHike, IDPoint) VALUES(?,?)";
 
 
             db.run(sqlPoint, [IDHike, IDPoint], err => {
