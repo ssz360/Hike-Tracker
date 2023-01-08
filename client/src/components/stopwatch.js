@@ -54,10 +54,8 @@ function StopWatch(props) {
             setErrorStartHike();
             e.preventDefault();
             e.stopPropagation();
-            if (!props.stopped) {
-                const timeOnClock = getTotalSeconds();
-                props.submitFinish(dayjs().format('YYYY-MM-DDTHH:mm:ss'), timeOnClock, hikeFinishTime);
-            }
+            const timeOnClock = getTotalSeconds();
+            props.submitFinish(dayjs().format('YYYY-MM-DDTHH:mm:ss'), timeOnClock, hikeFinishTime);
             setWaitingStartHike(false);
         } catch (error) {
             setWaitingStartHike(false);
