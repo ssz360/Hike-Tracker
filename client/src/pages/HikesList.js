@@ -89,12 +89,12 @@ function HikesList(props) {
                     event.preventDefault();
                     await api.getUserPerformance(props.user.username)
                       .then(usrPref => {
-                        setLenMin(0);
-                        setLenMax(usrPref.length);
-                        setAscMin(0);
-                        setAscMax(usrPref.ascent);
-                        setTimeMin(0);
-                        setTimeMax(usrPref.time);
+                        setLenMin(usrPref.MinLength);
+                        setLenMax(usrPref.MaxLength);
+                        setAscMin(usrPref.MinAscent);
+                        setAscMax(usrPref.MaxAscent);
+                        setTimeMin(usrPref.MinTime);
+                        setTimeMax(usrPref.MaxTime);
                       }, err => {console.log(err)});
                   }} />
               </OverlayTrigger>

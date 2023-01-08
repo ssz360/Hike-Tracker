@@ -92,7 +92,7 @@ async function getPreferences() {
             "MinAscent": 0,
             "MaxAscent": 4000,
             "MinTime": 0,
-            "MaxTime": 15
+            "MaxTime": 24
         };
         return prefs;
     }

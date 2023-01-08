@@ -397,7 +397,7 @@ app.get('/api/preferences', isLoggedIn, async (req, res) => {
             res.status(404).end();
             return;
         }
-        res.status(200).json({ userId: ret.IDUser, length: ret.LENGTH, ascent: ret.ASCENT, time: ret.TIME });
+        res.status(200).json({ userId: ret.IDUser, MinLength: ret.MinLength, MaxLength: ret.MaxLength, MinAscent: ret.MinAscent, MaxAscent: ret.MaxAscent, MinTime: ret.MinTime, MaxTime: ret.MaxTime });
     } catch (error) {
         res.status(error.status ?? 500).json(error.message)
     }
@@ -408,9 +408,12 @@ app.get('/api/preferences', isLoggedIn, async (req, res) => {
 // The body:
 
 // {
-//     "length": 5,
-//     "ascent": 500,
-//     "time": 4
+//     "MinLength": 2,
+//     "MaxLength": 5,
+//     "MinAscent": 300,
+//     "MaxAscent": 500,
+//     "MinTime": 1,
+//     "MaxTime": 4
 // }
 
 app.post('/api/preferences', isLoggedIn, async (req, res) => {
@@ -418,9 +421,12 @@ app.post('/api/preferences', isLoggedIn, async (req, res) => {
         const obj = req.body;
         const ret = await preferences.addUpdateReference({
             IDUser: req.user.username,
-            length: obj.length,
-            ascent: obj.ascent,
-            time: obj.time
+            minLength: obj.MinLength,
+            maxLength: obj.MaxLength,
+            minAscent: obj.MinAscent,
+            maxAscent: obj.MaxAscent,
+            minTime: obj.MinTime,
+            maxTime: obj.MaxTime
         });
         res.status(201).json(ret);
     } catch (error) {

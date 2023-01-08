@@ -16,7 +16,7 @@ exports.getUserPreferences = async (userId) => new Promise((resolve, reject) => 
 exports.addUpdateReference = (obj) => {
     return new Promise(async (resolve, reject) => {
         var oldPreferences = await this.getUserPreferences(obj.IDUser);
-        let sql = 'INSERT INTO PREFERENCES(IDUser,MINLENGTH,MAXLENGTH,MINASCENT,MAXASCENT,MINTIME,MAXTIME) VALUES(?,?,?,?,?,?,?)';
+        let sql = 'INSERT INTO PREFERENCES(IDUser,MinLength,MaxLength,MinAscent,MaxAscent,MinTime,MaxTime) VALUES(?,?,?,?,?,?,?)';
 
         if (!oldPreferences) {
             // check if user exists
@@ -38,7 +38,7 @@ exports.addUpdateReference = (obj) => {
 
         } else {
             userDao.getUserType(obj.IDUser).then((type) => {
-                sql = 'UPDATE PREFERENCES SET IDUser=?, MINLENGTH=?, MAXLENGTH=?, MINASCENT=?, MAXASCENT=?, MINTIME=?, MAXTIME=? WHERE IDUser=?';
+                sql = 'UPDATE PREFERENCES SET IDUser=?, MinLength=?, MaxLength=?, MinAscent=?, MaxAscent=?, MinTime=?, MaxTime=? WHERE IDUser=?';
 
                 if (!type) {
                     reject({ status: 404, message: 'user not found' });
