@@ -16,25 +16,30 @@ function Preferences() {
     useEffect(() => {
         const getPreferences = async () => {
             const prefs = await api.getPreferences();
-            setLenMax(prefs.length);
-            setAscMax(prefs.ascent);
-            setTimeMax(prefs.time);
+            setLenMin(prefs.MinLength);
+            setLenMax(prefs.MaxLength);
+            setAscMin(prefs.MinAscent);
+            setAscMax(prefs.MaxAscent);
+            setTimeMin(prefs.MinTime);
+            setTimeMax(prefs.MaxTime);
             setSaved(true);
-            console.log(prefs)
         }
         getPreferences();
     },[]);
 
     useEffect(() => {
         setSaved(false);
-    },[lenMax,ascMax,timeMax]);
+    },[lenMin,lenMax,ascMin,ascMax,timeMin,timeMax]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const prefs = {
-            "length": lenMax,
-            "ascent": ascMax,
-            "time": timeMax
+            "MinLength": lenMin,
+            "MaxLength": lenMax,
+            "MinAscent": ascMin,
+            "MaxAscent": ascMax,
+            "MinTime": timeMin,
+            "MaxTime": timeMax
         };
         await api.addPreferences(prefs);
         setSaved(true);
@@ -48,7 +53,7 @@ function Preferences() {
         </Row>
         <Card className="p-3 pe-4 mb-4">
             <Row className="mb-3">
-                <Col><strong>Preferred length</strong>: {lenMax}</Col>
+                <Col><strong>Preferred length (km)</strong></Col>
             </Row>
             <Row className="mb-4">
                 <InputGroup className="mb-4">
@@ -63,7 +68,7 @@ function Preferences() {
                 </InputGroup>
             </Row>
             <Row className="mb-3">
-                <Col><strong>Preferred ascent</strong>: {ascMax}</Col>
+                <Col><strong>Preferred ascent (m)</strong></Col>
             </Row>
             <Row className="mb-4">
                 <InputGroup className="mb-4">
@@ -78,7 +83,7 @@ function Preferences() {
                 </InputGroup>
             </Row>
             <Row className="mb-3">
-                <Col><strong>Preferred time expected</strong>: {timeMax}</Col>
+                <Col><strong>Preferred time expected (h)</strong></Col>
             </Row>
             <Row className="mb-4">
                 <InputGroup className="mb-4">

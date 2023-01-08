@@ -179,29 +179,29 @@ function HikesList(props) {
 
           {openArea && (<AreaMap center={center} setCenter={setCenter} radius={radius} setRadius={setRadius} drag={false} openArea={openArea} setOpenArea={setOpenArea} />)}
           {props.logged &&
-            <div className="mt-4">
-              <div className="d-grid gap-2">
-                <OverlayTrigger
-                  placement="right"
-                  delay={{ show: 250, hide: 400 }}
-                  overlay={<Tooltip> Your preferences</Tooltip>}
-                >
-                  <BookmarkHeartFill className="ms-4" role="button" size={"20px"}
-                    onClick={async (event) => {
-                      event.preventDefault();
-                      await api.getUserPerformance(props.user.username)
-                        .then(usrPref => {
-                          setLenMin(0);
-                          setLenMax(usrPref.length);
-                          setAscMin(0);
-                          setAscMax(usrPref.ascent);
-                          setTimeMin(0);
-                          setTimeMax(usrPref.time);
-                        }, err => { console.log(err) });
-                    }} />
-                </OverlayTrigger>
-              </div>
+          <div className="mt-4">
+            <div className="d-grid gap-2">
+              <OverlayTrigger
+                placement="right"
+                delay={{ show: 250, hide: 400 }}
+                overlay={<Tooltip> Your preferences</Tooltip>}
+              >
+                <BookmarkHeartFill className="ms-4" role="button" size={"20px"}
+                  onClick={async (event) => {
+                    event.preventDefault();
+                    await api.getUserPerformance(props.user.username)
+                      .then(usrPref => {
+                        setLenMin(usrPref.MinLength);
+                        setLenMax(usrPref.MaxLength);
+                        setAscMin(usrPref.MinAscent);
+                        setAscMax(usrPref.MaxAscent);
+                        setTimeMin(usrPref.MinTime);
+                        setTimeMax(usrPref.MaxTime);
+                      }, err => {console.log(err)});
+                  }} />
+              </OverlayTrigger>
             </div>
+          </div>
           }
           {/***** Area filter *****/}
           <div className="mt-4">
