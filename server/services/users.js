@@ -1,5 +1,5 @@
-const userDao = require("./dao/user-dao");
-const tokens = require("./tokens");
+const DAOUsers = require("../dao/user-dao");
+const DAOTokens = require("./tokens");
 
 // req.body {
 // 	username,
@@ -16,26 +16,24 @@ exports.register = async (req, res) => {
 		// 409 Conflict if username duplicates
 		// 200 on Successful registration
 		// 500 on general DB/API errors and sends it back
-		await tokens.newVerification(req.body.username);
-		return await userDao.register(req.body).then(
-			async ret => {
+		DAOTokens.newVerification(req.body.username);
+		DAOUsers.register(req.body).then(
+			ret => {
 				if (ret) {
-					return await userDao.login(req.body.username, req.body.password).then(
-						usr => {
-							return res.status(200).json(usr);
-						},
+					DAOUsers.login(req.body.username, req.body.password).then(
+						usr => res.status(200).json(usr),
 						err => {
 							throw err;
 						}
 					);
-				} else return res.status(409).end();
+				} else res.status(409).end();
 			},
 			err => {
 				throw err;
 			}
 		);
 	} catch (err) {
-		return res.status(500).json(err);
+		return res.status(err.status).json(err.message);
 	}
 };
 
@@ -43,4 +41,4 @@ exports.register = async (req, res) => {
 // 	username,
 // 	password
 // }
-exports.login = userDao.login;
+exports.login = DAOUsers.login;

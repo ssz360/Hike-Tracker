@@ -38,9 +38,9 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const session = require('express-session');
 const cors = require('cors');
-const user = require("./user");
+const users = require("./services/users");
 const userdao = require('./dao/user-dao');
-const tokens = require("./tokens");
+const tokens = require("./services/tokens");
 const ref = require("./referencePoints");
 const pointsdao = require('./dao/points');
 const points = require('./services/points');
@@ -96,7 +96,7 @@ app.post('/api/login', passport.authenticate('local'), (req, res) => {
     res.json({ username: req.user.username, type: req.user.type });
 });
 
-app.post("/api/register", user.register);
+app.post("/api/register", users.register);
 app.post("/api/resendVerification", isLoggedIn, tokens.resendVerification);
 app.get("/api/verify/:token", tokens.verify);
 app.post("/api/referencePoint", ref.addReferencePoint);
