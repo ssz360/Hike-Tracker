@@ -36,6 +36,11 @@ exports.addTrip = async (req, res) => {
 		res.status(400).send("Invalid date");
 		return;
 	}
+	const curr = this.getCurrentTrip(req, res);
+	if (curr == undefined){
+		res.status(422).send("Impossible starting a new hike: a hike is already going on");
+		return;
+	}
 	const ID_start_point = await DAOHikes.getHike(req.body.IDHike).then(
 		hike => hike.startPoint.id
 	);

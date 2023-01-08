@@ -492,7 +492,7 @@ function HikeRow(props) {
         </Card.Text>
       </Card.Body>
       {props.logged && props.unfinishedHikeId === -1 &&
-        <div className="justify-content-center mx-auto mb-2" onClick={e => {
+        <div className="justify-content-center mx-auto mb-2" role="button" onClick={e => {
           e.preventDefault();
           e.stopPropagation();
           props.setTimeStartingHike(dayjs().format('YYYY-MM-DDTHH:mm:ss'))
