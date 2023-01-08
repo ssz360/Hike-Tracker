@@ -158,7 +158,7 @@ function HikesList(props) {
                   e.preventDefault();
                   e.stopPropagation();
                   submitStartHike();
-                }} xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" className=" float-right bi bi-play-circle-fill" viewBox="0 0 16 16">
+                }} data-test="start-trip-overlay" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" className=" float-right bi bi-play-circle-fill" viewBox="0 0 16 16">
                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" />
               </svg>
                   </OverlayTrigger>
@@ -314,7 +314,7 @@ function HikesList(props) {
         <Col onScroll={manageUpdates} className="hikes-container" id="hikescontainer" sm={10} style={{ overflowY: 'scroll', height: '93vh' }}>
           <Row>
             {unfinishedHikeId !== -1 &&
-              <Alert className='mt-4 justify-content-center mx-auto' style={{ width: '95%' }} variant='info' onClose={() => setUnfinishedHikeId(-1)} dismissible>
+              <Alert data-test="unfinished-hike" className='mt-4 justify-content-center mx-auto' style={{ width: '95%' }} variant='info' onClose={() => setUnfinishedHikeId(-1)} dismissible>
                 <Alert.Heading>You started a hike but still have to complete it!</Alert.Heading>
                 <strong>
                   You still have to complete hike <Alert.Link href={props.hikes ? '/profile/hikes' : '#'}>{props.hikes ? props.hikes.find(p => p.id === unfinishedHikeId).name : 'error'}</Alert.Link>
@@ -497,7 +497,7 @@ function HikeRow(props) {
           e.stopPropagation();
           props.setTimeStartingHike(dayjs().format('YYYY-MM-DDTHH:mm:ss'))
           props.startHike(props.hike.id);
-        }}>
+        }} data-test="start-trip">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" className="bi bi-play-circle-fill" viewBox="0 0 16 16">
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" />
           </svg></div>

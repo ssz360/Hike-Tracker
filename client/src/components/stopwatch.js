@@ -26,7 +26,7 @@ const describeArc = (x, y, radius, startAngle, endAngle) => {
 
 
 function StopWatch(props) {
-    const [, setTime] = useState(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
+    const [time, setTime] = useState(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
 
     useEffect(() => {
         const interval = setInterval(() => setTime(dayjs().format('YYYY-MM-DDTHH:mm:ss')), 1000);
@@ -88,7 +88,7 @@ function StopWatch(props) {
                                 props.stopStopwatch(time, timeOnClock);
                             }
                             else props.resumeStopwatch(time);
-                        }} width="150" height="150" viewBox="0 0 300 300">
+                        }}  data-test="stop-watch" data-test-status={"clock-" + props.stopped} width="150" height="150" viewBox="0 0 300 300">
                             <path stroke="#2c3e50" strokeWidth="9" d={props.stopped ? "M 150 15 L 150 15 150 25" : "M 150 5 L 150 5 150 25"} />
                             <path stroke="#2c3e50" strokeWidth="9" d={describeArc(150, 150, props.stopped ? 135 : 145, 351, 9)} />
                             <path fill="#85c1e9" stroke="#d35400" strokeWidth="7" d={describeArc(150, 150, 125, 0, 359.99)} />
@@ -152,7 +152,7 @@ function StopWatch(props) {
                     </svg></div>
                 </Col>
                 <Col>
-                    <Button variant="warning" className='btn-finish' size="lg" onClick={() => setShowModal(true)}>
+                    <Button data-test="finish" variant="warning" className='btn-finish' size="lg" onClick={() => setShowModal(true)}>
                         Finish
                     </Button>
                 </Col>
@@ -184,7 +184,7 @@ function StopWatch(props) {
                             </Col>
                             <Col className="d-flex flex-row-reverse">
                                 <OverlayTrigger overlay={<Tooltip>End the hike!</Tooltip>}>
-                                    <Button variant="outline-success" onClick={finishHike}>finish</Button>
+                                    <Button data-test="finish-hike" variant="outline-success" onClick={finishHike}>finish</Button>
                                 </OverlayTrigger>
                             </Col>
                         </Row>
