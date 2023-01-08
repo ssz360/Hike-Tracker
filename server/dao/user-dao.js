@@ -3,7 +3,7 @@ const db = require("./dao");
 
 exports.verifyUser = async username => {
 	return new Promise((resolve, reject) => {
-		const query = "UPDATE USERS SET Type = 'user' WHERE Username = ?";
+		const query = "UPDATE USERS SET Type = 'hiker' WHERE Username = ?";
 		db.run(query, [username], function (err) {
 			if (err) reject(err);
 			else resolve(true);
