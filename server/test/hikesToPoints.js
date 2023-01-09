@@ -31,12 +31,34 @@ const loginUser={username:"davidwallace@gmail.com",password:"123abcABC!"};
 	});
 };
 
-const testFactoryUpdStrEnd = (name, IDHike, StartPoint, EndPoint, status, message) => {
+'/api/hikes/:hikeId/startPoint'
+
+'/api/hikes/:hikeId/endPoint'
+
+const testFactoryUpdStr = (name, IDHike, StartPoint, status, message) => {
 	return it(name, done => {
 		agent.post(loginRef).send(loginUser).then(res=>{
 			agent
-			.post(APIUpdateStartEnd)
-			.send({ IDHike, StartPoint, EndPoint })
+			.post('/api/hikes/'+IDHike+'/startPoint')
+			.send({ pointId:StartPoint })
+			.then(res => {
+				/*console.log("Res status is",res.status,"While expected status is",status);
+				console.log("response is ",res.text,"while expected is",message);*/
+				res.should.have.status(status);
+				res.text.should.include(message);
+				done();
+			})
+			.catch(done);
+		})
+	});
+};
+
+const testFactoryUpdEnd = (name, IDHike, EndPoint, status, message) => {
+	return it(name, done => {
+		agent.post(loginRef).send(loginUser).then(res=>{
+			agent
+			.post('/api/hikes/'+IDHike+'/endPoint')
+			.send({ pointId:EndPoint })
 			.then(res => {
 				/*console.log("Res status is",res.status,"While expected status is",status);
 				console.log("response is ",res.text,"while expected is",message);*/
@@ -78,25 +100,17 @@ describe("API Test: Link Points To Hikes", () => {
 
 describe("API Test: Update Start/End Points", () => {
 	describe("Update Start Points", () => {
-		testFactoryUpdStrEnd("Normal Call", 1, 9, undefined, "201", "");
+		testFactoryUpdStr("Normal Call", 1, 9, "422", "");
 		// testFactoryUpdStrEnd("Non-existent Hikes", Number.MAX_VALUE, 1, undefined, "404", "Hike");
-		testFactoryUpdStrEnd("Non-existent Start Point", 1, Number.MAX_VALUE, undefined, "404", "Start point");
+		testFactoryUpdStr("Non-existent Start Point", 1, Number.MAX_VALUE, "422", "not linkable");
 		// testFactoryUpdStrEnd("Non-numerical Hikes", "Number.MAX_VALUE", 1, undefined, "404", "Hike");
-		testFactoryUpdStrEnd("Non-numerical Start Point", 2, "Number.MAX_VALUE", undefined, "404", "Start point");
+		testFactoryUpdStr("Non-numerical Start Point", 2, "Number.MAX_VALUE", "422", "Bad parameters");
 	});
 	describe("Update End Points", () => {
-		testFactoryUpdStrEnd("Normal Call", 1, undefined, 9, "201", "");
+		testFactoryUpdEnd("Normal Call", 1, 9, "422", "");
 		// testFactoryUpdStrEnd("Non-existent Hikes", Number.MAX_VALUE, undefined, 1, "404", "Hike");
-		testFactoryUpdStrEnd("Non-existent End Point", 1, undefined, Number.MAX_VALUE, "404", "End point");
+		testFactoryUpdEnd("Non-existent End Point", 1, Number.MAX_VALUE, "422", "linkable");
 		// testFactoryUpdStrEnd("Non-numerical Hikes", "Number.MAX_VALUE", undefined, 1, "404", "Hike");
-		testFactoryUpdStrEnd("Non-numerical End Point", 2, undefined, "Number.MAX_VALUE", "404", "End point");
-	});
-	describe("Update Start & End Points", () => {
-		testFactoryUpdStrEnd("Normal Call", 1, 8, 9, "201", "");
-		// testFactoryUpdStrEnd("Non-existent Hikes", Number.MAX_VALUE, 1, 2, "404", "Hike");
-		testFactoryUpdStrEnd("Undefined Points", 1, undefined, undefined, "500", "startPoint or endPoint");
-		testFactoryUpdStrEnd("Non-existent Points", 1, Number.MAX_VALUE, Number.MAX_VALUE, "404", "Start point");
-		// testFactoryUpdStrEnd("Non-numerical Hikes", "Number.MAX_VALUE", undefined, 1, 2, "404", "Hike");
-		testFactoryUpdStrEnd("Non-numerical Points", 2, "Number.MAX_VALUE", "Number.MAX_VALUE", "404", "Start point");
+		testFactoryUpdEnd("Non-numerical End Point", 2, "Number.MAX_VALUE", "422", "Bad parameters");
 	});
 });
