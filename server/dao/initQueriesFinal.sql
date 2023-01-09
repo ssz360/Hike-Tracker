@@ -45416,7 +45416,7 @@ INSERT INTO "POINTS" ("IDPoint","Name","Latitude","Longitude","Altitude","Descri
  (67,'Point of hike Becetto - Bagnour',44.5892845652998,7.20338109880686,1369.53540039063,'Default starting point of hike Becetto - Bagnour','Cuneo','Piedmont','Italy','hikePoint'),
  (68,'Point of hike Becetto - Bagnour',44.6133209299296,7.07638755440712,2034.287109375,'Default arrival point of hike Becetto - Bagnour','Cuneo','Piedmont','Italy','hikePoint');
 INSERT INTO "POINTSIMAGES" ("pointId","path","name") VALUES (4,'33eda1cc-8932-418a-84fe-b9c99af63b83.jpg','Partenza-dal-Rifugio-La-Riposa-500x300.jpg');
-INSERT INTO "POINTSIMAGES" ("pointId","path","name") VALUES (3,'rocciamelonehut.jpg','rocciamelonehut.jpg');
+INSERT INTO "POINTSIMAGES" ("pointId","path","name") VALUES (3,'rocciamelonehut.jpeg','rocciamelonehut.jpeg');
 INSERT INTO "HIKESIMAGES" ("hikeId", "path","name") VALUES (1,'rocciamelone.jpg','rocciamelone.jpg');
 INSERT INTO "HIKESIMAGES" ("hikeId", "path","name") VALUES (1,'rocciamelone2.jpg','rocciamelone2.jpg');
 INSERT INTO "HIKESIMAGES" ("hikeId", "path","name") VALUES (1,'rocciamelone3.jpg','rocciamelone3.jpg');
