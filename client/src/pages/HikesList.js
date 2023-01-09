@@ -54,6 +54,8 @@ function HikesList(props) {
       ascMax !== '' ? ascMax : null,
       timeMin !== '' ? timeMin : null,
       timeMax !== '' ? timeMax : null);
+    
+      setUpdateCard(!updateCard);
 
   }
 
