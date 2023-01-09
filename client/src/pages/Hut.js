@@ -159,9 +159,7 @@ function HutRow(props) {
         {images.length > 0 ?
           <GallerySlider add={false} images={images} />
           :
-          <Placeholder as="p" animation="glow">
-            <Placeholder xs={12} bg='warning' size='lg' />
-          </Placeholder>
+          <GallerySlider add={false} images={[{ url: '/images/placeholder.png' }]} />
         }
         <Card.Text className='mt-2'><strong>Country: </strong>{props.hut.country}<br></br>
           <strong>Number of Bedrooms: </strong>{props.hut.numberOfBedrooms}<br></br>
