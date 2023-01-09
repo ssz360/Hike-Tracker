@@ -16,8 +16,8 @@ exports.register = async (req, res) => {
 		// 409 Conflict if username duplicates
 		// 200 on Successful registration
 		// 500 on general DB/API errors and sends it back
-		DAOTokens.newVerification(req.body.username);
-		DAOUsers.register(req.body).then(
+		await DAOTokens.newVerification(req.body.username);
+		await DAOUsers.register(req.body).then(
 			ret => {
 				if (ret) {
 					DAOUsers.login(req.body.username, req.body.password).then(
