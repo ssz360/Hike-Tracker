@@ -44,11 +44,14 @@ function GallerySlider(props){
         slidesToShow: 1,
         slidesToScroll: 1,
         speed: 500,
-        autoplay: true,
+        autoplay: props.autoplay===false ? false : true,
         autoplaySpeed: 2000,
         cssEase: "linear",
         adaptiveHeight: true
     };
+
+    console.log("autoplay: ", props.autoplay);
+
     return(
         <Row>
             {props.add &&

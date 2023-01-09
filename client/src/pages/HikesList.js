@@ -436,7 +436,7 @@ function HikeRow(props) {
         </Row>
         {visible ?
           active === 'images' ?
-            <GallerySlider dots={false} className='hikecardel' add={false} images={images.length > 0 ? images : [{ url: '/images/placeholder.png' }]} />
+            <GallerySlider dots={false} className='hikecardel' add={false} images={images.length > 0 ? images : [{ url: '/images/placeholder.png' }]} autoplay={false} />
             :
             active === 'map' && props.logged ?
               <HikeMap on hike={props.hike} />
