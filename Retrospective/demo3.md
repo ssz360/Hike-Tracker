@@ -109,7 +109,7 @@ sections:
 
 > Propose one or two
 
-    - Trying to be on par with technical debt and have more mantainable code
+    - Trying to be on pair with technical debt and have more mantainable code
 
     - Being able to have everything done 2 or 3 days before the presentation
 
