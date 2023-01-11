@@ -31,9 +31,9 @@ const loginUser={username:"davidwallace@gmail.com",password:"123abcABC!"};
 	});
 };
 
-'/api/hikes/:hikeId/startPoint'
+// '/api/hikes/:hikeId/startPoint'
 
-'/api/hikes/:hikeId/endPoint'
+// '/api/hikes/:hikeId/endPoint'
 
 const testFactoryUpdStr = (name, IDHike, StartPoint, status, message) => {
 	return it(name, done => {
