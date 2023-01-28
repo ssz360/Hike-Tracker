@@ -2,7 +2,7 @@
 # Use a Node 16 base image
 FROM node:18-alpine
 # Set the working directory to /app inside the container
-WORKDIR /app
+WORKDIR /usr/app
 # Copy app files
 COPY . .
 # ==== BUILD =====

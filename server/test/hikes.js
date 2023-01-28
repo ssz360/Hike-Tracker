@@ -50,7 +50,7 @@ describe('filtering hikes apis', () => {
               radius: 1
             }
         }
-        queryParams=getHikesFiltersQueryParams(filters.lengthMin,filters.lengthMax,filters.expectedTimeMin,filters.expectedTimeMax,filters.ascentMin,
+        let queryParams=getHikesFiltersQueryParams(filters.lengthMin,filters.lengthMax,filters.expectedTimeMin,filters.expectedTimeMax,filters.ascentMin,
             filters.ascentMax,filters.difficulty,filters.area)
         agent.get('/api/hikes/filters' + (queryParams !== '' ? '?' + queryParams : '')).send(filters).then(res=>{
             res.should.have.status(200);
