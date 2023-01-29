@@ -115,17 +115,17 @@ function ReferencePoint(props) {
     }, [props.point])
     return (
         <>
-            <Col xs={12} md={5}>
+            <Col xs={12}>
                 <div>
                     {props.waiting ?
                         <div className="my-3 text-center">
                             <Spinner animation="grow" />
                         </div>
                         :
-                        <GallerySlider preview={false} addImage={false} />}
+                        <GallerySlider images={props.images} preview={false} addImage={false} />}
                 </div>
             </Col>
-            <div className="ms-3">
+            <div className="ms-3 mt-2">
                 {props.point.description}
             </div>
         </>
@@ -145,7 +145,7 @@ function AddNewReferencePoint(props) {
                             <Form.Control placeholder={"Name"} type="text" value={props.name} onChange={e => { props.setName(e.target.value); }} />
                         </FloatingLabel>
                         <FloatingLabel controlId="floatingName" label="Description" className="mb-3">
-                            <Form.Control as="textarea" placeholder={"Description"} value={props.description} onChange={e => { props.setDescription(e.target.value); props.setOpenImages(e.target.value !== ""); }} />
+                            <Form.Control as="textarea" placeholder={"Description"} value={props.description} onChange={e => { props.setDescription(e.target.value); }} />
                         </FloatingLabel>
 
                         <GallerySlider add={true} images={props.images} setImages={props.setImages} />
@@ -238,13 +238,15 @@ function AddReferencePoint(props) {
             setWaiting(false);
             setError();
             setSuccess(true);
-            setTimeout(cleanup, 1500);
+            cleanup();
+            setTimeout(() => setSuccess(false), 3000);
             props.refreshHikes();
         } catch (error) {
             setWaiting(false);
             setError(error);
             setSuccess(false);
             setTimeout(() => setError(), 3000);
+            cleanup();
         }
     }
     useEffect(() => {
@@ -281,7 +283,7 @@ function AddReferencePoint(props) {
                                     <div className="my-4 mx-4">
                                         <h4>Reference points - Add new point</h4>
                                         <AddNewReferencePoint waiting={waiting} setWaiting={setWaiting} error={error} setError={setError} success={success} setSuccess={setSuccess}
-                                            name={name} setName={setName} submitHandler={submitHandler} images={images} setImages={setImages} />
+                                            name={name} setName={setName} description={description} setDescription={setDescription} submitHandler={submitHandler} images={images} setImages={setImages} />
                                     </div>
                                 </Card>
                             </Col>
@@ -298,7 +300,7 @@ function AddReferencePoint(props) {
                                     <div className="my-4 mx-4">
                                         {console.log(props.hike)}
                                         <h4>Reference points - <strong>{props.hike.referencePoints.find(p => p.id === selectedPoint).name}</strong></h4>
-                                        <ReferencePoint waiting={waiting} setWaiting={setWaiting} point={props.hike.referencePoints.find(p => p.id === selectedPoint)} />
+                                        <ReferencePoint images={images} setImages={setImages} waiting={waiting} setWaiting={setWaiting} point={props.hike.referencePoints.find(p => p.id === selectedPoint)} />
                                     </div>
                                 </Card>
                             </Col>
