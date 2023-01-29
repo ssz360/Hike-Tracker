@@ -1,9 +1,10 @@
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, useMap, Circle } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap, Circle, useMapEvents } from 'react-leaflet'
 import { Button, Modal } from "react-bootstrap";
 import { useState } from "react";
 import globalVariables from "../lib/globalVariables";
 import React from 'react';
+import { getDistance } from 'geolib';
 
 const POSITION_CLASSES = {
     bottomleft: 'leaflet-bottom leaflet-left',
@@ -53,12 +54,42 @@ function CenterMapDrag(props){
 
 function CenterMapClick(props){
     const [edit,setEdit]=useState(false);
-    const [ ,setControl]=useState(false);
+    const [control ,setControl]=useState(false);
     const map=useMap();
     if(edit)    map.dragging.disable();
     else    map.dragging.enable();
-    const [selecting, ]=useState(false);
-
+    const [selecting,setSelecting]=useState(false);
+    const mapev=useMapEvents({
+        mousedown: e =>{
+            if(edit && !control){
+                if(props.center!==undefined && !selecting){
+                    props.setRadius(0);
+                    props.setCenter(e.latlng);
+                }
+                else if(props.center===undefined && !selecting){
+                    props.setCenter(e.latlng);
+                }
+                else if(selecting){
+                    setSelecting(false);
+                    setEdit(false);
+                }
+            }
+        },
+        mousemove: e =>{
+            if(edit && props.center!==undefined && selecting){
+                props.setRadius(getDistance({latitude:e.latlng.lat,longitude:e.latlng.lng},{latitude:props.center.lat,longitude:props.center.lng}));
+            }
+        },
+        mouseup: e=>{
+            if(edit && !selecting) setSelecting(true);
+        },
+        mouseout: e=>{
+            if(edit && selecting){
+                setSelecting(false);
+                setEdit(false);
+            }
+        }
+    });
     return (<>
         <div className={POSITION_CLASSES.topright}>
             <div className="leaflet-control">

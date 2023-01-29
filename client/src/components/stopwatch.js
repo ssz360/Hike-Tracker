@@ -152,7 +152,10 @@ function StopWatch(props) {
                     </svg></div>
                 </Col>
                 <Col>
-                    <Button data-test="finish" variant="warning" className='btn-finish' size="lg" onClick={() => setShowModal(true)}>
+                    <Button data-test="finish" variant="warning" className='btn-finish' size="lg" onClick={() =>{
+                        setShowModal(true);
+                        setHikeFinishTime(dayjs().format('YYYY-MM-DDTHH:mm:ss'));
+                    }}>
                         Finish
                     </Button>
                 </Col>

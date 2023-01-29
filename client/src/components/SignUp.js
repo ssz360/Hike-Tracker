@@ -142,7 +142,7 @@ function SignUp() {
                             </FloatingLabel>
                         </Form.Group>
 
-                        {error !== '' && <Alert className="my-3" variant="danger">{error}</Alert>}
+                        
                         {success !== '' && <Alert className="my-3" variant="success">{error}</Alert>}
                         <div className="d-grid gap-2">
                             <Button type="submit"  className="rounded-pill"
