@@ -1,4 +1,5 @@
-## se2022-15-HikeTracker
+## The project of Software engineering 2 course of master's:
+# HikeTracker
 
 Hike tracker project developed by team 15 softeng 2.
 
