@@ -3,6 +3,13 @@
 
 Hike tracker project developed by team 15 softeng 2.
 
+### Screenshots:
+
+<img width="900" src="./screenshots/i1.jpg"/>
+<img width="900" src="./screenshots/i2.jpg"/>
+<img width="900" src="./screenshots/i3.jpg"/>
+<img width="900" src="./screenshots/i4.jpg"/>
+
 Technologies used on this project:
 
 - ReactJs
